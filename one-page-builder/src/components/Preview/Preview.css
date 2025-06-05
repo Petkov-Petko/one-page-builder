@@ -12,6 +12,16 @@
 }
 
 /* website styles */
+:root {
+    --body-bg-color: #f8fafc;
+    --body-text-color: #222222;
+}
+
+.website-preview {
+    background: var(--body-bg-color);
+    color: var(--body-text-color); 
+}
+
 
 .website-preview .hero-section {
     position: relative;

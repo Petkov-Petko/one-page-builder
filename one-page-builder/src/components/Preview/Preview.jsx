@@ -37,7 +37,12 @@ const Preview = ({ formData }) => {
   }
 
   return (
-    <div className="website-preview" lang={formData.lang}>
+    <div className="website-preview" lang={formData.lang}
+    style={{
+      ...(formData.bodyBgColor ? { '--body-bg-color': formData.bodyBgColor } : {}),
+      ...(formData.bodyTextColor ? { '--body-text-color': formData.bodyTextColor } : {})
+    }}
+>
       {/* Navigation */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">

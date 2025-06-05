@@ -6,3 +6,32 @@
     background-color: #f9f9f9;
     border-radius: 8px;
 }
+
+.form-style-section {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem 1rem;
+    border: 2px dashed #a5b4fc;
+    border-radius: 10px;
+    background: #f3f6fd;
+}
+
+.form-style-section .form-label {
+    font-weight: 600;
+    color: #4f46e5;
+    margin-bottom: 0.75rem;
+}.color-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 160px;
+    margin-bottom: 1rem;
+}
+
+.form-control-color.shadow {
+    box-shadow: 0 2px 8px 0 rgba(99, 102, 241, 0.10);
+    transition: box-shadow 0.2s;
+}
+
+.form-control-color.shadow:focus {
+    box-shadow: 0 0 0 3px #a5b4fc; }
