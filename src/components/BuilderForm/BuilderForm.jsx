@@ -173,9 +173,6 @@ const BuilderForm = ({ formData, setFormData }) => {
           />
         </div>
         <div className="form-style-section">
-          <h5>Style Options</h5>
-        </div>
-        <div className="form-style-section">
           <h5
             className="mb-4"
             style={{ letterSpacing: "1px", color: "#4f46e5" }}
@@ -238,12 +235,14 @@ const BuilderForm = ({ formData, setFormData }) => {
                   background: "none",
                 }}
               />
-            </div>          <div className="color-input-group">
+            </div>
+            <div className="color-input-group">
               <label
                 className="form-label"
                 style={{ fontWeight: 600, color: "#6366f1" }}
               >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🔠</span>Headings Color
+                <span style={{ marginRight: 8, fontSize: 18 }}>🔠</span>Headings
+                Color
               </label>
               <input
                 type="color"
@@ -264,6 +263,113 @@ const BuilderForm = ({ formData, setFormData }) => {
                   background: "none",
                 }}
               />
+            </div>
+            <div className="color-input-group">
+              <label
+                className="form-label"
+                style={{ fontWeight: 600, color: "#6366f1" }}
+              >
+                <span style={{ marginRight: 8, fontSize: 18 }}>🌈</span>Hero
+                Gradient Colors
+              </label>
+              <div className="d-flex align-items-center gap-2">
+                <input
+                  type="color"
+                  className="form-control form-control-color shadow"
+                  value={formData.heroGradient1 || "#667eea"}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      heroGradient1: e.target.value,
+                    }))
+                  }
+                  title="Choose first gradient color"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    border: "none",
+                    cursor: "pointer",
+                    background: "none",
+                  }}
+                />
+                <span style={{ fontSize: 24, color: "#6366f1" }}>→</span>
+                <input
+                  type="color"
+                  className="form-control form-control-color shadow"
+                  value={formData.heroGradient2 || "#764ba2"}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      heroGradient2: e.target.value,
+                    }))
+                  }
+                  title="Choose second gradient color"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    border: "none",
+                    cursor: "pointer",
+                    background: "none",
+                  }}
+                />
+              </div>
+              <div style={{ marginTop: 8, fontSize: 13, color: "#6366f1" }}>
+                Pick two colors for the hero section gradient background
+              </div>
+            </div>
+            <div className="color-input-group">
+              <label
+                className="form-label"
+                style={{ fontWeight: 600, color: "#6366f1" }}
+              >
+                <span style={{ marginRight: 8, fontSize: 18 }}>🦶</span>Footer
+                Background Color
+              </label>
+              <input
+                type="color"
+                className="form-control form-control-color shadow"
+                value={formData.footerBgColor || "##0d0d0d"}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    footerBgColor: e.target.value,
+                  }))
+                }
+                title="Choose footer background color"
+                style={{
+                  width: 48,
+                  height: 48,
+                  border: "none",
+                  cursor: "pointer",
+                  background: "none",
+                }}
+              />
+            </div>
+            <div className="color-input-group">
+              <label
+                className="form-label"
+                style={{ fontWeight: 600, color: "#6366f1" }}
+              >
+                <span style={{ marginRight: 8, fontSize: 18 }}>📌</span>Sticky
+                Navbar
+              </label>
+              <div className="form-check form-switch mt-1">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="stickyNavbar"
+                  checked={!!formData.stickyNavbar}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      stickyNavbar: e.target.checked,
+                    }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="stickyNavbar">
+                  Enable sticky navigation bar
+                </label>
+              </div>
             </div>
           </div>
         </div>
