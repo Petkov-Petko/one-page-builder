@@ -1,6 +1,29 @@
 import "./Preview.css";
 
 const Preview = ({ formData }) => {
+  function splitHtmlToSections(html) {
+    const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
+    let sections = [];
+    let currentSection = "";
+
+    parts.forEach((part) => {
+      if (part.match(/<h2[\s\S]*?<\/h2>/i)) {
+        if (currentSection) {
+          sections.push(`<section>${currentSection}</section>`);
+          currentSection = "";
+        }
+        currentSection += part;
+      } else {
+        currentSection += part;
+      }
+    });
+    if (currentSection) {
+      sections.push(`<section>${currentSection}</section>`);
+    }
+    return sections.join("\n");
+  }
+  const mainContentHtml = splitHtmlToSections(formData.mainContent || "");
+
   const heroClass = formData.heroBg
     ? "hero-section with-bg"
     : "hero-section gradient-bg";
@@ -240,7 +263,7 @@ h2 {
       </div>
     </header>
     <main class="main-content container py-5">
-      ${formData.mainContent || ""}
+      ${mainContentHtml || ""}
     </main>
     <footer class="footer" id="footer">
       <div class="container mt-4 pb-3">
@@ -356,8 +379,6 @@ h2 {
             </div>
           </div>
         </nav>
-
-        {/* Hero Section */}
         <header
           className={heroClass}
           style={
@@ -379,8 +400,6 @@ h2 {
             )}
           </div>
         </header>
-
-        {/* Main Content Sections */}
         <main className="main-content container py-5">
           {formData.mainContent ? (
             <div dangerouslySetInnerHTML={{ __html: formData.mainContent }} />
@@ -414,10 +433,7 @@ h2 {
           </div>
         </footer>
       </div>
-      <button
-        className="btn btn-primary mb-4 w-100 me-3"
-        onClick={() => handleDownload(formData)}
-      >
+      <button className="cool-ai-btn" onClick={() => handleDownload(formData)}>
         Download HTML & CSS
       </button>
     </>

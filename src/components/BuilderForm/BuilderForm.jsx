@@ -1,7 +1,7 @@
 import "./BuilderForm.css";
 
 const BuilderForm = ({ formData, setFormData }) => {
-  console.log("BuilderForm rendered!", formData);
+  
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -242,7 +242,7 @@ const BuilderForm = ({ formData, setFormData }) => {
                 style={{ fontWeight: 600, color: "#6366f1" }}
               >
                 <span style={{ marginRight: 8, fontSize: 18 }}>🔠</span>Headings
-                Color
+                Color (h2)
               </label>
               <input
                 type="color"

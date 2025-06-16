@@ -3,6 +3,7 @@ import './App.css'
 import BuilderForm from './components/BuilderForm/BuilderForm'
 import Preview from './components/Preview/Preview'
 import { useState } from 'react'
+import Footer from './components/Footer/Footer'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   });
 
   return (
+    <>
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-6">
@@ -23,6 +25,8 @@ function App() {
           </div>
         </div>
       </div>
+      <Footer/>
+      </>
   )
 }
 
