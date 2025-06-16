@@ -1,5 +1,5 @@
 {
-  "homepage": "https://(Petkov-Petko).github.io/(one-page-builder)",
+  "homepage": "https://Petkov-Petko.github.io/one-page-builder",
   "name": "one-page-builder",
   "private": true,
   "version": "0.0.0",
@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "bootstrap": "^5.3.6",
