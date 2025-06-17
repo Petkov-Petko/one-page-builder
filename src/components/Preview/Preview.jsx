@@ -1,28 +1,85 @@
 import "./Preview.css";
+import { generateExportHtml, generateExportCss } from "../../utils/exportSite";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const Preview = ({ formData }) => {
-  function splitHtmlToSections(html) {
-    const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
-    let sections = [];
-    let currentSection = "";
+  const css = generateExportCss(formData);
+  const html = generateExportHtml(formData);
 
-    parts.forEach((part) => {
-      if (part.match(/<h2[\s\S]*?<\/h2>/i)) {
-        if (currentSection) {
-          sections.push(`<section>${currentSection}</section>`);
-          currentSection = "";
-        }
-        currentSection += part;
-      } else {
-        currentSection += part;
-      }
-    });
-    if (currentSection) {
-      sections.push(`<section>${currentSection}</section>`);
+  async function handleDownloadZip(formData) {
+    const zip = new JSZip();
+  
+    // Add HTML and CSS
+    zip.file("index.html", generateExportHtml(formData));
+    zip.file("style.css", generateExportCss(formData));
+  
+    // Add .htaccess
+    zip.file(".htaccess", `RewriteEngine on
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+#the following two lines are non-www to www redirect
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+#the following two lines are www to non-www redirect
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+
+RewriteRule ^index\.php$ / [R=301,L]
+RewriteRule ^(.*)/index\.php$ /$1/ [R=301,L]
+
+Options All -Indexes
+
+ErrorDocument 404 /404.php
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [R=301,L]
+#start remove .html + remove trailing slash
+#replace .html with .php for php websites
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L,QSA]
+
+#301 from example.com/page.html to example.com/page
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*\.php\ HTTP/
+RewriteRule ^(.*)\.php$ /$1 [R=301,L]
+
+#removes multiple trailing slashes
+<IfModule mod_rewrite.c>
+RewriteBase /
+
+# rule 1: remove multiple leading slashes (directly after the TLD)
+RewriteCond %{THE_REQUEST} \s/{2,}
+RewriteRule (.*) $1 [R=301,L]
+
+# rule 2: remove multiple slashes in the requested path
+RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
+RewriteRule (.*) %1/%2 [R=301,L]
+</IfModule>`.trim());
+  
+    // Add images if needed
+    // Example for logo (if it's a data URL)
+    if (formData.logo && formData.logo.startsWith("data:")) {
+      const res = await fetch(formData.logo);
+      const blob = await res.blob();
+      zip.file("logo.svg", blob);
     }
-    return sections.join("\n");
+    if (formData.heroBg && formData.heroBg.startsWith("data:")) {
+      const res = await fetch(formData.heroBg);
+      const blob = await res.blob();
+      zip.file("hero-bg.jpg", blob);
+    }
+  
+    // Generate and trigger download
+    zip.generateAsync({ type: "blob" }).then((content) => {
+      saveAs(content, "website.zip");
+    });
   }
-  const mainContentHtml = splitHtmlToSections(formData.mainContent || "");
 
   const heroClass = formData.heroBg
     ? "hero-section with-bg"
@@ -50,243 +107,7 @@ const Preview = ({ formData }) => {
     if (formData.heroBg && formData.heroBg.startsWith("data:")) {
       downloadImage(formData.heroBg, "hero-bg.jpg");
     }
-    // 1. CSS (remove .website-preview prefix for export)
-    let css = `
-:root {
-  --body-bg-color: ${formData.bodyBgColor || "#f8fafc"};
-  --body-text-color: ${formData.bodyTextColor || "#222222"};
-  --heading-color: ${formData.headingColor || "#222222"};
-  --font-family: ${formData.fontFamily && formData.fontFamily !== "system" ? formData.fontFamily : "system-ui"};
-  --hero-gradient1: ${formData.heroGradient1 || "#667eea"};
-  --hero-gradient2: ${formData.heroGradient2 || "#764ba2"};
-  --footer-bg-color: ${formData.footerBgColor || "#667eea"};
 
-}
-body {
-  background: var(--body-bg-color) !important;
-  color: var(--body-text-color) !important;
-  font-family: var(--font-family) !important;
-}
-h1 {
-  font-size: clamp(2rem, 4vw, 2.5rem) !important;
-}
-h2 {
-  font-size: clamp(1.6rem, 3vw, 2rem) !important;
-  color: var(--heading-color);
-}
-h3 {
-  font-size: clamp(1.4rem, 3vw, 1.7rem) !important;
-}
-p {
-  margin-bottom: 0.5rem !important;
-}
-h2 {
-    color: var(--heading-color);
-  }
-    
-   .navbar.sticky-top {
-    position: sticky;
-    top: 0;
-    z-index: 1020;
-    box-shadow: 0 2px 12px 0 rgba(99, 102, 241, 0.08);
-}
-
- .navbar-toggler {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    background: #6366f1;
-    transition: background 0.2s;
-}
-
- .navbar-toggler .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
- .navbar-toggler:focus,
- .navbar-toggler:hover {
-    background: #4f46e5;
-}
-
- .navbar-collapse {
-    background: #f8fafc;
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 6px 24px 0 rgba(99, 102, 241, 0.08);
-    margin-top: 0.5rem;
-    padding: 0.5rem 0;
-}
-
-@media (max-width: 991.98px) {
-     .navbar-collapse {
-        position: absolute;
-        top: 100%;
-        right: 16px;
-        left: auto;
-        z-index: 100;
-        background: #f8fafc;
-        border-radius: 15px;
-        box-shadow: 0 6px 24px 0 rgba(99, 102, 241, 0.08);
-        margin-top: 0.5rem;
-        padding: 0.5rem 0;
-        max-width: 320px;
-        width: 90vw;
-    }
-
-     .navbar-nav .nav-link {
-        padding: 0.75rem 1.5rem;
-        font-size: 1.15rem;
-        border-radius: 6px;
-        margin: 0.25rem 0;
-        text-align: center;
-    }
-
-     .navbar-nav .nav-link.active,
-     .navbar-nav .nav-link:focus,
-     .navbar-nav .nav-link:hover {
-        background: #6366f1;
-        color: #fff !important;
-    }
-}
-  .hero-section {
-    position: relative;
-    width: 100%;
-    min-height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .hero-section.with-bg {
-    background-size: cover;
-    background-position: center;
-    color: #fff;
-    position: relative;
-  }
-  .hero-section.with-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hero-section.gradient-bg {
-    background: linear-gradient(135deg, var(--hero-gradient1, #667eea) 0%, var(--hero-gradient2, #764ba2) 100%);
-    color: #fff;
-    position: relative;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 64px 0;
-    text-align: center;
-    width: 100%;
-  }
-  .hero-afterh1 {
-    margin-top: 1.5rem;
-    font-size: 1.25rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .hero-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  .footer {
-   font-size: 1rem;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 48px;
-  padding-top: 24px;
-  background: var(--footer-bg-color, #667eea);
-  color: #fff;
-  }
-  .sitename {
-    font-weight: 600;
-    color: #fff;
-    text-decoration: underline;
-  }
-  .footer a {
-    color: #fff;
-    text-decoration: underline;
-  }
-  .footer a:hover {
-    text-decoration: none;
-  }
-  `;
-
-    // 2. HTML
-    const html = `
-    <!DOCTYPE html>
-    <html lang="${formData.lang || "en"}">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${formData.title || "Website Title"}</title>
-    <meta name="description" content="${formData.desc || ""}">
-    <link rel="stylesheet" href="/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    </head>
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light${formData.stickyNavbar ? " sticky-top" : ""}">
-      <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="${formData.logo ? "/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav">
-      <li class="nav-item"><a class="nav-link" aria-current="page" href="#section1">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="#section2">About</a></li>
-      <li class="nav-item"><a class="nav-link" href="#section3">Contact</a></li>
-      </ul>
-      </div>
-      </div>
-    </nav>
-    <header class="hero-section${formData.heroBg ? " with-bg" : " gradient-bg"}" 
-      ${formData.heroBg ? `style="background-image:url('/hero-bg.jpg');"` : ""}>
-      <div class="hero-content">
-      <h1 class="hero-title">${formData.h1 || "Main Heading"}</h1>
-      ${
-        formData.afterH1
-          ? `<div class="hero-afterh1">${formData.afterH1
-              .split("\n")
-              .map((p) => `<p>${p}</p>`)
-              .join("")}</div>`
-          : ""
-      }
-      </div>
-    </header>
-    <main class="main-content container py-5">
-      ${mainContentHtml || ""}
-    </main>
-    <footer class="footer" id="footer">
-      <div class="container mt-4 pb-3">
-      <div class="d-flex justify-content-center flex-column flex-md-row justify-content-md-between align-items-center">
-      <p class="text-center mb-2 mb-md-0">
-      © <span>Copyright</span> {{YEAR}}
-      <a href="/" class="px-1 sitename">${formData.domain || "domain.com"}</a>
-      <span>All Rights reserved</span>
-      </p>
-      <div class="d-flex justify-content-center gap-3">
-      <p>Email: info[@]${formData.domain || "domain.com"}</p>
-      <a href="/privacy">Privacy Policy</a>
-      </div>
-      </div>
-      </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script>
-      document.body.innerHTML = document.body.innerHTML.replace('{{YEAR}}', new Date().getFullYear());
-    </script>
-    </body>
-    </html>
-    `;
 
     // 3. Download helpers
     function downloadFile(filename, content, type) {
@@ -329,6 +150,8 @@ h2 {
           ...(formData.heroGradient2
             ? { "--hero-gradient2": formData.heroGradient2 }
             : {}),
+            ...(formData.linkColor ? { "--link-color": formData.linkColor } : {}),
+            ...(formData.headerBgColor ? { "--header-bg-color": formData.headerBgColor } : {}),
         }}
       >
         {/* Navigation */}
@@ -416,7 +239,7 @@ h2 {
               : undefined
           }
         >
-          <div className="container mt-4 pb-3">
+          <div className="container-fluid mt-4 pb-3">
             <div className="d-flex justify-content-center flex-column flex-md-row justify-content-md-between align-items-center">
               <p className="text-center mb-2 mb-md-0">
                 © <span>Copyright</span> {new Date().getFullYear()}
@@ -425,15 +248,15 @@ h2 {
                 </a>
                 <span>All Rights reserved</span>
               </p>
-              <div className="d-flex justify-content-center gap-3">
-                <p>Email: info[@]{formData.domain || "domain.com"}</p>
+              <div className="d-flex flex-column flex-md-row justify-content-center  align-items-center gap-3">
+                <p className="mb-0">Email: info[@]{formData.domain || "domain.com"}</p>
                 <a href="/privacy">Privacy Policy</a>
               </div>
             </div>
           </div>
         </footer>
       </div>
-      <button className="cool-ai-btn" onClick={() => handleDownload(formData)}>
+      <button className="cool-ai-btn" onClick={() => handleDownloadZip(formData)}>
         Download HTML & CSS
       </button>
     </>

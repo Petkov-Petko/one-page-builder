@@ -1,3 +1,4 @@
+/* website styles */
 .website-preview {
     width: 100%;
     position: relative;
@@ -15,6 +16,7 @@
     max-height: 1000px;
     overflow-y: auto;
 }
+
 .cool-ai-btn {
     background: linear-gradient(90deg, #6366f1 0%, #0ea5e9 100%);
     color: #fff;
@@ -50,12 +52,15 @@
     background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%);
     transform: translateY(-2px) scale(1.04);
     box-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.18);
-    outline: none; }
-/* website styles */
+    outline: none;
+}
+
+
 :root {
     --body-bg-color: #f8fafc;
     --body-text-color: #222222;
     --heading-color: #222222;
+    --link-color: #0041ce;
 }
 
 .website-preview {
@@ -79,6 +84,18 @@ p {
     margin-bottom: 0.5rem !important;
 }
 
+.main-content a,
+.footer a {
+    color: var(--link-color, #2563eb) !important;
+    transition: color 0.2s;
+}
+
+.main-content a:hover,
+.footer a:hover {
+    color: color-mix(in srgb, var(--link-color) 80%, black) !important;
+}
+
+
 .website-preview h2 {
     color: var(--heading-color, #222222);
 }
@@ -86,6 +103,10 @@ p {
 /* Mobile nav improvements */
 
 /* In Preview.css */
+.website-preview .navbar {
+    background: var(--header-bg-color, #fff) !important;
+}
+
 .website-preview .navbar.sticky-top {
     position: sticky;
     top: 0;
@@ -99,7 +120,7 @@ p {
     box-shadow: none;
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
-    background: #6366f1;
+    background: #2d2d2d8e;
     transition: background 0.2s;
 }
 
@@ -109,13 +130,11 @@ p {
 
 .website-preview .navbar-toggler:focus,
 .website-preview .navbar-toggler:hover {
-    background: #4f46e5;
+    background: var(--link-color);
 }
 
 .website-preview .navbar-collapse {
-    background: #f8fafc;
     border-radius: 0 0 12px 12px;
-    box-shadow: 0 6px 24px 0 rgba(99, 102, 241, 0.08);
     margin-top: 0.5rem;
     padding: 0.5rem 0;
 }
@@ -147,7 +166,7 @@ p {
     .website-preview .navbar-nav .nav-link.active,
     .website-preview .navbar-nav .nav-link:focus,
     .website-preview .navbar-nav .nav-link:hover {
-        background: #6366f1;
+        background: var(--link-color);
         color: #fff !important;
     }
 }
