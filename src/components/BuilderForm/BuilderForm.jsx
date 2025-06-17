@@ -1,7 +1,6 @@
 import "./BuilderForm.css";
 
 const BuilderForm = ({ formData, setFormData }) => {
-  
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -345,30 +344,88 @@ const BuilderForm = ({ formData, setFormData }) => {
                 }}
               />
             </div>
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>📌</span>Sticky
-                Navbar
-              </label>
-              <div className="form-check form-switch mt-1">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <div className="color-input-group">
+                <label
+                  className="form-label"
+                  style={{ fontWeight: 600, color: "#6366f1" }}
+                >
+                  <span style={{ marginRight: 8, fontSize: 18 }}>📌</span>Sticky
+                  Navbar
+                </label>
+                <div className="form-check form-switch mt-1">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="stickyNavbar"
+                    checked={!!formData.stickyNavbar}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        stickyNavbar: e.target.checked,
+                      }))
+                    }
+                  />
+                  <label className="form-check-label" htmlFor="stickyNavbar">
+                    Enable sticky navigation bar
+                  </label>
+                </div>
+              </div>
+              <div className="color-input-group">
+                <label
+                  className="form-label"
+                  style={{ fontWeight: 600, color: "#6366f1" }}
+                >
+                  <span style={{ marginRight: 8, fontSize: 18 }}>🔗</span>Link
+                  Color (a)
+                </label>
                 <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="stickyNavbar"
-                  checked={!!formData.stickyNavbar}
+                  type="color"
+                  className="form-control form-control-color shadow"
+                  value={formData.linkColor || "#2563eb"}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      stickyNavbar: e.target.checked,
+                      linkColor: e.target.value,
                     }))
                   }
+                  title="Choose link color"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    border: "none",
+                    cursor: "pointer",
+                    background: "none",
+                  }}
                 />
-                <label className="form-check-label" htmlFor="stickyNavbar">
-                  Enable sticky navigation bar
+              </div>
+              <div className="color-input-group">
+                <label
+                  className="form-label"
+                  style={{ fontWeight: 600, color: "#6366f1" }}
+                >
+                  <span style={{ marginRight: 8, fontSize: 18 }}>🟦</span>Header
+                  Background Color
                 </label>
+                <input
+                  type="color"
+                  className="form-control form-control-color shadow"
+                  value={formData.headerBgColor || "#ffffff"}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      headerBgColor: e.target.value,
+                    }))
+                  }
+                  title="Choose header background color"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    border: "none",
+                    cursor: "pointer",
+                    background: "none",
+                  }}
+                />
               </div>
             </div>
           </div>
