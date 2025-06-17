@@ -1,4 +1,3 @@
-
 export function generateExportCss(formData) {
     return `
 :root {
@@ -33,6 +32,9 @@ p {
 h2 {
     color: var(--heading-color);
   }
+    section {
+      padding: 17px 0;
+    }
 .main-content a,
 .footer a {
     color: var(--link-color, #2563eb) !important;
