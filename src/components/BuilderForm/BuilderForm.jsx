@@ -192,10 +192,9 @@ const BuilderForm = ({ formData, setFormData }) => {
       name="exportFormat"
       value="php"
       checked={formData.exportFormat === "php"}
-      disabled
       onChange={() => setFormData(prev => ({ ...prev, exportFormat: "php" }))}
     />
-    PHP <span style={{ color: "#f59e42", fontSize: 13, marginLeft: 4 }}>(coming soon)</span>
+    PHP <span style={{ color: "#f59e42", fontSize: 13, marginLeft: 4 }}>(still in development)</span>
   </label>
 </div>
 </div>
