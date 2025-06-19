@@ -1,5 +1,113 @@
+export function generateFunctionsPhp(formData) {
+  return `
+<?php
+function site_header($title, $description)
+{
+  $canonical = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  ob_start(); ?>
+
+
+    <!DOCTYPE html>
+    <html lang="${formData.lang || "en"}">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $title;?></title>
+    <meta name="description" content="<?php echo $description ?>">
+    <link rel="canonical" href="<?php echo $canonical;?>">
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light ${formData.stickyNavbar ? " sticky-top" : ""}">
+      <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="${formData.logo ? "/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link" aria-current="page" href="#section1">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="#section2">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="#section3">Contact</a></li>
+      </ul>
+      </div>
+      </div>
+    </nav>
+<?php
+  return ob_get_clean();
+}
+
+?>
+
+<?php
+function site_footer()
+{
+  ob_start(); ?>
+
+  <footer class="footer" id="footer">
+      <div class="container-fluid mt-4 pb-3">
+      <div class="d-flex justify-content-center flex-column flex-md-row justify-content-md-between align-items-center">
+      <p class="text-center mb-2 mb-md-0">
+      © <span>Copyright</span> <?php echo date('Y');?>
+      <a href="/" class="px-1 sitename">${formData.domain || "domain.com"}</a>
+      <span>All Rights reserved</span>
+      </p>
+      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-1 gap-sm-3">
+      <p>Email: info[@]${formData.domain || "domain.com"}</p>
+      <a href="/privacy">Privacy Policy</a>
+      </div>
+      </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+    </html>
+
+<?php
+  return ob_get_clean();
+}
+`.trim();
+}
+
+export function generateExportPhp(formData) {
+  const mainContentHtml = splitHtmlToSections(formData.mainContent || "");
+  return `
+<?php include 'functions.php';
+$title = "${formData.title || "Website Title"}";
+$description = "${formData.desc || ""}";
+echo site_header($title, $description);
+?>
+
+ <header class="hero-section${formData.heroBg ? " with-bg" : " gradient-bg"}" 
+      ${formData.heroBg ? `style="background-image:url('/hero-bg.jpg');"` : ""}>
+      <div class="hero-content container">
+      <h1 class="hero-title">${formData.h1 || "Main Heading"}</h1>
+      ${formData.afterH1
+      ? `<div class="hero-afterh1">${formData.afterH1
+        .split("\n")
+        .filter((p) => p.trim() !== "")
+        .map((p) => `<p>${p}</p>`)
+        .join("")
+      }</div>`
+      : ""
+    }
+      </div>
+    </header>
+    <main class="main-content container py-5">
+      ${mainContentHtml || ""}
+    </main>
+
+<?php echo site_footer();?>
+`.trim();
+}
+
 export function generateExportCss(formData) {
-    return `
+  return `
 :root {
   --body-bg-color: ${formData.bodyBgColor || "#f8fafc"};
   --body-text-color: ${formData.bodyTextColor || "#222222"};
@@ -179,30 +287,30 @@ h2 {
 }
 
 export function splitHtmlToSections(html) {
-    const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
-    let sections = [];
-    let currentSection = "";
+  const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
+  let sections = [];
+  let currentSection = "";
 
-    parts.forEach(part => {
-        if (part.match(/<h2[\s\S]*?<\/h2>/i)) {
-            if (currentSection) {
-                sections.push(`<section>${currentSection}</section>`);
-                currentSection = "";
-            }
-            currentSection += part;
-        } else {
-            currentSection += part;
-        }
-    });
-    if (currentSection) {
+  parts.forEach(part => {
+    if (part.match(/<h2[\s\S]*?<\/h2>/i)) {
+      if (currentSection) {
         sections.push(`<section>${currentSection}</section>`);
+        currentSection = "";
+      }
+      currentSection += part;
+    } else {
+      currentSection += part;
     }
-    return sections.join("\n");
+  });
+  if (currentSection) {
+    sections.push(`<section>${currentSection}</section>`);
+  }
+  return sections.join("\n");
 }
 
 export function generateExportHtml(formData, cssFileName = "style.css") {
-    const mainContentHtml = splitHtmlToSections(formData.mainContent || "");
-    return `
+  const mainContentHtml = splitHtmlToSections(formData.mainContent || "");
+  return `
     <!DOCTYPE html>
     <html lang="${formData.lang || "en"}">
     <head>
@@ -238,14 +346,14 @@ export function generateExportHtml(formData, cssFileName = "style.css") {
       <div class="hero-content container">
       <h1 class="hero-title">${formData.h1 || "Main Heading"}</h1>
       ${formData.afterH1
-            ? `<div class="hero-afterh1">${formData.afterH1
-                .split("\n")
-                .filter((p) => p.trim() !== "")
-                .map((p) => `<p>${p}</p>`)
-                .join("")
-            }</div>`
-            : ""
-        }
+      ? `<div class="hero-afterh1">${formData.afterH1
+        .split("\n")
+        .filter((p) => p.trim() !== "")
+        .map((p) => `<p>${p}</p>`)
+        .join("")
+      }</div>`
+      : ""
+    }
       </div>
     </header>
     <main class="main-content container py-5">
