@@ -16,7 +16,7 @@ const BuilderForm = ({ formData, setFormData }) => {
 
   return (
     <div className="form-container">
-      <h1>One Page Builder</h1>
+      <h1 className="website-title">One Page Builder</h1>
       <div className="header-editor">
         <div className="row mb-3">
           <div className="col-md-6 mb-3 mb-md-0">
@@ -172,32 +172,37 @@ const BuilderForm = ({ formData, setFormData }) => {
           />
         </div>
         <div className="mb-3">
-<label className="form-label">
-  Export Format:
-</label>
-<div>
-  <label style={{ marginRight: 16 }}>
-    <input
-      type="radio"
-      name="exportFormat"
-      value="html"
-      checked={formData.exportFormat !== "php"}
-      onChange={() => setFormData(prev => ({ ...prev, exportFormat: "html" }))}
-    />
-    HTML
-  </label>
-  <label>
-    <input
-      type="radio"
-      name="exportFormat"
-      value="php"
-      checked={formData.exportFormat === "php"}
-      onChange={() => setFormData(prev => ({ ...prev, exportFormat: "php" }))}
-    />
-    PHP <span style={{ color: "#f59e42", fontSize: 13, marginLeft: 4 }}>(still in development)</span>
-  </label>
-</div>
-</div>
+          <label className="form-label">Export Format:</label>
+          <div>
+            <label style={{ marginRight: 16 }}>
+              <input
+                type="radio"
+                name="exportFormat"
+                value="html"
+                checked={formData.exportFormat !== "php"}
+                onChange={() =>
+                  setFormData((prev) => ({ ...prev, exportFormat: "html" }))
+                }
+              />
+              HTML
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="exportFormat"
+                value="php"
+                checked={formData.exportFormat === "php"}
+                onChange={() =>
+                  setFormData((prev) => ({ ...prev, exportFormat: "php" }))
+                }
+              />
+              PHP{" "}
+              <span style={{ color: "#f59e42", fontSize: 13, marginLeft: 4 }}>
+                (still in development)
+              </span>
+            </label>
+          </div>
+        </div>
         <div className="form-style-section">
           <h5
             className="mb-4"

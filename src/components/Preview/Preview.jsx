@@ -1,15 +1,17 @@
 import "./Preview.css";
-import { generateExportHtml, generateExportCss, generateFunctionsPhp, generateExportPhp } from "../../utils/exportSite";
+import {
+  generateExportHtml,
+  generateExportCss,
+  generateFunctionsPhp,
+  generateExportPhp,
+} from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
 const Preview = ({ formData }) => {
-  const css = generateExportCss(formData);
-  const html = generateExportHtml(formData);
-
   async function handleDownloadZip(formData) {
     const zip = new JSZip();
-  
+
     if (formData.exportFormat === "php") {
       zip.file("functions.php", generateFunctionsPhp(formData));
       zip.file("index.php", generateExportPhp(formData));
@@ -18,9 +20,11 @@ const Preview = ({ formData }) => {
     }
     // Add HTML and CSS
     zip.file("style.css", generateExportCss(formData));
-  
+
     // Add .htaccess
-    zip.file(".htaccess", `RewriteEngine on
+    zip.file(
+      ".htaccess",
+      `RewriteEngine on
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
@@ -66,8 +70,9 @@ RewriteRule (.*) $1 [R=301,L]
 RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
 RewriteRule (.*) %1/%2 [R=301,L]
 </IfModule>
-`.trim());
-  
+`.trim(),
+    );
+
     // Add images if needed
     // Example for logo (if it's a data URL)
     if (formData.logo && formData.logo.startsWith("data:")) {
@@ -80,7 +85,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
       const blob = await res.blob();
       zip.file("hero-bg.jpg", blob);
     }
-  
+
     // Generate and trigger download
     zip.generateAsync({ type: "blob" }).then((content) => {
       saveAs(content, "website.zip");
@@ -90,46 +95,6 @@ RewriteRule (.*) %1/%2 [R=301,L]
   const heroClass = formData.heroBg
     ? "hero-section with-bg"
     : "hero-section gradient-bg";
-
-  function handleDownload(formData) {
-    function downloadImage(dataUrl, filename) {
-      fetch(dataUrl)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
-        });
-    }
-
-    // When downloading:
-    if (formData.logo && formData.logo.startsWith("data:")) {
-      downloadImage(formData.logo, "logo.svg");
-    }
-    if (formData.heroBg && formData.heroBg.startsWith("data:")) {
-      downloadImage(formData.heroBg, "hero-bg.jpg");
-    }
-
-
-    // 3. Download helpers
-    function downloadFile(filename, content, type) {
-      const blob = new Blob([content], { type });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-    }
-
-    downloadFile("index.html", html, "text/html");
-    downloadFile("style.css", css, "text/css");
-  }
 
   // Use CSS variables for preview
   return (
@@ -156,8 +121,10 @@ RewriteRule (.*) %1/%2 [R=301,L]
           ...(formData.heroGradient2
             ? { "--hero-gradient2": formData.heroGradient2 }
             : {}),
-            ...(formData.linkColor ? { "--link-color": formData.linkColor } : {}),
-            ...(formData.headerBgColor ? { "--header-bg-color": formData.headerBgColor } : {}),
+          ...(formData.linkColor ? { "--link-color": formData.linkColor } : {}),
+          ...(formData.headerBgColor
+            ? { "--header-bg-color": formData.headerBgColor }
+            : {}),
         }}
       >
         {/* Navigation */}
@@ -255,14 +222,19 @@ RewriteRule (.*) %1/%2 [R=301,L]
                 <span>All Rights reserved</span>
               </p>
               <div className="d-flex flex-column flex-md-row justify-content-center  align-items-center gap-3">
-                <p className="mb-0">Email: info[@]{formData.domain || "domain.com"}</p>
+                <p className="mb-0">
+                  Email: info[@]{formData.domain || "domain.com"}
+                </p>
                 <a href="/privacy">Privacy Policy</a>
               </div>
             </div>
           </div>
         </footer>
       </div>
-      <button className="cool-ai-btn" onClick={() => handleDownloadZip(formData)}>
+      <button
+        className="cool-ai-btn"
+        onClick={() => handleDownloadZip(formData)}
+      >
         Download HTML & CSS
       </button>
     </>

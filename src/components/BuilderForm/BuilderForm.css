@@ -1,10 +1,42 @@
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    background-color: #f9f9f9;
+    gap: 20px;
+    padding: 32px 28px;
+    background: linear-gradient(120deg, #f3f4f6 0%, #e0e7ff 100%);
+    border-radius: 18px;
+    box-shadow: 0 6px 32px 0 rgba(99, 102, 241, 0.08), 0 1.5px 6px 0 rgba(30, 64, 175, 0.06);
+    border: 1.5px solid #e0e7ff;
+    margin: 32px auto 0 auto;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    max-height: 123vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #7a7bb5 #e0e7ff;
+}
+
+/* Chrome, Edge, Safari */
+.form-container::-webkit-scrollbar {
+    width: 10px;
     border-radius: 8px;
+    background: #e0e7ff;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(120deg, #6366f1 0%, #0ea5e9 100%);
+    border-radius: 8px;
+    min-height: 40px;
+    box-shadow: 0 2px 8px #6366f144;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(120deg, #4f46e5 0%, #0ea5e9 100%);
+}
+
+.form-container:focus-within,
+.form-container:hover {
+    box-shadow: 0 12px 48px 0 rgba(99, 102, 241, 0.13), 0 2px 8px 0 rgba(30, 64, 175, 0.09);
+    border-color: #6366f1;
 }
 
 .form-style-section {
@@ -20,7 +52,9 @@
     font-weight: 600;
     color: #4f46e5;
     margin-bottom: 0.75rem;
-}.color-input-group {
+}
+
+.color-input-group {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -34,4 +68,25 @@
 }
 
 .form-control-color.shadow:focus {
-    box-shadow: 0 0 0 3px #a5b4fc; }
+    box-shadow: 0 0 0 3px #a5b4fc;
+}
+
+.website-title {
+    font-family: 'JetBrains Mono', 'Fira Mono', 'Menlo', monospace;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #312e81 0%, #2563eb 60%, #0ea5e9 100%);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-align: center;
+    margin-bottom: 32px;
+    text-shadow: 0 4px 24px #312e8144, 0 1px 0 #222;
+    transition: text-shadow 0.2s, letter-spacing 0.2s;
+}
+
+.website-title:hover {
+    text-shadow: 0 8px 32px #0ea5e988, 0 2px 0 #222;
+    letter-spacing: 3px;
+}
