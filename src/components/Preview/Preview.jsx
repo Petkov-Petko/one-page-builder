@@ -235,7 +235,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
         className="cool-ai-btn"
         onClick={() => handleDownloadZip(formData)}
       >
-        Download HTML & CSS
+        Download Files
       </button>
     </>
   );
