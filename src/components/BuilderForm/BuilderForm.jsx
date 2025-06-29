@@ -13,6 +13,26 @@ const BuilderForm = ({ formData, setFormData }) => {
       setFormData((prev) => ({ ...prev, logo: "" }));
     }
   };
+  const handleFaviconChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ 
+          ...prev, 
+          favicon: reader.result,
+          faviconName: file.name 
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFormData((prev) => ({ 
+        ...prev, 
+        favicon: "",
+        faviconName: ""
+      }));
+    }
+  };
 
   return (
     <div className="form-container">
@@ -92,6 +112,35 @@ const BuilderForm = ({ formData, setFormData }) => {
             </div>
           )}
         </div>
+        <div className="mb-3">
+        <label className="form-label">Website Favicon</label>
+        <input
+          type="file"
+          className="form-control"
+          accept="image/*"
+          onChange={handleFaviconChange}
+        />
+        {formData.favicon && (
+          <div className="mt-2">
+            <img
+              src={formData.favicon}
+              alt="Favicon Preview"
+              style={{ maxWidth: "32px", maxHeight: "32px" }}
+            />
+            <button
+              type="button"
+              className="btn btn-sm btn-danger mt-2 ms-4"
+              onClick={() => setFormData((prev) => ({ 
+                ...prev, 
+                favicon: "",
+                faviconName: ""
+              }))}
+            >
+              X
+            </button>
+          </div>
+        )}
+      </div>
         <div className="mb-3">
           <label className="form-label">Main Heading (h1)</label>
           <input

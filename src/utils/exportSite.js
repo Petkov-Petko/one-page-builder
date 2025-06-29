@@ -16,6 +16,7 @@ function site_header($title, $description)
     <meta name="description" content="<?php echo $description ?>">
     <link rel="canonical" href="<?php echo $canonical;?>">
     <link rel="stylesheet" href="/style.css">
+    ${formData.favicon ? '<link rel="icon" type="image/png" href="/images/favicon.png">' : ''}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
@@ -320,6 +321,7 @@ export function generateExportHtml(formData, cssFileName = "style.css") {
     <title>${formData.title || "Website Title"}</title>
     <meta name="description" content="${formData.desc || ""}">
     <link rel="stylesheet" href="/style.css">
+    ${formData.favicon ? '<link rel="icon" type="image/png" href="/images/favicon.png">' : ''}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
@@ -327,7 +329,7 @@ export function generateExportHtml(formData, cssFileName = "style.css") {
     <nav class="navbar navbar-expand-lg navbar-light ${formData.stickyNavbar ? " sticky-top" : ""}">
       <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="/">
-      <img src="${formData.logo ? "/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
+      <img src="${formData.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

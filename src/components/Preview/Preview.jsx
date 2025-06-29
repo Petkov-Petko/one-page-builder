@@ -72,18 +72,23 @@ RewriteRule (.*) %1/%2 [R=301,L]
 </IfModule>
 `.trim(),
     );
-
-    // Add images if needed
-    // Example for logo (if it's a data URL)
+    // logo
     if (formData.logo && formData.logo.startsWith("data:")) {
       const res = await fetch(formData.logo);
       const blob = await res.blob();
       zip.file("images/logo.svg", blob);
     }
+    // hero background
     if (formData.heroBg && formData.heroBg.startsWith("data:")) {
       const res = await fetch(formData.heroBg);
       const blob = await res.blob();
       zip.file("images/hero-bg.jpg", blob);
+    }
+    // favicon
+    if (formData.favicon && formData.favicon.startsWith("data:")) {
+      const res = await fetch(formData.favicon);
+      const blob = await res.blob();
+      zip.file("images/favicon.png", blob);
     }
 
     // Generate and trigger download
