@@ -1,6 +1,5 @@
 import "./Preview.css";
 import {
-  generateExportHtml,
   generateExportCss,
   generateFunctionsPhp,
   generateExportPhp,
@@ -12,13 +11,8 @@ const Preview = ({ formData }) => {
   async function handleDownloadZip(formData) {
     const zip = new JSZip();
 
-    if (formData.exportFormat === "php") {
-      zip.file("functions.php", generateFunctionsPhp(formData));
-      zip.file("index.php", generateExportPhp(formData));
-    } else {
-      zip.file("index.html", generateExportHtml(formData));
-    }
-    // Add HTML and CSS
+    zip.file("index.php", generateExportPhp(formData));
+    zip.file("functions.php", generateFunctionsPhp(formData));
     zip.file("style.css", generateExportCss(formData));
 
     // Add .htaccess

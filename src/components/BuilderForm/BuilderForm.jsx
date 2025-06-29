@@ -220,35 +220,6 @@ const BuilderForm = ({ formData, setFormData }) => {
             placeholder="Enter main content"
           />
         </div>
-        <div className="mb-3">
-          <label className="form-label">Export Format:</label>
-          <div>
-            <label style={{ marginRight: 16 }}>
-              <input
-                type="radio"
-                name="exportFormat"
-                value="html"
-                checked={formData.exportFormat !== "php"}
-                onChange={() =>
-                  setFormData((prev) => ({ ...prev, exportFormat: "html" }))
-                }
-              />
-              HTML
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="exportFormat"
-                value="php"
-                checked={formData.exportFormat === "php"}
-                onChange={() =>
-                  setFormData((prev) => ({ ...prev, exportFormat: "php" }))
-                }
-              />
-              PHP
-            </label>
-          </div>
-        </div>
         <div className="form-style-section">
           <h5
             className="mb-4"
