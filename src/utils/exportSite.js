@@ -23,7 +23,7 @@ function site_header($title, $description)
     <nav class="navbar navbar-expand-lg navbar-light ${formData.stickyNavbar ? " sticky-top" : ""}">
       <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="/">
-      <img src="${formData.logo ? "/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
+      <img src="${formData.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${formData.domain}" width="220" height="50">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ echo site_header($title, $description);
 ?>
 
  <header class="hero-section${formData.heroBg ? " with-bg" : " gradient-bg"}" 
-      ${formData.heroBg ? `style="background-image:url('/hero-bg.jpg');"` : ""}>
+      ${formData.heroBg ? `style="background-image:url('/images/hero-bg.jpg');"` : ""}>
       <div class="hero-content container">
       <h1 class="hero-title">${formData.h1 || "Main Heading"}</h1>
       ${formData.afterH1
@@ -343,7 +343,7 @@ export function generateExportHtml(formData, cssFileName = "style.css") {
       </div>
     </nav>
     <header class="hero-section${formData.heroBg ? " with-bg" : " gradient-bg"}" 
-      ${formData.heroBg ? `style="background-image:url('/hero-bg.jpg');"` : ""}>
+      ${formData.heroBg ? `style="background-image:url('/images/hero-bg.jpg');"` : ""}>
       <div class="hero-content container">
       <h1 class="hero-title">${formData.h1 || "Main Heading"}</h1>
       ${formData.afterH1
