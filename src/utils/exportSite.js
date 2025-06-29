@@ -123,6 +123,7 @@ body {
   background: var(--body-bg-color) !important;
   color: var(--body-text-color) !important;
   font-family: var(--font-family) !important;
+  overflow-x: hidden;
 }
 h1 {
   font-size: clamp(2rem, 4vw, 2.5rem) !important;
