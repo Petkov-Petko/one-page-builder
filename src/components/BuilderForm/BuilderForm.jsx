@@ -196,10 +196,7 @@ const BuilderForm = ({ formData, setFormData }) => {
                   setFormData((prev) => ({ ...prev, exportFormat: "php" }))
                 }
               />
-              PHP{" "}
-              <span style={{ color: "#f59e42", fontSize: 13, marginLeft: 4 }}>
-                (still in development)
-              </span>
+              PHP
             </label>
           </div>
         </div>
