@@ -307,6 +307,10 @@ a:hover {
   color: white;
 }
 
+.footer a {
+  text-decoration: none;
+}
+
 .content-area {
   line-height: 1.8;
 }
@@ -403,7 +407,7 @@ echo site_header("${page.formData.title || page.title}", "${page.formData.desc |
 <main class="container my-5">
   <div class="row">
     <div class="col-lg-12">
-      ${page.formData.mainContent || '<div class="text-center text-muted py-5"><h3>No content added yet</h3><p>Add some content to see it here</p></div>'}
+    ${splitHtmlToSections(page.formData.mainContent) || '<div class="text-center text-muted py-5"><h3>No content added yet</h3><p>Add some content to see it here</p></div>'}
     </div>
   </div>
 </main>
