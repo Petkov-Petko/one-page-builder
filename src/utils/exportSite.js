@@ -21,7 +21,7 @@ function site_header($title, $description)
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
-    <nav class="navbar navbar-expand-lg navbar-light ${globalSettings.stickyNavbar ? " sticky-top" : ""}">
+    <nav class="navbar navbar-expand-xl navbar-light ${globalSettings.stickyNavbar ? " sticky-top" : ""}">
       <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="/">
       <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.domain}" width="220" height="50">
@@ -74,221 +74,6 @@ function site_footer()
 }
 `.trim();
 }
-
-// index.php
-export function generateExportPhp(pageData, globalSettings) {
-  const mainContentHtml = splitHtmlToSections(pageData.mainContent || "");
-  return `
-<?php include 'functions.php';
-$title = "${pageData.title || "Website Title"}";
-$description = "${pageData.desc || ""}";
-echo site_header($title, $description);
-?>
-
- <header class="hero-section${pageData.heroBg ? " with-bg" : " gradient-bg"}" 
-      ${pageData.heroBg ? `style="background-image:url('/images/hero-bg.jpg');"` : ""}>
-      <div class="hero-content container">
-      <h1 class="hero-title">${pageData.h1 || "Main Heading"}</h1>
-      ${pageData.afterH1
-      ? `<div class="hero-afterh1">${pageData.afterH1
-        .split("\n")
-        .filter((p) => p.trim() !== "")
-        .map((p) => `<p>${p}</p>`)
-        .join("")
-      }</div>`
-      : ""
-    }
-      </div>
-    </header>
-    <main class="main-content container py-5">
-      ${mainContentHtml || ""}
-    </main>
-
-<?php echo site_footer();?>
-`.trim();
-}
-
-export function generateExportCss(globalSettings) {
-  return `
-:root {
-  --body-bg-color: ${globalSettings.bodyBgColor || "#f8fafc"};
-  --body-text-color: ${globalSettings.bodyTextColor || "#222222"};
-  --heading-color: ${globalSettings.headingColor || "#222222"};
-  --font-family: ${globalSettings.fontFamily && globalSettings.fontFamily !== "system" ? globalSettings.fontFamily : "system-ui"};
-  --hero-gradient1: ${globalSettings.heroGradient1 || "#667eea"};
-  --hero-gradient2: ${globalSettings.heroGradient2 || "#764ba2"};
-  --footer-bg-color: ${globalSettings.footerBgColor || "#667eea"};
---link-color: ${globalSettings.linkColor || "#2563eb"};
-  --header-bg-color: ${globalSettings.headerBgColor || "#fff"};
-}
-body {
-  background: var(--body-bg-color) !important;
-  color: var(--body-text-color) !important;
-  font-family: var(--font-family) !important;
-  overflow-x: hidden;
-}
-h1 {
-  font-size: clamp(2rem, 4vw, 2.5rem) !important;
-}
-h2 {
-  font-size: clamp(1.6rem, 3vw, 2rem) !important;
-  color: var(--heading-color);
-}
-h3 {
-  font-size: clamp(1.4rem, 3vw, 1.7rem) !important;
-}
-p {
-  margin-bottom: 0.5rem !important;
-}
-h2 {
-    color: var(--heading-color);
-  }
-    section {
-      padding: 17px 0;
-    }
-.main-content a,
-.footer a {
-    color: var(--link-color, #2563eb) !important;
-    transition: color 0.2s;
-}
-    .main-content a:hover,
-.footer a:hover {
-    color: color-mix(in srgb, var(--link-color) 80%, black) !important;
-}
-
-   .navbar.sticky-top {
-    position: sticky;
-    top: 0;
-    z-index: 1020;
-    box-shadow: 0 2px 12px 0 rgba(99, 102, 241, 0.08);
-}
-.navbar {
-    background: var(--header-bg-color, #fff) !important;
-}
- .navbar-toggler {
-    border: none;
-    outline: none;
-    box-shadow: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    background: #2d2d2d8e;
-    transition: background 0.2s;
-}
-
- .navbar-toggler .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
- .navbar-toggler:focus,
- .navbar-toggler:hover {
-    background: var(--link-color);
-}
-
- .navbar-collapse {
-    border-radius: 0 0 12px 12px;
-    margin-top: 0.5rem;
-    padding: 0.5rem 0;
-}
-
-@media (max-width: 991.98px) {
-     .navbar-collapse {
-        position: absolute;
-        top: 100%;
-        right: 16px;
-        left: auto;
-        z-index: 100;
-        background: #f8fafc;
-        border-radius: 15px;
-        margin-top: 0.5rem;
-        padding: 0.5rem 0;
-        max-width: 320px;
-        width: 90vw;
-    }
-
-     .navbar-nav .nav-link {
-        padding: 0.75rem 1.5rem;
-        font-size: 1.15rem;
-        border-radius: 6px;
-        margin: 0.25rem 0;
-        text-align: center;
-    }
-
-     .navbar-nav .nav-link.active,
-     .navbar-nav .nav-link:focus,
-     .navbar-nav .nav-link:hover {
-        background: var(--link-color);
-        color: #fff !important;
-    }
-}
-  .hero-section {
-    position: relative;
-    width: 100%;
-    min-height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .hero-section.with-bg {
-    background-size: cover;
-    background-position: center;
-    color: #fff;
-    position: relative;
-  }
-  .hero-section.with-bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hero-section.gradient-bg {
-    background: linear-gradient(135deg, var(--hero-gradient1, #667eea) 0%, var(--hero-gradient2, #764ba2) 100%);
-    color: #fff;
-    position: relative;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 64px 0;
-    text-align: center;
-    width: 100%;
-  }
-  .hero-afterh1 {
-    margin-top: 1.5rem;
-    font-size: 1.25rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .hero-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  .footer {
-   font-size: 1rem;
-  border-top: 1px solid #e5e7eb;
- padding: 11px 0;
-  background: var(--footer-bg-color, #667eea);
-  color: #fff;
-  }
-  .sitename {
-    font-weight: 600;
-    color: #fff;
-    text-decoration: underline;
-  }
-  .footer a {
-    color: #fff;
-  text-decoration: none;
-    } 
- .footer p {
-   margin-bottom: 0 !important;
-  }
-  .footer a:hover {
-    text-decoration: none;
-  }
-  `;
-}
-
 export function splitHtmlToSections(html) {
   const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
   let sections = [];
@@ -375,7 +160,7 @@ function site_header($title, $description, $lang = 'en')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light${globalSettings.stickyNavbar ? ' sticky-top' : ''}">
+<nav class="navbar navbar-expand-xl navbar-light${globalSettings.stickyNavbar ? ' sticky-top' : ''}">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="/">
       <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.domain || 'Website'}" width="220" height="50">
@@ -550,6 +335,47 @@ main {
     font-size: 2rem;
   }
 }
+  /* Mobile nav */
+@media (max-width: 1200px) {
+  .navbar-collapse {
+    position: fixed;
+    top: 61px;
+    left: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    padding: 15px;
+    margin: 0;
+  }
+
+  .navbar-nav {
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item {
+    margin: 7px 0;
+  }
+
+  .navbar-nav .nav-item:hover {
+    transform: translateY(-1px);
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: block;
+    padding: 0;
+  }
+
+  .navbar-toggler {
+    z-index: 10000;
+    position: relative;
+  }
+}
 `;
 }
 
@@ -565,13 +391,11 @@ echo site_header("${page.formData.title || page.title}", "${page.formData.desc |
 
 <section class="${heroClass}" ${heroStyle}>
   <div class="container">
-    <div class="row justify-content-center text-center">
-      <div class="col-lg-10">
-        <h1 class="display-4 fw-bold text-white mb-4">
+    <div class="justify-content-center text-center">
+        <h1 class="text-white">
           ${page.formData.h1 || page.title}
         </h1>
         ${page.formData.afterH1 ? `<p class="text-white mb-4">${page.formData.afterH1}</p>` : ''}
-      </div>
     </div>
   </div>
 </section>
