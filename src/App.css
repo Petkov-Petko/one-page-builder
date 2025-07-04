@@ -45,7 +45,7 @@
 /* Scrollbar styling */
 .builder-panel::-webkit-scrollbar,
 .preview-container::-webkit-scrollbar {
-    width: 8px;
+    width: 5px;
 }
 
 .builder-panel::-webkit-scrollbar-track,
