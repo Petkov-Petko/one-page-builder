@@ -5,7 +5,6 @@ import Preview from './components/Preview/Preview'
 import PageManager from './components/PageManager/PageManager'
 import NavigationBuilder from './components/NavigationBuilder/NavigationBuilder'
 import { useState, useEffect } from 'react'
-import Footer from './components/Footer/Footer'
 
 function App() {
   // Initialize with a default home page
@@ -99,7 +98,6 @@ function App() {
           </div>
         </div>
       </div>
-      <Footer/>
     </>
   )
 }

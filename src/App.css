@@ -25,7 +25,7 @@
 .preview-container {
     height: 100vh;
     overflow-y: auto;
-    border-left: 2px solid #e9ecef;
+    /* border-left: 2px solid #e9ecef; */
 }
 
 .preview-header {

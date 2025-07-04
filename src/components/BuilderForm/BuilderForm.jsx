@@ -257,7 +257,8 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               <option value="Verdana">Verdana</option>
             </select>
           </div>
-
+          <div className="colors">
+          <h4 className='d-block w-100'>Colors:</h4>
           <div className="form-group">
             <label>Body Background Color</label>
             <input
@@ -279,7 +280,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
           </div>
 
           <div className="form-group">
-            <label>Heading Color</label>
+            <label>Heading Color(h2)</label>
             <input
               type="color"
               className="form-control"
@@ -336,6 +337,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               value={globalSettings.footerBgColor || '#0d0d0d'}
               onChange={(e) => handleGlobalChange('footerBgColor', e.target.value)}
             />
+          </div>
           </div>
         </div>
       )}

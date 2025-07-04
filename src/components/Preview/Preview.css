@@ -7,7 +7,7 @@
     border: 2px solid #d1d5db;
     border-radius: 11px;
     box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
-    margin: 32px auto;
+    margin: 15px auto;
     max-width: 1200px;
     transition: box-shadow 0.2s;
 }
