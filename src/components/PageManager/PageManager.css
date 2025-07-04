@@ -1,0 +1,97 @@
+.page-manager {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.pages-list {
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.page-item {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-item:hover {
+    border-color: #6366f1;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
+}
+
+.page-item.active {
+    border-color: #6366f1;
+    background: #f0f0ff;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.page-info {
+    flex: 1;
+}
+
+.page-title {
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-slug {
+    font-size: 0.85rem;
+    color: #666;
+    font-family: monospace;
+}
+
+.home-badge {
+    background: #28a745;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.page-actions {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.page-actions .btn {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8rem;
+}
+
+/* Scrollbar styling */
+.page-manager::-webkit-scrollbar,
+.pages-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.page-manager::-webkit-scrollbar-track,
+.pages-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.page-manager::-webkit-scrollbar-thumb,
+.pages-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+}
+
+.page-manager::-webkit-scrollbar-thumb:hover,
+.pages-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

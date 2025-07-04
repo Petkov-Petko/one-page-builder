@@ -1,0 +1,65 @@
+.builder-panel {
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.current-page-indicator .alert {
+    margin-bottom: 0;
+}
+
+.global-settings {
+    border: 2px solid #e3f2fd;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8f9ff;
+}
+
+.page-specific-settings {
+    border: 2px solid #e8f5e8;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8fff8;
+}
+
+.preview-container {
+    height: 100vh;
+    overflow-y: auto;
+    border-left: 2px solid #e9ecef;
+}
+
+.preview-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.website-preview {
+    background: var(--body-bg-color);
+    color: var(--body-text-color);
+    min-height: calc(100vh - 80px);
+}
+
+/* Scrollbar styling */
+.builder-panel::-webkit-scrollbar,
+.preview-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.builder-panel::-webkit-scrollbar-track,
+.preview-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.builder-panel::-webkit-scrollbar-thumb,
+.preview-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.builder-panel::-webkit-scrollbar-thumb:hover,
+.preview-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

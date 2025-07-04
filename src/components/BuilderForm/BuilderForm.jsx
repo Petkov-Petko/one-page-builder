@@ -1,487 +1,346 @@
-import "./BuilderForm.css";
+import { useState } from 'react';
+import './BuilderForm.css';
 
-const BuilderForm = ({ formData, setFormData }) => {
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, logo: reader.result }));
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setFormData((prev) => ({ ...prev, logo: "" }));
-    }
+function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings, currentPage }) {
+  const [activeTab, setActiveTab] = useState('page');
+
+  const handleGlobalChange = (field, value) => {
+    setGlobalSettings(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
-  const handleFaviconChange = (e) => {
-    const file = e.target.files[0];
+
+  const handlePageChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleFileUpload = (field, file) => {
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({ 
-          ...prev, 
-          favicon: reader.result,
-          faviconName: file.name 
-        }));
+      reader.onload = (e) => {
+        if (field === 'logo') {
+          handleGlobalChange('logo', e.target.result);
+        } else if (field === 'favicon') {
+          handleGlobalChange('favicon', e.target.result);
+          handleGlobalChange('faviconName', file.name);
+        } else if (field === 'heroBg') {
+          handlePageChange('heroBg', e.target.result);
+        }
       };
       reader.readAsDataURL(file);
-    } else {
-      setFormData((prev) => ({ 
-        ...prev, 
-        favicon: "",
-        faviconName: ""
-      }));
     }
   };
 
   return (
-    <div className="form-container">
-      <h1 className="website-title">One Page Builder</h1>
-      <div className="header-editor">
-        <div className="row mb-3">
-          <div className="col-md-6 mb-3 mb-md-0">
-            <label className="form-label">Website Language</label>
+    <div className="builder-form">
+      <div className="form-tabs">
+        <button 
+          className={`tab-btn ${activeTab === 'page' ? 'active' : ''}`}
+          onClick={() => setActiveTab('page')}
+        >
+          Page Content
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'global' ? 'active' : ''}`}
+          onClick={() => setActiveTab('global')}
+        >
+          Global Settings
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'style' ? 'active' : ''}`}
+          onClick={() => setActiveTab('style')}
+        >
+          Styling
+        </button>
+      </div>
+
+      {activeTab === 'page' && (
+        <div className="tab-content">
+          <h3>{currentPage?.title || 'Page'} Content</h3>
+          
+          <div className="form-group">
+            <label>Page Title (SEO)</label>
             <input
               type="text"
               className="form-control"
-              value={formData.lang}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, lang: e.target.value }))
-              }
-              placeholder="e.g. en, fr, es"
+              value={formData.title || ''}
+              onChange={(e) => handlePageChange('title', e.target.value)}
+              placeholder="Page title for browser tab and SEO"
             />
           </div>
-          <div className="col-md-6">
-            <label className="form-label">Website Domain</label>
+
+          <div className="form-group">
+            <label>Meta Description</label>
+            <textarea
+              className="form-control"
+              rows="2"
+              value={formData.desc || ''}
+              onChange={(e) => handlePageChange('desc', e.target.value)}
+              placeholder="Brief description for search engines"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Hero Heading (H1)</label>
             <input
               type="text"
               className="form-control"
-              value={formData.domain || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, domain: e.target.value }))
-              }
-              placeholder="e.g. example.com"
+              value={formData.h1 || ''}
+              onChange={(e) => handlePageChange('h1', e.target.value)}
+              placeholder="Main heading that visitors see first"
             />
           </div>
+
+          <div className="form-group">
+            <label>Hero Subtext</label>
+            <textarea
+              className="form-control"
+              rows="3"
+              value={formData.afterH1 || ''}
+              onChange={(e) => handlePageChange('afterH1', e.target.value)}
+              placeholder="Text that appears below the main heading"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Hero Background Image</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => handleFileUpload('heroBg', e.target.files[0])}
+            />
+            {formData.heroBg && (
+              <div className="file-preview">
+                <img src={formData.heroBg} alt="Hero background" style={{maxWidth: '180px', maxHeight: '110px'}} />
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-danger ms-2"
+                  onClick={() => handlePageChange('heroBg', '')}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label>Main Content</label>
+            <textarea
+              className="form-control"
+              rows="12"
+              value={formData.mainContent || ''}
+              onChange={(e) => handlePageChange('mainContent', e.target.value)}
+              placeholder="HTML content for this page (use <h2> for sections, <p> for paragraphs)"
+            />
+            <small className="form-text text-muted">
+              Use HTML tags like &lt;h2&gt;Section Title&lt;/h2&gt; and &lt;p&gt;Paragraph text&lt;/p&gt;
+            </small>
+          </div>
         </div>
-        <div className="mb-3">
-          <label className="form-label">Website Title</label>
-          <input
-            type="text"
-            className="form-control"
-            value={formData.title}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, title: e.target.value }))
-            }
-            placeholder="Enter website title"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Website Description</label>
-          <textarea
-            className="form-control"
-            value={formData.desc}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, desc: e.target.value }))
-            }
-            placeholder="Enter website description"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Website Logo</label>
-          <input
-            type="file"
-            className="form-control"
-            accept="image/*"
-            onChange={handleLogoChange}
-          />
-          {formData.logo && (
-            <div className="mt-2">
-              <img
-                src={formData.logo}
-                alt="Logo Preview"
-                style={{ maxWidth: "120px", maxHeight: "120px" }}
+      )}
+
+      {activeTab === 'global' && (
+        <div className="tab-content">
+          <h3>Global Settings</h3>
+          
+          <div className="form-group">
+            <label>Website Domain</label>
+            <input
+              type="text"
+              className="form-control"
+              value={globalSettings.domain || ''}
+              onChange={(e) => handleGlobalChange('domain', e.target.value)}
+              placeholder="yourdomain.com"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Website Language</label>
+            <input
+              type="text"
+              className="form-control"
+              value={globalSettings.lang || 'en'}
+              onChange={(e) => handleGlobalChange('lang', e.target.value)}
+              placeholder="Language code (e.g., en, es, fr, de, etc.)"
+            />
+            <small className="form-text text-muted">
+              Enter the language code for your website (e.g., en for English, es for Spanish, fr for French)
+            </small>
+          </div>
+
+          <div className="form-group">
+            <label>Logo</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => handleFileUpload('logo', e.target.files[0])}
+            />
+            {globalSettings.logo && (
+              <div className="file-preview">
+                <img src={globalSettings.logo} alt="Logo" style={{maxWidth: '180px', maxHeight: '90px'}} />
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-danger ms-2"
+                  onClick={() => handleGlobalChange('logo', '')}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label>Favicon</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => handleFileUpload('favicon', e.target.files[0])}
+            />
+            {globalSettings.favicon && (
+              <div className="file-preview">
+                <img src={globalSettings.favicon} alt="Favicon" style={{maxWidth: '48px', maxHeight: '48px'}} />
+                <span className="ms-2">{globalSettings.faviconName}</span>
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-danger ms-2"
+                  onClick={() => {
+                    handleGlobalChange('favicon', '');
+                    handleGlobalChange('faviconName', '');
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={globalSettings.stickyNavbar || false}
+                onChange={(e) => handleGlobalChange('stickyNavbar', e.target.checked)}
               />
-              <button
-                type="button"
-                className="btn btn-sm btn-danger mt-2 ms-4"
-                onClick={() => setFormData((prev) => ({ ...prev, logo: "" }))}
-              >
-                X
-              </button>
+              <label className="form-check-label">
+                Sticky Navigation Bar
+              </label>
             </div>
-          )}
+          </div>
         </div>
-        <div className="mb-3">
-        <label className="form-label">Website Favicon</label>
-        <input
-          type="file"
-          className="form-control"
-          accept="image/*"
-          onChange={handleFaviconChange}
-        />
-        {formData.favicon && (
-          <div className="mt-2">
-            <img
-              src={formData.favicon}
-              alt="Favicon Preview"
-              style={{ maxWidth: "32px", maxHeight: "32px" }}
-            />
-            <button
-              type="button"
-              className="btn btn-sm btn-danger mt-2 ms-4"
-              onClick={() => setFormData((prev) => ({ 
-                ...prev, 
-                favicon: "",
-                faviconName: ""
-              }))}
+      )}
+
+      {activeTab === 'style' && (
+        <div className="tab-content">
+          <h3>Global Styling</h3>
+          <p className="text-muted">These styles apply to all pages</p>
+          
+          <div className="form-group">
+            <label>Font Family</label>
+            <select
+              className="form-control"
+              value={globalSettings.fontFamily || 'system'}
+              onChange={(e) => handleGlobalChange('fontFamily', e.target.value)}
             >
-              X
-            </button>
+              <option value="system">System Default</option>
+              <option value="Arial">Arial</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Verdana">Verdana</option>
+            </select>
           </div>
-        )}
-      </div>
-        <div className="mb-3">
-          <label className="form-label">Main Heading (h1)</label>
-          <input
-            type="text"
-            className="form-control"
-            value={formData.h1 || ""}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, h1: e.target.value }))
-            }
-            placeholder="Enter main heading"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Hero Background Image (optional)</label>
-          <input
-            type="file"
-            className="form-control"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setFormData((prev) => ({ ...prev, heroBg: reader.result }));
-                };
-                reader.readAsDataURL(file);
-              } else {
-                setFormData((prev) => ({ ...prev, heroBg: "" }));
-              }
-            }}
-          />
-          {formData.heroBg && (
-            <div className="mt-2">
-              <img
-                src={formData.heroBg}
-                alt="Hero Background Preview"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "120px",
-                  objectFit: "cover",
-                }}
-              />
-              <button
-                type="button"
-                className="btn btn-sm btn-danger mt-2 ms-3"
-                onClick={() => setFormData((prev) => ({ ...prev, heroBg: "" }))}
-              >
-                Remove Image
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Text after Heading</label>
-          <textarea
-            className="form-control"
-            rows={4}
-            value={formData.afterH1 || ""}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, afterH1: e.target.value }))
-            }
-            placeholder="Enter text after heading"
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">
-            Main Content (HTML only, e.g. &lt;h2&gt;...&lt;/h2&gt;,
-            &lt;p&gt;...&lt;/p&gt;)
-          </label>
-          <textarea
-            className="form-control"
-            rows={10}
-            value={formData.mainContent || ""}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, mainContent: e.target.value }))
-            }
-            placeholder="Enter main content"
-          />
-        </div>
-        <div className="form-style-section">
-          <h5
-            className="mb-4"
-            style={{ letterSpacing: "1px", color: "#4f46e5" }}
-          >
-            Style Options
-          </h5>
-          <div className="mb-3 d-flex align-items-center gap-4 flex-wrap">
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🎨</span>Body
-                Background Color
-              </label>
-              <input
-                type="color"
-                className="form-control form-control-color shadow"
-                value={formData.bodyBgColor || "#f8fafc"}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    bodyBgColor: e.target.value,
-                  }))
-                }
-                title="Choose body background color"
-                style={{
-                  width: 48,
-                  height: 48,
-                  border: "none",
-                  cursor: "pointer",
-                  background: "none",
-                }}
-              />
-            </div>
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🖍️</span>Text
-                Color
-              </label>
-              <input
-                type="color"
-                className="form-control form-control-color shadow"
-                value={formData.bodyTextColor || "#222222"}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    bodyTextColor: e.target.value,
-                  }))
-                }
-                title="Choose body text color"
-                style={{
-                  width: 48,
-                  height: 48,
-                  border: "none",
-                  cursor: "pointer",
-                  background: "none",
-                }}
-              />
-            </div>
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🔠</span>Headings
-                Color (h2)
-              </label>
-              <input
-                type="color"
-                className="form-control form-control-color shadow"
-                value={formData.headingColor || "#222222"}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    headingColor: e.target.value,
-                  }))
-                }
-                title="Choose headings color"
-                style={{
-                  width: 48,
-                  height: 48,
-                  border: "none",
-                  cursor: "pointer",
-                  background: "none",
-                }}
-              />
-            </div>
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🌈</span>Hero
-                Gradient Colors
-              </label>
-              <div className="d-flex align-items-center gap-2">
-                <input
-                  type="color"
-                  className="form-control form-control-color shadow"
-                  value={formData.heroGradient1 || "#667eea"}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      heroGradient1: e.target.value,
-                    }))
-                  }
-                  title="Choose first gradient color"
-                  style={{
-                    width: 48,
-                    height: 48,
-                    border: "none",
-                    cursor: "pointer",
-                    background: "none",
-                  }}
-                />
-                <span style={{ fontSize: 24, color: "#6366f1" }}>→</span>
-                <input
-                  type="color"
-                  className="form-control form-control-color shadow"
-                  value={formData.heroGradient2 || "#764ba2"}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      heroGradient2: e.target.value,
-                    }))
-                  }
-                  title="Choose second gradient color"
-                  style={{
-                    width: 48,
-                    height: 48,
-                    border: "none",
-                    cursor: "pointer",
-                    background: "none",
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: 8, fontSize: 13, color: "#6366f1" }}>
-                Pick two colors for the hero section gradient background
-              </div>
-            </div>
-            <div className="color-input-group">
-              <label
-                className="form-label"
-                style={{ fontWeight: 600, color: "#6366f1" }}
-              >
-                <span style={{ marginRight: 8, fontSize: 18 }}>🦶</span>Footer
-                Background Color
-              </label>
-              <input
-                type="color"
-                className="form-control form-control-color shadow"
-                value={formData.footerBgColor || "##0d0d0d"}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    footerBgColor: e.target.value,
-                  }))
-                }
-                title="Choose footer background color"
-                style={{
-                  width: 48,
-                  height: 48,
-                  border: "none",
-                  cursor: "pointer",
-                  background: "none",
-                }}
-              />
-            </div>
-            <div className="d-flex align-items-center gap-2 flex-wrap">
-              <div className="color-input-group">
-                <label
-                  className="form-label"
-                  style={{ fontWeight: 600, color: "#6366f1" }}
-                >
-                  <span style={{ marginRight: 8, fontSize: 18 }}>📌</span>Sticky
-                  Navbar
-                </label>
-                <div className="form-check form-switch mt-1">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="stickyNavbar"
-                    checked={!!formData.stickyNavbar}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        stickyNavbar: e.target.checked,
-                      }))
-                    }
-                  />
-                  <label className="form-check-label" htmlFor="stickyNavbar">
-                    Enable sticky navigation bar
-                  </label>
-                </div>
-              </div>
-              <div className="color-input-group">
-                <label
-                  className="form-label"
-                  style={{ fontWeight: 600, color: "#6366f1" }}
-                >
-                  <span style={{ marginRight: 8, fontSize: 18 }}>🔗</span>Link
-                  Color (a)
-                </label>
-                <input
-                  type="color"
-                  className="form-control form-control-color shadow"
-                  value={formData.linkColor || "#2563eb"}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      linkColor: e.target.value,
-                    }))
-                  }
-                  title="Choose link color"
-                  style={{
-                    width: 48,
-                    height: 48,
-                    border: "none",
-                    cursor: "pointer",
-                    background: "none",
-                  }}
-                />
-              </div>
-              <div className="color-input-group">
-                <label
-                  className="form-label"
-                  style={{ fontWeight: 600, color: "#6366f1" }}
-                >
-                  <span style={{ marginRight: 8, fontSize: 18 }}>🟦</span>Header
-                  Background Color
-                </label>
-                <input
-                  type="color"
-                  className="form-control form-control-color shadow"
-                  value={formData.headerBgColor || "#ffffff"}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      headerBgColor: e.target.value,
-                    }))
-                  }
-                  title="Choose header background color"
-                  style={{
-                    width: 48,
-                    height: 48,
-                    border: "none",
-                    cursor: "pointer",
-                    background: "none",
-                  }}
-                />
-              </div>
-            </div>
+
+          <div className="form-group">
+            <label>Body Background Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.bodyBgColor || '#f8fafc'}
+              onChange={(e) => handleGlobalChange('bodyBgColor', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Body Text Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.bodyTextColor || '#222222'}
+              onChange={(e) => handleGlobalChange('bodyTextColor', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Heading Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.headingColor || '#222222'}
+              onChange={(e) => handleGlobalChange('headingColor', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Link Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.linkColor || '#2563eb'}
+              onChange={(e) => handleGlobalChange('linkColor', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Header Background Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.headerBgColor || '#ffffff'}
+              onChange={(e) => handleGlobalChange('headerBgColor', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Hero Gradient Color 1</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.heroGradient1 || '#667eea'}
+              onChange={(e) => handleGlobalChange('heroGradient1', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Hero Gradient Color 2</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.heroGradient2 || '#764ba2'}
+              onChange={(e) => handleGlobalChange('heroGradient2', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Footer Background Color</label>
+            <input
+              type="color"
+              className="form-control"
+              value={globalSettings.footerBgColor || '#0d0d0d'}
+              onChange={(e) => handleGlobalChange('footerBgColor', e.target.value)}
+            />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
-};
+}
 
 export default BuilderForm;

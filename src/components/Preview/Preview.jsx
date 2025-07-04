@@ -1,19 +1,25 @@
 import "./Preview.css";
 import {
-  generateExportCss,
-  generateFunctionsPhp,
-  generateExportPhp,
+  generateMultiPageExport,
 } from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
-const Preview = ({ formData }) => {
-  async function handleDownloadZip(formData) {
+const Preview = ({ formData, globalSettings, pages, currentPage }) => {
+  async function handleDownloadZip() {
     const zip = new JSZip();
 
-    zip.file("index.php", generateExportPhp(formData));
-    zip.file("functions.php", generateFunctionsPhp(formData));
-    zip.file("style.css", generateExportCss(formData));
+    // Generate multi-page website files
+    const multiPageExport = generateMultiPageExport(pages, globalSettings);
+    
+    // Add all PHP files
+    Object.entries(multiPageExport.pages).forEach(([filename, content]) => {
+      zip.file(filename, content);
+    });
+    
+    // Add functions.php and style.css
+    zip.file("functions.php", multiPageExport.functions);
+    zip.file("style.css", multiPageExport.styles);
 
     // Add .htaccess
     zip.file(
@@ -26,10 +32,8 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # RewriteCond %{HTTP_HOST} !^www\\. [NC]
 # RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-#the following two lines are www to non-www redirect
 RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]
 RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
-
 
 RewriteRule ^index\\.php$ / [R=301,L]
 RewriteRule ^(.*)/index\\.php$ /$1/ [R=301,L]
@@ -41,14 +45,12 @@ ErrorDocument 404 /404.php
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R=301,L]
-#start remove .html + remove trailing slash
-#replace .html with .php for php websites
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.+)$ $1.php [L,QSA]
 
-#301 from example.com/page.html to example.com/page
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\\ /.*\\.php\\ HTTP/
 RewriteRule ^(.*)\\.php$ /$1 [R=301,L]
 
@@ -57,7 +59,7 @@ RewriteRule ^(.*)\\.php$ /$1 [R=301,L]
 RewriteBase /
 
 # rule 1: remove multiple leading slashes (directly after the TLD)
-RewriteCond %{THE_REQUEST} \\s/{2,}
+RewriteCond %{THE_REQUEST} \s/{2,}
 RewriteRule (.*) $1 [R=301,L]
 
 # rule 2: remove multiple slashes in the requested path
@@ -66,28 +68,33 @@ RewriteRule (.*) %1/%2 [R=301,L]
 </IfModule>
 `.trim(),
     );
-    // logo
-    if (formData.logo && formData.logo.startsWith("data:")) {
-      const res = await fetch(formData.logo);
+    
+    // Add images if they exist
+    if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
+      const res = await fetch(globalSettings.logo);
       const blob = await res.blob();
       zip.file("images/logo.svg", blob);
     }
-    // hero background
-    if (formData.heroBg && formData.heroBg.startsWith("data:")) {
-      const res = await fetch(formData.heroBg);
-      const blob = await res.blob();
-      zip.file("images/hero-bg.jpg", blob);
-    }
-    // favicon
-    if (formData.favicon && formData.favicon.startsWith("data:")) {
-      const res = await fetch(formData.favicon);
+    
+    if (globalSettings.favicon && globalSettings.favicon.startsWith("data:")) {
+      const res = await fetch(globalSettings.favicon);
       const blob = await res.blob();
       zip.file("images/favicon.png", blob);
     }
 
+    // Add hero backgrounds for each page that has one
+    for (const page of pages) {
+      if (page.formData.heroBg && page.formData.heroBg.startsWith("data:")) {
+        const res = await fetch(page.formData.heroBg);
+        const blob = await res.blob();
+        const filename = page.isHome ? "hero-bg.jpg" : `hero-bg-${page.slug}.jpg`;
+        zip.file(`images/${filename}`, blob);
+      }
+    }
+
     // Generate and trigger download
     zip.generateAsync({ type: "blob" }).then((content) => {
-      saveAs(content, "website.zip");
+      saveAs(content, `${globalSettings.domain || 'multi-page-website'}.zip`);
     });
   }
 
@@ -95,45 +102,48 @@ RewriteRule (.*) %1/%2 [R=301,L]
     ? "hero-section with-bg"
     : "hero-section gradient-bg";
 
-  // Use CSS variables for preview
+  // Generate navigation items
+  const visiblePages = pages.filter(page => !globalSettings.hiddenFromNav?.includes(page.id));
+  const customNavItems = globalSettings.customNavItems || [];
+
+  const currentYear = new Date().getFullYear();
+
   return (
-    <>
-      <div
-        className="website-preview"
-        lang={formData.lang}
-        style={{
-          ...(formData.bodyBgColor
-            ? { "--body-bg-color": formData.bodyBgColor }
-            : {}),
-          ...(formData.bodyTextColor
-            ? { "--body-text-color": formData.bodyTextColor }
-            : {}),
-          ...(formData.headingColor
-            ? { "--heading-color": formData.headingColor }
-            : {}),
-          ...(formData.fontFamily && formData.fontFamily !== "system"
-            ? { "--font-family": formData.fontFamily }
-            : {}),
-          ...(formData.heroGradient1
-            ? { "--hero-gradient1": formData.heroGradient1 }
-            : {}),
-          ...(formData.heroGradient2
-            ? { "--hero-gradient2": formData.heroGradient2 }
-            : {}),
-          ...(formData.linkColor ? { "--link-color": formData.linkColor } : {}),
-          ...(formData.headerBgColor
-            ? { "--header-bg-color": formData.headerBgColor }
-            : {}),
-        }}
-      >
-        {/* Navigation */}
-        <nav
-          className={`navbar navbar-expand-lg navbar-light bg-light${formData.stickyNavbar ? " sticky-top" : ""}`}
+    <div className="preview-container" 
+      style={{
+        '--body-bg-color': globalSettings.bodyBgColor || '#f8fafc',
+        '--body-text-color': globalSettings.bodyTextColor || '#222222',
+        '--heading-color': globalSettings.headingColor || '#222222',
+        '--hero-gradient-1': globalSettings.heroGradient1 || '#667eea',
+        '--hero-gradient-2': globalSettings.heroGradient2 || '#764ba2',
+        '--footer-bg-color': globalSettings.footerBgColor || '#0d0d0d',
+        '--link-color': globalSettings.linkColor || '#2563eb',
+        '--header-bg-color': globalSettings.headerBgColor || '#ffffff',
+        '--font-family': globalSettings.fontFamily && globalSettings.fontFamily !== 'system' ? globalSettings.fontFamily : 'system-ui',
+      }}
+    >
+      <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+        <div>
+          <h5 className="mb-0">Preview: {currentPage?.title || 'Untitled Page'}</h5>
+          <small className="text-muted">
+            {pages.length} page{pages.length !== 1 ? 's' : ''} total
+          </small>
+        </div>
+        <button 
+          className="btn btn-success"
+          onClick={handleDownloadZip}
         >
+          <i className="bi bi-download"></i> Download Multi-Page Site
+        </button>
+      </div>
+
+      <div className="website-preview" lang={globalSettings.lang || 'en'}>
+        {/* Navigation */}
+        <nav className={`navbar navbar-expand-lg navbar-light${globalSettings.stickyNavbar ? " sticky-top" : ""}`}>
           <div className="container-fluid">
             <a className="navbar-brand d-flex align-items-center" href="#">
               <img
-                src={formData.logo || "https://placehold.co/220x50"}
+                src={globalSettings.logo || "https://placehold.co/220x50"}
                 alt="Logo"
                 width="220"
                 height="50"
@@ -150,93 +160,98 @@ RewriteRule (.*) %1/%2 [R=301,L]
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div
-              className="collapse navbar-collapse justify-content-end"
-              id="navbarNav"
-            >
+            <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
               <ul className="navbar-nav">
-                <li className="nav-item">
-                  <a className="nav-link" aria-current="page" href="#section1">
-                    Home
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#section2">
-                    About
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#section3">
-                    Contact
-                  </a>
-                </li>
+                {visiblePages.map(page => (
+                  <li key={page.id} className="nav-item">
+                    <a 
+                      className={`nav-link ${page.id === currentPage?.id ? 'active' : ''}`}
+                      href={page.isHome ? "#" : `#${page.slug}`}
+                    >
+                      {page.navLabel || page.title}
+                    </a>
+                  </li>
+                ))}
+                {customNavItems.map(item => (
+                  <li key={item.id} className="nav-item">
+                    <a 
+                      className="nav-link"
+                      href={item.url}
+                      target={item.external ? "_blank" : "_self"}
+                      rel={item.external ? "noopener noreferrer" : ""}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </nav>
-        <header
+
+        {/* Hero Section */}
+        <section 
           className={heroClass}
-          style={
-            formData.heroBg
-              ? { backgroundImage: `url(${formData.heroBg})` }
-              : {
-                  background: `linear-gradient(135deg, ${formData.heroGradient1 || "#667eea"} 0%, ${formData.heroGradient2 || "#764ba2"} 100%)`,
-                }
-          }
+          style={formData.heroBg ? {
+            backgroundImage: `url(${formData.heroBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          } : {}}
         >
-          <div className="hero-content">
-            <h1 className="hero-title">{formData.h1 || "Main Heading"}</h1>
-            {formData.afterH1 && (
-              <div className="hero-afterh1">
-                {formData.afterH1.split("\n").map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
+          <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="row justify-content-center text-center">
+              <div className="col-lg-11">
+                <h1 className="display-4 fw-bold text-white mb-4">
+                  {formData.h1 || "Welcome to Your Website"}
+                </h1>
+                {formData.afterH1 && (
+                  <p className="lead text-white mb-4">
+                    {formData.afterH1}
+                  </p>
+                )}
               </div>
-            )}
+            </div>
           </div>
-        </header>
-        <main className="main-content container py-5">
-          {formData.mainContent ? (
-            <div dangerouslySetInnerHTML={{ __html: formData.mainContent }} />
-          ) : (
-            <div className="no-content">No main content yet.</div>
-          )}
+        </section>
+
+        {/* Main Content */}
+        <main className="container my-5">
+          <div className="row">
+            <div className="col-lg-12">
+              {formData.mainContent ? (
+                <div
+                  className="content-area"
+                  dangerouslySetInnerHTML={{ __html: formData.mainContent }}
+                />
+              ) : (
+                <div className="text-center text-muted py-5">
+                  <h3>No content added yet</h3>
+                  <p>Add some content to see it here</p>
+                </div>
+              )}
+            </div>
+          </div>
         </main>
-        <footer
-          className="accent-background footer"
-          id="footer"
-          style={
-            formData.footerBgColor
-              ? { background: formData.footerBgColor }
-              : undefined
-          }
-        >
-          <div className="container-fluid mt-4 pb-3">
-            <div className="d-flex justify-content-center flex-column flex-md-row justify-content-md-between align-items-center">
-              <p className="text-center mb-2 mb-md-0">
-                © <span>Copyright</span> {new Date().getFullYear()}
-                <a href="/" className="px-1 sitename">
-                  {formData.domain || "domain.com"}
-                </a>
-                <span>All Rights reserved</span>
-              </p>
-              <div className="d-flex flex-column flex-md-row justify-content-center  align-items-center gap-3">
+
+        {/* Footer */}
+        <footer className="footer mt-auto py-4">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
                 <p className="mb-0">
-                  Email: info[@]{formData.domain || "domain.com"}
+                  © {currentYear} {globalSettings.domain || "Your Website"}. All rights reserved.
                 </p>
+              </div>
+              <div className="col-md-6 text-md-end">
+                <span className="me-3">Email: info[@]{globalSettings.domain || 'domain.com'}</span>
                 <a href="/privacy">Privacy Policy</a>
               </div>
             </div>
           </div>
         </footer>
       </div>
-      <button
-        className="cool-ai-btn"
-        onClick={() => handleDownloadZip(formData)}
-      >
-        Download Files
-      </button>
-    </>
+    </div>
   );
 };
 
