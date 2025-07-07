@@ -242,6 +242,11 @@ h3 {
 p {
   margin-bottom: 0.5rem !important;
 }
+  
+  section {
+  padding: 15px 0;
+}
+
 .navbar {
   background-color: var(--header-bg-color) !important;
   ${globalSettings.stickyNavbar ? 'position: sticky; top: 0; z-index: 1020;' : ''}
@@ -258,6 +263,7 @@ p {
 }
 
 .hero-section.with-bg {
+  background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -384,8 +390,7 @@ main {
 }
 
 function generatePagePhp(page, globalSettings) {
-  const heroClass = page.formData.heroBg ? 'hero-section with-bg' : 'hero-section gradient-bg';
-  const heroStyle = page.formData.heroBg ? `style="background-image: url('/images/hero-bg${page.isHome ? '' : '-' + page.slug}.jpg');"` : '';
+  const heroClass = globalSettings.heroBg ? 'hero-section with-bg' : 'hero-section gradient-bg';
 
   return `<?php
 require_once 'functions.php';
@@ -393,7 +398,7 @@ require_once 'functions.php';
 echo site_header("${page.formData.title || page.title}", "${page.formData.desc || ''}", '${globalSettings.lang || 'en'}');
 ?>
 
-<section class="${heroClass}" ${heroStyle}>
+<section class="${heroClass}">
   <div class="container">
     <div class="justify-content-center text-center">
         <h1 class="text-white">
