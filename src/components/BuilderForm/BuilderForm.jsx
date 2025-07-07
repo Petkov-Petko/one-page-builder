@@ -28,7 +28,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
           handleGlobalChange('favicon', e.target.result);
           handleGlobalChange('faviconName', file.name);
         } else if (field === 'heroBg') {
-          handlePageChange('heroBg', e.target.result);
+          handleGlobalChange('heroBg', e.target.result);
         }
       };
       reader.readAsDataURL(file);
@@ -106,27 +106,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             />
           </div>
 
-          <div className="form-group">
-            <label>Hero Background Image</label>
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={(e) => handleFileUpload('heroBg', e.target.files[0])}
-            />
-            {formData.heroBg && (
-              <div className="file-preview">
-                <img src={formData.heroBg} alt="Hero background" style={{maxWidth: '180px', maxHeight: '110px'}} />
-                <button 
-                  type="button" 
-                  className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handlePageChange('heroBg', '')}
-                >
-                  Remove
-                </button>
-              </div>
-            )}
-          </div>
+
 
           <div className="form-group">
             <label>Main Content</label>
@@ -233,6 +213,28 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
                 Sticky Navigation Bar
               </label>
             </div>
+          </div>
+
+          <div className="form-group">
+            <label>Hero Background Image (All Pages)</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              onChange={(e) => handleFileUpload('heroBg', e.target.files[0])}
+            />
+            {globalSettings.heroBg && (
+              <div className="file-preview">
+                <img src={globalSettings.heroBg} alt="Hero background" style={{maxWidth: '180px', maxHeight: '110px'}} />
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-danger ms-2"
+                  onClick={() => handleGlobalChange('heroBg', '')}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -82,14 +82,11 @@ RewriteRule (.*) %1/%2 [R=301,L]
       zip.file("images/favicon.png", blob);
     }
 
-    // Add hero backgrounds for each page that has one
-    for (const page of pages) {
-      if (page.formData.heroBg && page.formData.heroBg.startsWith("data:")) {
-        const res = await fetch(page.formData.heroBg);
-        const blob = await res.blob();
-        const filename = page.isHome ? "hero-bg.jpg" : `hero-bg-${page.slug}.jpg`;
-        zip.file(`images/${filename}`, blob);
-      }
+    // Add hero background if it exists
+    if (globalSettings.heroBg && globalSettings.heroBg.startsWith("data:")) {
+      const res = await fetch(globalSettings.heroBg);
+      const blob = await res.blob();
+      zip.file("images/hero-bg.jpg", blob);
     }
 
     // Generate and trigger download
@@ -98,7 +95,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
     });
   }
 
-  const heroClass = formData.heroBg
+  const heroClass = globalSettings.heroBg
     ? "hero-section with-bg"
     : "hero-section gradient-bg";
 
@@ -192,8 +189,8 @@ RewriteRule (.*) %1/%2 [R=301,L]
         {/* Hero Section */}
         <section 
           className={heroClass}
-          style={formData.heroBg ? {
-            backgroundImage: `url(${formData.heroBg})`,
+          style={globalSettings.heroBg ? {
+            backgroundImage: `url(${globalSettings.heroBg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
