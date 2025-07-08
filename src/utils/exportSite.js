@@ -373,6 +373,9 @@ a:hover {
   display: flex;
   justify-content: center;
 }` : ""}
+.error_page {
+  min-height: 70vh;
+}
 `;
 }
 

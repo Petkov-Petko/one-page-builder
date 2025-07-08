@@ -4,6 +4,7 @@ import {
 } from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { export404 } from "../../utils/export404";
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
   async function handleDownloadZip() {
@@ -20,7 +21,8 @@ const Preview = ({ formData, globalSettings, pages, currentPage }) => {
     // Add functions.php and style.css
     zip.file("functions.php", multiPageExport.functions);
     zip.file("style.css", multiPageExport.styles);
-
+    // Add 404.php
+    zip.file("404.php", export404());
     // Add .htaccess
     zip.file(
       ".htaccess",
