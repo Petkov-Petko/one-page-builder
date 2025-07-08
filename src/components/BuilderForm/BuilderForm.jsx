@@ -152,6 +152,23 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               Enter the language code for your website (e.g., en for English, es for Spanish, fr for French)
             </small>
           </div>
+          <div className="form-group">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={globalSettings.sidebar || false}
+                onChange={(e) => handleGlobalChange('sidebar', e.target.checked)}
+                id="sidebarCheckbox"
+              />
+              <label className="form-check-label " htmlFor="sidebarCheckbox">
+                Enable Sidebar
+              </label>
+            </div>
+            <small className="form-text text-muted">
+              Check to display a sidebar on all pages. Default is off.
+            </small>
+          </div>
 
           <div className="form-group">
             <label>Logo</label>
