@@ -118,14 +118,19 @@ function site_header($title, $description, $lang = 'en')
       ob_start(); ?>
     
       <div class="col-lg-4 col-xl-3 pt-3 d-flex flex-column align-items-center">
-      ${pages.length > 0 ? `  
+      ${pages.length > 1 ? `  
           <div>
           <h2>Quick Links</h2>
             <ul class="sidebar-page-list">
               ${sidebarLinks}
             </ul>
       </div>` : ""}
-    
+          <div class="x mb-3">
+        <blockquote class="twitter-tweet">
+          <p lang="pt" dir="ltr">Varna, Bulgaria 🇧🇬 <a href="https://t.co/e2MyIvZY4O">pic.twitter.com/e2MyIvZY4O</a></p>&mdash; Digital Nomad Destinations (@Nomad_Destiny) <a href="https://twitter.com/Nomad_Destiny/status/1941950564067164491?ref_src=twsrc%5Etfw">July 6, 2025</a>
+        </blockquote>
+        <script async src="https://platform.twitter.com/widgets.js"></script>
+      </div>
         <div class="mb-2">
           <iframe width="279" height="330" class="rounded" src="https://www.youtube.com/embed/N6SY8uqaPZI" title="In 2022, the Brazilian Congress broke the record for changes to the country’s Constitution"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
@@ -360,6 +365,14 @@ a:hover {
   color: #ffffff;
   padding-left: 11px;
 }
+  ${globalSettings.sidebar ? `.twitter-tweet {
+  width: 270px !important;
+}
+
+.x {
+  display: flex;
+  justify-content: center;
+}` : ""}
 `;
 }
 
