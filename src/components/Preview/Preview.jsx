@@ -5,9 +5,11 @@ import {
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { export404 } from "../../utils/export404";
+import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
+import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
-  async function handleDownloadZip() {
+  async function handleDownloadZip() {    
     const zip = new JSZip();
 
     // Generate multi-page website files
@@ -23,6 +25,26 @@ const Preview = ({ formData, globalSettings, pages, currentPage }) => {
     zip.file("style.css", multiPageExport.styles);
     // Add 404.php
     zip.file("404.php", export404());
+    // Add privacy or terms
+    if(globalSettings.privacyOrTerms === 'privacy') {
+      switch (globalSettings.privacyOption) {
+        case '1':
+          zip.file("privacy.php", exportPrivacy1(globalSettings.email, globalSettings.url, globalSettings.country, globalSettings.name));
+          break;
+        case '2':
+          zip.file("privacy.php", exportPrivacy2(globalSettings.email, globalSettings.url, globalSettings.country, globalSettings.name));
+          break;
+      }
+    }else if(globalSettings.privacyOrTerms === 'terms') {
+      switch (globalSettings.termsOption) {
+        case '1':
+          zip.file("terms.php", exportTerms1(globalSettings.email, globalSettings.url, globalSettings.country, globalSettings.name));
+          break;
+          case '2':
+          zip.file("terms.php", exportTerms2(globalSettings.email, globalSettings.url, globalSettings.country, globalSettings.name));
+          break;
+      }
+    }
     // Add .htaccess
     zip.file(
       ".htaccess",
@@ -243,8 +265,8 @@ RewriteRule (.*) %1/%2 [R=301,L]
                 </p>
               </div>
               <div className="col-md-6 text-md-end">
-                <span className="me-3">Email: info[@]{globalSettings.domain || 'domain.com'}</span>
-                <a href="/privacy">Privacy Policy</a>
+                <span className="me-3">Email: {globalSettings.email || `info[@]${globalSettings.domain || 'domain.com'}`}</span>
+                <a href="#">{globalSettings.privacyOrTerms === "privacy" ? 'Privacy Policy' : "Terms & Conditions"}</a>
               </div>
             </div>
           </div>

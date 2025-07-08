@@ -56,6 +56,12 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
         >
           Styling
         </button>
+        <button 
+          className={`tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
+          onClick={() => setActiveTab('privacy')}
+        >
+          Privacy or Terms
+        </button>
       </div>
 
       {activeTab === 'page' && (
@@ -138,6 +144,16 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               placeholder="yourdomain.com"
             />
           </div>
+          <div className='form-group'>
+            <label>Website Name</label>
+            <input
+            type='text'
+            className='form-control'
+            value={globalSettings.name || ''}
+            onChange={(e) => handleGlobalChange('name', e.target.value)}
+            placeholder='Your Website Name'
+            />
+          </div>
 
           <div className="form-group">
             <label>Website Language</label>
@@ -150,6 +166,19 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             />
             <small className="form-text text-muted">
               Enter the language code for your website (e.g., en for English, es for Spanish, fr for French)
+            </small>
+          </div>
+          <div className="form-group">
+            <label>Website Email</label>
+            <input
+              type="email"
+              className="form-control"
+              value={globalSettings.email || ''}
+              onChange={(e) => handleGlobalChange('email', e.target.value)}
+              placeholder="Website contact email"
+            />
+            <small className="form-text text-muted">
+              This email will be used in footer and Terms or Privacy pages.
             </small>
           </div>
           <div className="form-group">
@@ -360,6 +389,69 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
           </div>
         </div>
       )}
+      {activeTab === 'privacy' && (
+        <div className="tab-content">
+          <div className="form-group">
+            <label>Select Page Type</label>
+            <select
+              className="form-control"
+              value={globalSettings.privacyOrTerms || 'privacy'}
+              onChange={e => handleGlobalChange('privacyOrTerms', e.target.value)}
+            >
+              <option value="privacy">Privacy Policy</option>
+              <option value="terms">Terms &amp; Conditions</option>
+            </select>
+          </div>
+          <div className='form-group'>
+            <label>Website full URL</label>
+            <input
+              type="text"
+              className="form-control"
+              value={globalSettings.url || ''}
+              onChange={e => handleGlobalChange('url', e.target.value)}
+              placeholder="Enter your website URL (e.g., https://yourdomain.com)"
+            />
+          </div>
+          <div>
+            <div className="form-group">
+              <label>Country</label>
+              <input
+                type="text"
+                className="form-control"
+                value={globalSettings.country || ''}
+                onChange={e => handleGlobalChange('country', e.target.value)}
+                placeholder="Enter country (e.g., United States)"
+              />
+            </div>
+          </div>
+          <div>
+      {globalSettings.privacyOrTerms === 'privacy' ? (
+          <div className="form-group">
+            <label>Choose privacy style type</label>
+            <select
+              className="form-control"
+              value={globalSettings.privacyOption || '1'}
+              onChange={e => handleGlobalChange('privacyOption', e.target.value)}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+      ) : (
+        <div className="form-group">
+        <label>Choose terms style type</label>
+        <select
+          className="form-control"
+          value={globalSettings.privacyOption || '1'}
+          onChange={e => handleGlobalChange('termsOption', e.target.value)}
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      )}
+          </div>
+          </div>)}
     </div>
   );
 }

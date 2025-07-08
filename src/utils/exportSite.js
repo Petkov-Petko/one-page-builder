@@ -93,7 +93,7 @@ function site_header($title, $description, $lang = 'en')
 <nav class="navbar navbar-expand-xl navbar-light${globalSettings.stickyNavbar ? ' sticky-top' : ''}">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" href="/">
-      <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.domain || 'Website'}" width="220" height="50">
+      <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.name || globalSettings.domain || 'Domain'}" width="220" height="50">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -155,8 +155,8 @@ function site_footer()
         <p class="mb-0">© Copyright <?php echo date('Y'); ?> ${globalSettings.domain || 'Your Website'}. All rights reserved.</p>
       </div>
       <div class="col-md-6 text-md-end text-center d-flex flex-column flex-md-row justify-content-center justify-content-md-end">
-      <span class="me-3">Email: info[@]${globalSettings.domain || 'domain.com'}</span>
-        <a href="/privacy">Privacy Policy</a>
+      <span class="me-3">Email: ${globalSettings.email || `info[@]${globalSettings.domain || 'domain.com'}`}</span>
+        <a href="${globalSettings.privacyOrTerms === "privacy" ? '/privacy' : '/terms'}">${globalSettings.privacyOrTerms === "privacy" ? 'Privacy Policy' : 'Terms & Conditions'}</a>
       </div>
     </div>
   </div>
