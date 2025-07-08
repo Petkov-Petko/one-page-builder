@@ -44,7 +44,10 @@ function App() {
     footerBgColor: "#0d0d0d",
     linkColor: "#2563eb",
     headerBgColor: "#ffffff",
-    stickyNavbar: true
+    stickyNavbar: true,
+    privacyOrTerms : 'privacy',
+    privacyOption : '1',
+    termsOption : '1',
   });
 
   // Get current page data
