@@ -12,10 +12,19 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
   const handleAddPage = () => {
     if (!newPageData.title.trim() || !newPageData.slug.trim()) return;
     
+    const normalizedSlug = newPageData.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    
+    // Check if a page with this slug already exists
+    const slugExists = pages.some(page => page.slug === normalizedSlug);
+    if (slugExists) {
+      alert(`A page with the slug "${normalizedSlug}" already exists. Please choose a different slug.`);
+      return;
+    }
+    
     const newPage = {
       id: Date.now().toString(),
       title: newPageData.title,
-      slug: newPageData.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+      slug: normalizedSlug,
       navLabel: newPageData.navLabel || newPageData.title,
       isHome: pages.length === 0,
       formData: {
