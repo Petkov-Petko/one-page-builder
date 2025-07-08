@@ -109,7 +109,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
 
 
           <div className="form-group">
-            <label>Main Content</label>
+            <label>Main Content(The content must be valid HTML. For example: <code>&lt;h2&gt;Heading&lt;/h2&gt;</code>)</label>
             <textarea
               className="form-control"
               rows="12"
