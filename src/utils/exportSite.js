@@ -72,12 +72,12 @@ function generateMultiPageFunctions(globalSettings, navigationHtml, pages) {
   }).join('\n              ');
 
   return `<?php
-function site_header($title, $description, $lang = 'en')
+function site_header($title, $description)
 {
   $canonical = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
   ob_start(); ?>
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="${globalSettings.lang || 'en'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -260,7 +260,7 @@ p {
   z-index: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h2, h3 {
   color: var(--heading-color);
 }
 
@@ -385,7 +385,7 @@ function generatePagePhp(page, globalSettings) {
   return `<?php
 require_once 'functions.php';
 
-echo site_header("${page.formData.title || page.title}", "${page.formData.desc || ''}", '${globalSettings.lang || 'en'}');
+echo site_header("${page.formData.title || page.title}", "${page.formData.desc || ''}");
 ?>
 
 <section class="${heroClass}">

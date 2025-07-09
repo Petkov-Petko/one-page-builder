@@ -328,7 +328,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
           </div>
 
           <div className="form-group">
-            <label>Heading Color(h2)</label>
+            <label>Headings Color</label>
             <input
               type="color"
               className="form-control"
