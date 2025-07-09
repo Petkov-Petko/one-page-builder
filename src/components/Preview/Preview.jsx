@@ -7,6 +7,7 @@ import { saveAs } from "file-saver";
 import { export404 } from "../../utils/export404";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
+import { exportRobots } from "../../utils/exportRobots";
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
   async function handleDownloadZip() {    
@@ -25,6 +26,10 @@ const Preview = ({ formData, globalSettings, pages, currentPage }) => {
     zip.file("style.css", multiPageExport.styles);
     // Add 404.php
     zip.file("404.php", export404());
+    // Add robots.txt
+    if(pages.length > 1) {
+      zip.file("robots.txt", exportRobots(globalSettings.url));
+    }
     // Add privacy or terms
     if(globalSettings.privacyOrTerms === 'privacy') {
       switch (globalSettings.privacyOption) {
