@@ -394,7 +394,7 @@ echo site_header("${page.formData.title || page.title}", "${page.formData.desc |
         <h1 class="text-white">
           ${page.formData.h1 || page.title}
         </h1>
-        ${page.formData.afterH1 ? `<p class="text-white mb-4">${page.formData.afterH1}</p>` : ''}
+        ${page.formData.afterH1 ? `<div class="text-white">${page.formData.afterH1}</div>` : ''}
     </div>
   </div>
 </section>

@@ -232,9 +232,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
                   {formData.h1 || "Welcome to Your Website"}
                 </h1>
                 {formData.afterH1 && (
-                  <p className="lead text-white mb-4">
-                    {formData.afterH1}
-                  </p>
+                  <div className="text-white" dangerouslySetInnerHTML={{ __html: formData.afterH1 }} />
                 )}
               </div>
             </div>

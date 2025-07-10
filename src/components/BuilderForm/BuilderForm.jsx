@@ -102,7 +102,7 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
           </div>
 
           <div className="form-group">
-            <label>Hero Subtext</label>
+            <label>Hero Subtext(The subtext must be valid HTML. For example: <code>&lt;p&gt;Text&lt;/p&gt;</code>)</label>
             <textarea
               className="form-control"
               rows="3"
