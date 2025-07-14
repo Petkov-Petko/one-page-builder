@@ -264,11 +264,11 @@ h2, h3 {
   color: var(--heading-color);
 }
 
-a {
+.content-area a {
   color: var(--link-color) !important;
 }
 
-a:hover {
+.content-area a:hover {
   color: var(--link-color);
   opacity: 0.8;
 }
@@ -292,7 +292,7 @@ a:hover {
   }
 }
   /* Mobile nav */
-@media (max-width: 1200px) {
+@media (max-width: 1199.98px) {
   .navbar-collapse {
     position: fixed;
     top: 61px;
@@ -362,11 +362,10 @@ a:hover {
 }
 
 .sidebar-page-list li a:hover {
-  color: #ffffff;
   padding-left: 11px;
 }
   ${globalSettings.sidebar ? `.twitter-tweet {
-  width: 270px !important;
+  width: 279px !important;
 }
 
 .x {
