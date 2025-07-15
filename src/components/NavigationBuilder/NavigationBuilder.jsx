@@ -6,7 +6,6 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
   const [newCustomLink, setNewCustomLink] = useState({
     label: '',
     url: '',
-    external: false
   });
 
   const handleAddCustomLink = () => {
@@ -17,7 +16,6 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
       id: Date.now().toString(),
       label: newCustomLink.label,
       url: newCustomLink.url,
-      external: newCustomLink.external
     };
 
     setGlobalSettings(prev => ({
@@ -25,7 +23,7 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
       customNavItems: [...customNavItems, newItem]
     }));
 
-    setNewCustomLink({ label: '', url: '', external: false });
+    setNewCustomLink({ label: '', url: '' });
     setShowAddCustomLink(false);
   };
 
@@ -106,7 +104,7 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
           </button>
         </div>
         <p className="text-muted small mb-3">
-          Add external links or custom navigation items
+          Add custom navigation items
         </p>
 
         {showAddCustomLink && (
@@ -138,21 +136,6 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
                   />
                 </div>
               </div>
-              <div className="form-check mb-3">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="external-link"
-                  checked={newCustomLink.external}
-                  onChange={(e) => setNewCustomLink(prev => ({
-                    ...prev,
-                    external: e.target.checked
-                  }))}
-                />
-                <label className="form-check-label" htmlFor="external-link">
-                  External link (opens in new tab)
-                </label>
-              </div>
               <div className="d-flex gap-2">
                 <button 
                   className="btn btn-success btn-sm"
@@ -165,7 +148,7 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
                   className="btn btn-secondary btn-sm"
                   onClick={() => {
                     setShowAddCustomLink(false);
-                    setNewCustomLink({ label: '', url: '', external: false });
+                    setNewCustomLink({ label: '', url: '' });
                   }}
                 >
                   Cancel
@@ -182,7 +165,6 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
                 <div className="custom-link-info">
                   <div className="custom-link-label">
                     {item.label}
-                    {item.external && <span className="external-badge">EXTERNAL</span>}
                   </div>
                   <div className="custom-link-url">{item.url}</div>
                 </div>
