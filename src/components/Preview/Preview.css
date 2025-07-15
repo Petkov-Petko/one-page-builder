@@ -26,6 +26,7 @@
     --link-color: #2563eb;
     --header-bg-color: #ffffff;
     --font-family: system-ui;
+    --nav-link-color: #141414;
 }
 
 .website-preview {
@@ -239,7 +240,7 @@ p {
 .website-preview .custom-dropdown .dropdown-item {
     padding: .75rem 1.5rem;
     transition: all .3s ease;
-    color: #333 !important;
+    color: var(--nav-link-color, #141414) !important;
     font-weight: 500;
     border-radius: 0;
     text-wrap: wrap
@@ -290,4 +291,8 @@ p {
 .website-preview .dropdown-item.active,
 .website-preview .dropdown-item:active {
     background-color: rgba(0, 0, 0, 0.055);
+}
+
+.nav-item a {
+    color: var(--nav-link-color, #141414) !important;
 }

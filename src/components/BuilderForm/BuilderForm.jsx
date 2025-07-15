@@ -336,7 +336,7 @@ function BuilderForm({
           <div className="style-section">
             <h4 className="section-title">Header</h4>
             <div className="row">
-              <div className="col-lg-4">
+              <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
                   <label>Header Background Color</label>
                   <input
@@ -349,7 +349,7 @@ function BuilderForm({
                   />
                 </div>
               </div>
-              <div className="col-lg-4">
+              <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
                   <label>Hero Gradient Color 1</label>
                   <input
@@ -362,7 +362,7 @@ function BuilderForm({
                   />
                 </div>
               </div>
-              <div className="col-lg-4">
+              <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
                   <label>Hero Gradient Color 2</label>
                   <input
@@ -371,6 +371,19 @@ function BuilderForm({
                     value={globalSettings.heroGradient2 || "#764ba2"}
                     onChange={(e) =>
                       handleGlobalChange("heroGradient2", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4 col-xl-3">
+                <div className="form-group">
+                  <label>Nav links color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.navLinkColor || "#222222"}
+                    onChange={(e) =>
+                      handleGlobalChange("navLinkColor", e.target.value)
                     }
                   />
                 </div>

@@ -202,6 +202,7 @@ function generateMultiPageCss(pages, globalSettings) {
   --link-color: ${globalSettings.linkColor || '#2563eb'};
   --header-bg-color: ${globalSettings.headerBgColor || '#ffffff'};
   --font-family: ${globalSettings.fontFamily && globalSettings.fontFamily !== 'system' ? globalSettings.fontFamily : 'system-ui'};
+  --nav-link-color: ${globalSettings.navLinkColor || '#141414'};
 }
 
 body {
@@ -309,6 +310,9 @@ h2, h3 {
     font-size: 2rem;
   }
 }
+  .navbar-light .navbar-nav .nav-link {
+    color: var(--nav-link-color, #141414) !important;
+  }
   /* Mobile nav */
 @media (max-width: 1199.98px) {
   .navbar-collapse {
@@ -381,7 +385,7 @@ h2, h3 {
 .custom-dropdown .dropdown-item {
   padding: .75rem 1.5rem;
   transition: all .3s ease;
-  color: #333 !important;
+  color: var(--nav-link-color, #141414) !important;
   font-weight: 500;
   border-radius: 0;
   text-wrap: wrap

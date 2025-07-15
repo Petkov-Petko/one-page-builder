@@ -186,6 +186,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
           globalSettings.fontFamily && globalSettings.fontFamily !== "system"
             ? globalSettings.fontFamily
             : "system-ui",
+        "--nav-link-color": globalSettings.navLinkColor || "#141414",
       }}
     >
       <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
