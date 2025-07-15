@@ -30,15 +30,33 @@ export function generateMultiPageExport(pages, globalSettings) {
   const generateNavigation = () => {
     let navHtml = '';
 
-    visiblePages.forEach(page => {
-      const href = page.isHome ? '/' : `/${page.slug}`;
-      navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.navLabel || page.title}</a></li>\n`;
+    // Group pages by parent
+    const topLevelPages = visiblePages.filter(page => !page.parentId);
+    const childPages = visiblePages.filter(page => page.parentId);
+
+    topLevelPages.forEach(page => {
+      if (page.isDropdownParent) {
+        // Create dropdown
+        const children = childPages.filter(child => child.parentId === page.id);
+        navHtml += `
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="/${page.slug}" role="button">
+            ${page.navLabel || page.title}
+          </a>
+          <ul class="custom-dropdown dropdown-menu">
+            ${children.map(child =>
+          `<li><a class="dropdown-item" href="/${child.slug}">${child.navLabel || child.title}</a></li>`
+        ).join('\n')}
+          </ul>
+        </li>
+      `;
+      } else {
+        // Regular nav item
+        const href = page.isHome ? '/' : `/${page.slug}`;
+        navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.navLabel || page.title}</a></li>\n`;
+      }
     });
 
-    customNavItems.forEach(item => {
-      const target = item.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-      navHtml += `<li class="nav-item"><a class="nav-link" href="${item.url}"${target}>${item.label}</a></li>\n`;
-    });
     return navHtml;
   };
 
@@ -91,7 +109,7 @@ function site_header($title, $description)
 </head>
 <body>
 <nav class="navbar navbar-expand-xl navbar-light${globalSettings.stickyNavbar ? ' sticky-top' : ''}">
-  <div class="container-fluid">
+  <div class="container">
     <a class="navbar-brand d-flex align-items-center" href="/">
       <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.name || globalSettings.domain || 'Domain'}" width="220" height="50">
     </a>
@@ -332,6 +350,11 @@ h2, h3 {
     position: relative;
   }
 }
+
+/* dropdown */
+.dropdown-menu{top:100%; left: 50% !important; transform: translateX(-50%);}.navbar .dropdown-toggle::after{transition:transform .3s ease}.dropdown:hover .dropdown-toggle::after{transform:rotate(180deg)}.custom-dropdown{border:0;box-shadow:0 10px 40px rgba(0,0,0,.15);border-radius:12px;padding:.5rem 0;margin-top:.5rem;min-width:220px;background:rgba(255,255,255,.98);backdrop-filter:blur(10px)}.custom-dropdown .dropdown-item{padding:.75rem 1.5rem;transition:all .3s ease;color:#333!important;font-weight:500;border-radius:0;text-wrap:wrap}.custom-dropdown .dropdown-item:hover{color:#fff;border-radius:8px}.custom-dropdown .dropdown-item i{width:16px;color:#6c757d;transition:color .3s ease}.custom-dropdown .dropdown-item:hover i{color:#fff}.dropdown-menu{opacity:0;transition:all .3s ease;display:block;visibility:hidden}.dropdown-menu.show{opacity:1;transform:translateY(0);visibility:visible}@media (min-width:1199.98px){.custom-dropdown{max-width:200px}}@media (max-width:1199.98px){.custom-dropdown{background:#f8f9fa;box-shadow:none;border-radius:0;margin-top:0;border-top:1px solid #dee2e6}.custom-dropdown .dropdown-item:hover{margin:0;border-radius:0;transform:none}}.dropdown-menu:hover,.dropdown:hover .dropdown-menu{display:block!important;visibility:visible;opacity:1}
+
+
   .sidebar-page-list {
   padding: 0;
   margin: 0;
@@ -375,6 +398,8 @@ h2, h3 {
 .error_page {
   min-height: 70vh;
 }
+
+
 `;
 }
 
