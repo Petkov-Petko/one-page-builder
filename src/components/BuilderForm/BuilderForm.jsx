@@ -1,20 +1,26 @@
-import { useState } from 'react';
-import './BuilderForm.css';
+import { useState } from "react";
+import "./BuilderForm.css";
 
-function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings, currentPage }) {
-  const [activeTab, setActiveTab] = useState('page');
+function BuilderForm({
+  formData,
+  setFormData,
+  globalSettings,
+  setGlobalSettings,
+  currentPage,
+}) {
+  const [activeTab, setActiveTab] = useState("page");
 
   const handleGlobalChange = (field, value) => {
-    setGlobalSettings(prev => ({
+    setGlobalSettings((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handlePageChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -22,13 +28,13 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        if (field === 'logo') {
-          handleGlobalChange('logo', e.target.result);
-        } else if (field === 'favicon') {
-          handleGlobalChange('favicon', e.target.result);
-          handleGlobalChange('faviconName', file.name);
-        } else if (field === 'heroBg') {
-          handleGlobalChange('heroBg', e.target.result);
+        if (field === "logo") {
+          handleGlobalChange("logo", e.target.result);
+        } else if (field === "favicon") {
+          handleGlobalChange("favicon", e.target.result);
+          handleGlobalChange("faviconName", file.name);
+        } else if (field === "heroBg") {
+          handleGlobalChange("heroBg", e.target.result);
         }
       };
       reader.readAsDataURL(file);
@@ -38,43 +44,43 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
   return (
     <div className="builder-form">
       <div className="form-tabs">
-        <button 
-          className={`tab-btn ${activeTab === 'page' ? 'active' : ''}`}
-          onClick={() => setActiveTab('page')}
+        <button
+          className={`tab-btn ${activeTab === "page" ? "active" : ""}`}
+          onClick={() => setActiveTab("page")}
         >
           Page Content
         </button>
-        <button 
-          className={`tab-btn ${activeTab === 'global' ? 'active' : ''}`}
-          onClick={() => setActiveTab('global')}
+        <button
+          className={`tab-btn ${activeTab === "global" ? "active" : ""}`}
+          onClick={() => setActiveTab("global")}
         >
           Global Settings
         </button>
-        <button 
-          className={`tab-btn ${activeTab === 'style' ? 'active' : ''}`}
-          onClick={() => setActiveTab('style')}
+        <button
+          className={`tab-btn ${activeTab === "style" ? "active" : ""}`}
+          onClick={() => setActiveTab("style")}
         >
           Styling
         </button>
-        <button 
-          className={`tab-btn ${activeTab === 'privacy' ? 'active' : ''}`}
-          onClick={() => setActiveTab('privacy')}
+        <button
+          className={`tab-btn ${activeTab === "privacy" ? "active" : ""}`}
+          onClick={() => setActiveTab("privacy")}
         >
           Privacy or Terms
         </button>
       </div>
 
-      {activeTab === 'page' && (
+      {activeTab === "page" && (
         <div className="tab-content">
-          <h3>{currentPage?.title || 'Page'} Content</h3>
-          
+          <h3>{currentPage?.title || "Page"} Content</h3>
+
           <div className="form-group">
             <label>Page Title (SEO)</label>
             <input
               type="text"
               className="form-control"
-              value={formData.title || ''}
-              onChange={(e) => handlePageChange('title', e.target.value)}
+              value={formData.title || ""}
+              onChange={(e) => handlePageChange("title", e.target.value)}
               placeholder="Page title for browser tab and SEO"
             />
           </div>
@@ -84,8 +90,8 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             <textarea
               className="form-control"
               rows="2"
-              value={formData.desc || ''}
-              onChange={(e) => handlePageChange('desc', e.target.value)}
+              value={formData.desc || ""}
+              onChange={(e) => handlePageChange("desc", e.target.value)}
               placeholder="Brief description for search engines"
             />
           </div>
@@ -95,63 +101,68 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             <input
               type="text"
               className="form-control"
-              value={formData.h1 || ''}
-              onChange={(e) => handlePageChange('h1', e.target.value)}
+              value={formData.h1 || ""}
+              onChange={(e) => handlePageChange("h1", e.target.value)}
               placeholder="Main heading that visitors see first"
             />
           </div>
 
           <div className="form-group">
-            <label>Hero Subtext(The subtext must be valid HTML. For example: <code>&lt;p&gt;Text&lt;/p&gt;</code>)</label>
+            <label>
+              Hero Subtext(The subtext must be valid HTML. For example:{" "}
+              <code>&lt;p&gt;Text&lt;/p&gt;</code>)
+            </label>
             <textarea
               className="form-control"
               rows="3"
-              value={formData.afterH1 || ''}
-              onChange={(e) => handlePageChange('afterH1', e.target.value)}
+              value={formData.afterH1 || ""}
+              onChange={(e) => handlePageChange("afterH1", e.target.value)}
               placeholder="Text that appears below the main heading"
             />
           </div>
 
-
-
           <div className="form-group">
-            <label>Main Content(The content must be valid HTML. For example: <code>&lt;h2&gt;Heading&lt;/h2&gt;</code>)</label>
+            <label>
+              Main Content(The content must be valid HTML. For example:{" "}
+              <code>&lt;h2&gt;Heading&lt;/h2&gt;</code>)
+            </label>
             <textarea
               className="form-control"
               rows="12"
-              value={formData.mainContent || ''}
-              onChange={(e) => handlePageChange('mainContent', e.target.value)}
+              value={formData.mainContent || ""}
+              onChange={(e) => handlePageChange("mainContent", e.target.value)}
               placeholder="HTML content for this page (use <h2> for sections, <p> for paragraphs)"
             />
             <small className="form-text text-muted">
-              Use HTML tags like &lt;h2&gt;Section Title&lt;/h2&gt; and &lt;p&gt;Paragraph text&lt;/p&gt;
+              Use HTML tags like &lt;h2&gt;Section Title&lt;/h2&gt; and
+              &lt;p&gt;Paragraph text&lt;/p&gt;
             </small>
           </div>
         </div>
       )}
 
-      {activeTab === 'global' && (
+      {activeTab === "global" && (
         <div className="tab-content">
           <h3>Global Settings</h3>
-          
+
           <div className="form-group">
             <label>Website Domain</label>
             <input
               type="text"
               className="form-control"
-              value={globalSettings.domain || ''}
-              onChange={(e) => handleGlobalChange('domain', e.target.value)}
+              value={globalSettings.domain || ""}
+              onChange={(e) => handleGlobalChange("domain", e.target.value)}
               placeholder="yourdomain.com"
             />
           </div>
-          <div className='form-group'>
+          <div className="form-group">
             <label>Website Name</label>
             <input
-            type='text'
-            className='form-control'
-            value={globalSettings.name || ''}
-            onChange={(e) => handleGlobalChange('name', e.target.value)}
-            placeholder='Your Website Name'
+              type="text"
+              className="form-control"
+              value={globalSettings.name || ""}
+              onChange={(e) => handleGlobalChange("name", e.target.value)}
+              placeholder="Your Website Name"
             />
           </div>
 
@@ -160,12 +171,13 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             <input
               type="text"
               className="form-control"
-              value={globalSettings.lang || 'en'}
-              onChange={(e) => handleGlobalChange('lang', e.target.value)}
+              value={globalSettings.lang || "en"}
+              onChange={(e) => handleGlobalChange("lang", e.target.value)}
               placeholder="Language code (e.g., en, es, fr, de, etc.)"
             />
             <small className="form-text text-muted">
-              Enter the language code for your website (e.g., en for English, es for Spanish, fr for French)
+              Enter the language code for your website (e.g., en for English, es
+              for Spanish, fr for French)
             </small>
           </div>
           <div className="form-group">
@@ -173,8 +185,8 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
             <input
               type="email"
               className="form-control"
-              value={globalSettings.email || ''}
-              onChange={(e) => handleGlobalChange('email', e.target.value)}
+              value={globalSettings.email || ""}
+              onChange={(e) => handleGlobalChange("email", e.target.value)}
               placeholder="Website contact email"
             />
             <small className="form-text text-muted">
@@ -187,7 +199,9 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
                 className="form-check-input"
                 type="checkbox"
                 checked={globalSettings.sidebar || false}
-                onChange={(e) => handleGlobalChange('sidebar', e.target.checked)}
+                onChange={(e) =>
+                  handleGlobalChange("sidebar", e.target.checked)
+                }
                 id="sidebarCheckbox"
               />
               <label className="form-check-label " htmlFor="sidebarCheckbox">
@@ -205,15 +219,19 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               type="file"
               className="form-control"
               accept="image/*"
-              onChange={(e) => handleFileUpload('logo', e.target.files[0])}
+              onChange={(e) => handleFileUpload("logo", e.target.files[0])}
             />
             {globalSettings.logo && (
               <div className="file-preview">
-                <img src={globalSettings.logo} alt="Logo" style={{maxWidth: '180px', maxHeight: '90px'}} />
-                <button 
-                  type="button" 
+                <img
+                  src={globalSettings.logo}
+                  alt="Logo"
+                  style={{ maxWidth: "180px", maxHeight: "90px" }}
+                />
+                <button
+                  type="button"
                   className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handleGlobalChange('logo', '')}
+                  onClick={() => handleGlobalChange("logo", "")}
                 >
                   Remove
                 </button>
@@ -227,18 +245,22 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               type="file"
               className="form-control"
               accept="image/*"
-              onChange={(e) => handleFileUpload('favicon', e.target.files[0])}
+              onChange={(e) => handleFileUpload("favicon", e.target.files[0])}
             />
             {globalSettings.favicon && (
               <div className="file-preview">
-                <img src={globalSettings.favicon} alt="Favicon" style={{maxWidth: '48px', maxHeight: '48px'}} />
+                <img
+                  src={globalSettings.favicon}
+                  alt="Favicon"
+                  style={{ maxWidth: "48px", maxHeight: "48px" }}
+                />
                 <span className="ms-2">{globalSettings.faviconName}</span>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-sm btn-danger ms-2"
                   onClick={() => {
-                    handleGlobalChange('favicon', '');
-                    handleGlobalChange('faviconName', '');
+                    handleGlobalChange("favicon", "");
+                    handleGlobalChange("faviconName", "");
                   }}
                 >
                   Remove
@@ -253,11 +275,11 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
                 className="form-check-input"
                 type="checkbox"
                 checked={globalSettings.stickyNavbar || false}
-                onChange={(e) => handleGlobalChange('stickyNavbar', e.target.checked)}
+                onChange={(e) =>
+                  handleGlobalChange("stickyNavbar", e.target.checked)
+                }
               />
-              <label className="form-check-label">
-                Sticky Navigation Bar
-              </label>
+              <label className="form-check-label">Sticky Navigation Bar</label>
             </div>
           </div>
 
@@ -267,15 +289,19 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               type="file"
               className="form-control"
               accept="image/*"
-              onChange={(e) => handleFileUpload('heroBg', e.target.files[0])}
+              onChange={(e) => handleFileUpload("heroBg", e.target.files[0])}
             />
             {globalSettings.heroBg && (
               <div className="file-preview">
-                <img src={globalSettings.heroBg} alt="Hero background" style={{maxWidth: '180px', maxHeight: '110px'}} />
-                <button 
-                  type="button" 
+                <img
+                  src={globalSettings.heroBg}
+                  alt="Hero background"
+                  style={{ maxWidth: "180px", maxHeight: "110px" }}
+                />
+                <button
+                  type="button"
                   className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handleGlobalChange('heroBg', '')}
+                  onClick={() => handleGlobalChange("heroBg", "")}
                 >
                   Remove
                 </button>
@@ -285,17 +311,17 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
         </div>
       )}
 
-      {activeTab === 'style' && (
+      {activeTab === "style" && (
         <div className="tab-content">
           <h3>Global Styling</h3>
           <p className="text-muted">These styles apply to all pages</p>
-          
+
           <div className="form-group">
             <label>Font Family</label>
             <select
               className="form-control"
-              value={globalSettings.fontFamily || 'system'}
-              onChange={(e) => handleGlobalChange('fontFamily', e.target.value)}
+              value={globalSettings.fontFamily || "system"}
+              onChange={(e) => handleGlobalChange("fontFamily", e.target.value)}
             >
               <option value="system">System Default</option>
               <option value="Arial">Arial</option>
@@ -305,110 +331,155 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               <option value="Verdana">Verdana</option>
             </select>
           </div>
-          <div className="colors">
-          <h4 className='d-block w-100'>Colors:</h4>
-          <div className="form-group">
-            <label>Body Background Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.bodyBgColor || '#f8fafc'}
-              onChange={(e) => handleGlobalChange('bodyBgColor', e.target.value)}
-            />
+
+          {/* Header Section */}
+          <div className="style-section">
+            <h4 className="section-title">Header</h4>
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>Header Background Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.headerBgColor || "#ffffff"}
+                    onChange={(e) =>
+                      handleGlobalChange("headerBgColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>Hero Gradient Color 1</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.heroGradient1 || "#667eea"}
+                    onChange={(e) =>
+                      handleGlobalChange("heroGradient1", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>Hero Gradient Color 2</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.heroGradient2 || "#764ba2"}
+                    onChange={(e) =>
+                      handleGlobalChange("heroGradient2", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Body Text Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.bodyTextColor || '#222222'}
-              onChange={(e) => handleGlobalChange('bodyTextColor', e.target.value)}
-            />
+          {/* Main Section */}
+          <div className="style-section">
+            <h4 className="section-title">Main Content</h4>
+            <div className="row">
+              <div className="col-xl-3 col-lg-6">
+                <div className="form-group">
+                  <label>Body Background Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.bodyBgColor || "#f8fafc"}
+                    onChange={(e) =>
+                      handleGlobalChange("bodyBgColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-xl-3 col-lg-6">
+                <div className="form-group">
+                  <label>Body Text Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.bodyTextColor || "#222222"}
+                    onChange={(e) =>
+                      handleGlobalChange("bodyTextColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-xl-3 col-lg-6">
+                <div className="form-group">
+                  <label>Headings Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.headingColor || "#222222"}
+                    onChange={(e) =>
+                      handleGlobalChange("headingColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-xl-3 col-lg-6">
+                <div className="form-group">
+                  <label>Link Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.linkColor || "#2563eb"}
+                    onChange={(e) =>
+                      handleGlobalChange("linkColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="form-group">
-            <label>Headings Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.headingColor || '#222222'}
-              onChange={(e) => handleGlobalChange('headingColor', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Link Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.linkColor || '#2563eb'}
-              onChange={(e) => handleGlobalChange('linkColor', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Header Background Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.headerBgColor || '#ffffff'}
-              onChange={(e) => handleGlobalChange('headerBgColor', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Hero Gradient Color 1</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.heroGradient1 || '#667eea'}
-              onChange={(e) => handleGlobalChange('heroGradient1', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Hero Gradient Color 2</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.heroGradient2 || '#764ba2'}
-              onChange={(e) => handleGlobalChange('heroGradient2', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Footer Background Color</label>
-            <input
-              type="color"
-              className="form-control"
-              value={globalSettings.footerBgColor || '#0d0d0d'}
-              onChange={(e) => handleGlobalChange('footerBgColor', e.target.value)}
-            />
-          </div>
+          {/* Footer Section */}
+          <div className="style-section">
+            <h4 className="section-title">Footer</h4>
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>Footer Background Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.footerBgColor || "#0d0d0d"}
+                    onChange={(e) =>
+                      handleGlobalChange("footerBgColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
-      {activeTab === 'privacy' && (
+      {activeTab === "privacy" && (
         <div className="tab-content">
           <div className="form-group">
             <label>Select Page Type</label>
             <select
               className="form-control"
-              value={globalSettings.privacyOrTerms || 'privacy'}
-              onChange={e => handleGlobalChange('privacyOrTerms', e.target.value)}
+              value={globalSettings.privacyOrTerms || "privacy"}
+              onChange={(e) =>
+                handleGlobalChange("privacyOrTerms", e.target.value)
+              }
             >
               <option value="privacy">Privacy Policy</option>
               <option value="terms">Terms &amp; Conditions</option>
             </select>
           </div>
-          <div className='form-group'>
+          <div className="form-group">
             <label>Website full URL</label>
             <input
               type="text"
               className="form-control"
-              value={globalSettings.url || ''}
-              onChange={e => handleGlobalChange('url', e.target.value)}
+              value={globalSettings.url || ""}
+              onChange={(e) => handleGlobalChange("url", e.target.value)}
               placeholder="Enter your website URL (e.g., https://yourdomain.com)"
             />
           </div>
@@ -418,40 +489,45 @@ function BuilderForm({ formData, setFormData, globalSettings, setGlobalSettings,
               <input
                 type="text"
                 className="form-control"
-                value={globalSettings.country || ''}
-                onChange={e => handleGlobalChange('country', e.target.value)}
+                value={globalSettings.country || ""}
+                onChange={(e) => handleGlobalChange("country", e.target.value)}
                 placeholder="Enter country (e.g., United States)"
               />
             </div>
           </div>
           <div>
-      {globalSettings.privacyOrTerms === 'privacy' ? (
-          <div className="form-group">
-            <label>Choose privacy style type</label>
-            <select
-              className="form-control"
-              value={globalSettings.privacyOption || '1'}
-              onChange={e => handleGlobalChange('privacyOption', e.target.value)}
-            >
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select>
+            {globalSettings.privacyOrTerms === "privacy" ? (
+              <div className="form-group">
+                <label>Choose privacy style type</label>
+                <select
+                  className="form-control"
+                  value={globalSettings.privacyOption || "1"}
+                  onChange={(e) =>
+                    handleGlobalChange("privacyOption", e.target.value)
+                  }
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+            ) : (
+              <div className="form-group">
+                <label>Choose terms style type</label>
+                <select
+                  className="form-control"
+                  value={globalSettings.privacyOption || "1"}
+                  onChange={(e) =>
+                    handleGlobalChange("termsOption", e.target.value)
+                  }
+                >
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+            )}
           </div>
-      ) : (
-        <div className="form-group">
-        <label>Choose terms style type</label>
-        <select
-          className="form-control"
-          value={globalSettings.privacyOption || '1'}
-          onChange={e => handleGlobalChange('termsOption', e.target.value)}
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-      </div>
+        </div>
       )}
-          </div>
-          </div>)}
     </div>
   );
 }
