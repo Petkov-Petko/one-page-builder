@@ -29,6 +29,8 @@ export function generateMultiPageExport(pages, globalSettings) {
   // Generate navigation HTML
   const generateNavigation = () => {
     let navHtml = '';
+    const customNavItems = globalSettings.customNavItems || [];
+
 
     // Group pages by parent
     const topLevelPages = visiblePages.filter(page => !page.parentId);
@@ -55,6 +57,15 @@ export function generateMultiPageExport(pages, globalSettings) {
         const href = page.isHome ? '/' : `/${page.slug}`;
         navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.navLabel || page.title}</a></li>\n`;
       }
+    });
+
+    // Add custom navigation items
+    customNavItems.forEach(item => {
+      navHtml += `<li class="nav-item">
+      <a class="nav-link" href="${item.url}">
+        ${item.label}
+      </a>
+    </li>\n`;
     });
 
     return navHtml;
