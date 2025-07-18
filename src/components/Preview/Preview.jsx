@@ -22,6 +22,22 @@ const Preview = ({ formData, globalSettings, pages, currentPage }) => {
     // Add functions.php and style.css
     zip.file("functions.php", multiPageExport.functions);
     zip.file("style.css", multiPageExport.styles);
+
+// Add Bootstrap files
+try {
+  // Add Bootstrap CSS
+  const bootstrapCssResponse = await fetch('/one-page-builder/bootstrap/css/bootstrap.min.css');
+  const bootstrapCssBlob = await bootstrapCssResponse.blob();
+  zip.file("assets/bootstrap/css/bootstrap.min.css", bootstrapCssBlob);
+
+  // Add Bootstrap JS
+  const bootstrapJsResponse = await fetch('/one-page-builder/bootstrap/js/bootstrap.min.js');
+  const bootstrapJsBlob = await bootstrapJsResponse.blob();
+  zip.file("assets/bootstrap/js/bootstrap.min.js", bootstrapJsBlob);
+} catch (error) {
+  console.warn('Could not add Bootstrap files to download:', error);
+}
+
     // Add 404.php
     zip.file("404.php", export404());
     // Add robots.txt
