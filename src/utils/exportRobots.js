@@ -1,4 +1,4 @@
-export function exportRobots(url) {
+export function exportRobots(url, pages) {
     return `User-agent: *
 Allow: /*.css
 Allow: /*.js
@@ -28,5 +28,5 @@ Disallow: /
 
 #end optional
 
-Sitemap: ${url || 'domain.com'}/sitemap.xml`
+${pages.length > 1 ? `Sitemap: ${url || 'domain.com'}/sitemap.xml` : ''}`
 }

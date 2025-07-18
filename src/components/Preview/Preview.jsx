@@ -41,9 +41,7 @@ try {
     // Add 404.php
     zip.file("404.php", export404());
     // Add robots.txt
-    if (pages.length > 1) {
-      zip.file("robots.txt", exportRobots(globalSettings.url));
-    }
+      zip.file("robots.txt", exportRobots(globalSettings.url, pages));
     // Add privacy or terms
     if (globalSettings.privacyOrTerms === "privacy") {
       switch (globalSettings.privacyOption) {

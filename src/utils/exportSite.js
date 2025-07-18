@@ -24,7 +24,6 @@ export function splitHtmlToSections(html) {
 export function generateMultiPageExport(pages, globalSettings) {
   const hiddenPages = globalSettings.hiddenFromNav || [];
   const visiblePages = pages.filter(page => !hiddenPages.includes(page.id));
-  const customNavItems = globalSettings.customNavItems || [];
 
   // Generate navigation HTML
   const generateNavigation = () => {
