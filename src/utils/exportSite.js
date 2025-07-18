@@ -388,8 +388,8 @@ h2, h3 {
   padding: .5rem 0;
   margin-top: .5rem;
   min-width: 220px;
-  background: rgba(255, 255, 255, .98);
-  backdrop-filter: blur(10px)
+  background-color: rgb(205 205 205 / 79%) !important;
+  backdrop-filter: blur(12px)
 }
 
 .custom-dropdown .dropdown-item {
