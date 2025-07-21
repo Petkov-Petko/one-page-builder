@@ -290,15 +290,16 @@ p {
 }
 
 h2, h3 {
-  color: var(--heading-color);
+  color: var(--heading-color) !important;
 }
 
 .content-area a {
   color: var(--link-color) !important;
+  text-decoration: none !important;
 }
 
 .content-area a:hover {
-  color: var(--link-color);
+  color: var(--link-color) !important;
   opacity: 0.8;
 }
 
