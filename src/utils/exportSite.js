@@ -310,6 +310,7 @@ h2, h3 {
 
 .footer a {
   text-decoration: none;
+  color: var(--link-color) !important;
 }
 
 @media (max-width: 768px) {
