@@ -250,15 +250,16 @@ p {
 }
 
 h2, h3 {
-  color: var(--heading-color);
+  color: var(--heading-color) !important;
 }
 
 .content-area a {
   color: var(--link-color) !important;
+  text-decoration: none !important;
 }
 
 .content-area a:hover {
-  color: var(--link-color);
+  color: var(--link-color) !important;
   opacity: 0.8;
 }
 
@@ -269,6 +270,7 @@ h2, h3 {
 
 .footer a {
   text-decoration: none;
+  color: var(--link-color) !important;
 }
 
 @media (max-width: 768px) {
@@ -348,8 +350,8 @@ h2, h3 {
   padding: .5rem 0;
   margin-top: .5rem;
   min-width: 220px;
-  background: rgba(255, 255, 255, .98);
-  backdrop-filter: blur(10px)
+  background-color: rgb(205 205 205 / 79%) !important;
+  backdrop-filter: blur(12px)
 }
 
 .custom-dropdown .dropdown-item {
