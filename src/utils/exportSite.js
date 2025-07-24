@@ -494,6 +494,7 @@ h2, h3 {
   font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
+  color: var(--link-color);
 }
 
 .sidebar-page-list li a:hover {
