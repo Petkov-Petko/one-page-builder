@@ -332,7 +332,7 @@ h2, h3 {
     top: 61px;
     left: 15px;
     right: 15px;
-    background: rgb(205 205 205 / 79%);
+    background-color: color-mix(in srgb, var(--header-bg-color) 65%, transparent);
     backdrop-filter: blur(12px);
     border-radius: 12px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
@@ -364,6 +364,7 @@ h2, h3 {
   .navbar-toggler {
     z-index: 10000;
     position: relative;
+    border: var(--bs-border-width) solid var(--nav-link-color, #141414) !important;
   }
 }
 
@@ -390,7 +391,7 @@ h2, h3 {
   padding: .5rem 0;
   margin-top: .5rem;
   min-width: 220px;
-  background-color: rgb(205 205 205 / 79%) !important;
+  background: color-mix(in srgb, var(--header-bg-color) 65%, transparent) !important;
   backdrop-filter: blur(12px)
 }
 
@@ -405,7 +406,7 @@ h2, h3 {
 
 .custom-dropdown .dropdown-item:hover {
   color: #fff;
-  border-radius: 8px
+  background: color-mix(in srgb, var(--header-bg-color) 95%, transparent) !important;
 }
 
 .custom-dropdown .dropdown-item i {

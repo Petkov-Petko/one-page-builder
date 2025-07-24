@@ -6,7 +6,7 @@ $description = "404 - The page you're looking for can't be found. Please check t
 echo site_header($title, $description);
 
 ?>
-<div class="container-fluid bg-light py-5 error_page">
+<div class="container-fluid py-5 error_page">
     <div class="py-5 text-center">
         <div class="justify-content-center">
                 <i class="bi bi-exclamation-circle display-2"></i>
