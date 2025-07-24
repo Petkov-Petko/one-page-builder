@@ -531,7 +531,7 @@ function BuilderForm({
                 <label>Choose terms style type</label>
                 <select
                   className="form-control"
-                  value={globalSettings.privacyOption || "1"}
+                  value={globalSettings.termsOption || "1"}
                   onChange={(e) =>
                     handleGlobalChange("termsOption", e.target.value)
                   }
