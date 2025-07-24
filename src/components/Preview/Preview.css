@@ -234,7 +234,7 @@ p {
     padding: .5rem 0;
     margin-top: .5rem;
     min-width: 220px;
-    background: rgba(255, 255, 255, .98);
+    background: color-mix(in srgb, var(--header-bg-color) 65%, transparent) !important;
     backdrop-filter: blur(10px)
 }
 
@@ -249,7 +249,7 @@ p {
 
 .website-preview .custom-dropdown .dropdown-item:hover {
     color: #fff;
-    border-radius: 8px
+    background: color-mix(in srgb, var(--header-bg-color) 95%, transparent) !important;
 }
 
 .website-preview .custom-dropdown .dropdown-item i {
