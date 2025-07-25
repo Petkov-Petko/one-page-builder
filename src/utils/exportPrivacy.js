@@ -6,7 +6,7 @@ echo site_header($title, $description);
 
 ?>
 
-<div class="container py-3">
+<div class="container py-5 mt-5">
     <h1>Privacy Policy</h1>
 <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
 <p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.</p>
@@ -190,7 +190,7 @@ $title = 'Privacy policy page';
 $description = 'This Privacy Policy describes the information that we gather on or through our Services and how we use and process such information.';
 echo site_header($title, $description);
 ?>
-<div class="container py-3">
+<div class="container py-5 mt-5">
     <h1 style="text-align: center;">Privacy Policy</h1>
     <h2>1. Introduction</h2>
     <p>Welcome to  ${name || "our website"}.</p>

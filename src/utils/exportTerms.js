@@ -4,7 +4,7 @@ $title = 'Terms and Conditions page';
 $description = 'Review the terms and conditions outlining the rules, rights, and responsibilities for using this site.';
 echo site_header($title, $description);
 ?>
-<div class="container py-3">
+<div class="container py-5 mt-5">
     <h1>Terms and Conditions</h1>
     <p>Please read these terms and conditions carefully before using Our Service.</p>
     <h2>Interpretation and Definitions</h2>
@@ -97,7 +97,7 @@ $title = 'Terms and Conditions page';
 $description = 'Read the terms and conditions that outline the proper use of our website and services.';
 echo site_header($title, $description);
 ?>
-<div class="container py-3">
+<div class="container py-5 mt-5">
     <h1>Terms and Conditions</h1>
     <h2>1. Introduction</h2>
     <p>Welcome to ${name || 'Our website'} (“Company”, “we”, “our”, “us”)!</p>
