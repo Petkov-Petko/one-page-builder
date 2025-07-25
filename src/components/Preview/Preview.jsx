@@ -3,12 +3,15 @@ import { generateMultiPageExport } from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { export404 } from "../../utils/export404";
+import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
 import { exportRobots } from "../../utils/exportRobots";
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
   async function handleDownloadZip() {
+    console.log(globalSettings);
+    
     const zip = new JSZip();
 
     // Generate multi-page website files
@@ -95,52 +98,7 @@ try {
       }
     }
     // Add .htaccess
-    zip.file(
-      ".htaccess",
-      `RewriteEngine on
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-#the following two lines are non-www to www redirect
-# RewriteCond %{HTTP_HOST} !^www\\. [NC]
-# RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]
-RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
-
-RewriteRule ^index\\.php$ / [R=301,L]
-RewriteRule ^(.*)/index\\.php$ /$1/ [R=301,L]
-
-Options All -Indexes
-
-ErrorDocument 404 /404.php
-
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} (.+)/$
-RewriteRule ^ %1 [R=301,L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.+)$ $1.php [L,QSA]
-
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\\ /.*\\.php\\ HTTP/
-RewriteRule ^(.*)\\.php$ /$1 [R=301,L]
-
-#removes multiple trailing slashes
-<IfModule mod_rewrite.c>
-RewriteBase /
-
-# rule 1: remove multiple leading slashes (directly after the TLD)
-RewriteCond %{THE_REQUEST} \s/{2,}
-RewriteRule (.*) $1 [R=301,L]
-
-# rule 2: remove multiple slashes in the requested path
-RewriteCond %{REQUEST_URI} ^(.*)/{2,}(.*)$
-RewriteRule (.*) %1/%2 [R=301,L]
-</IfModule>
-`.trim(),
-    );
+    zip.file(".htaccess", exportHtaccess());
 
     // Add images if they exist
     if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
@@ -220,7 +178,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
       <div className="website-preview" lang={globalSettings.lang || "en"}>
         {/* Navigation */}
         <nav
-          className={`navbar navbar-expand-lg navbar-light${globalSettings.stickyNavbar ? " sticky-top" : ""}`}
+          className={`navbar navbar-expand-lg navbar-light${globalSettings.stickyNavbar ? " sticky-top" : ""} ${globalSettings.navStyle === "1" ? "" : "floating-rounded-navbar container"}`}
         >
           <div className="container-fluid">
             <a className="navbar-brand d-flex align-items-center" href="#">
@@ -311,7 +269,7 @@ RewriteRule (.*) %1/%2 [R=301,L]
 
         {/* Hero Section */}
         <section
-          className={heroClass}
+          className={`${heroClass} ${globalSettings.navStyle === "2" && "second-style"}`}
           style={
             globalSettings.heroBg
               ? {

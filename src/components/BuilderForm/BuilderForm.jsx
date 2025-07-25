@@ -336,6 +336,19 @@ function BuilderForm({
           <div className="style-section">
             <h4 className="section-title">Header</h4>
             <div className="row">
+              <div className="col-lg-12">
+                <div className="form-group">
+                  <label>Navigation style:</label>
+                  <select
+                    className="form-control"
+                    value={globalSettings.navStyle || "1"}
+                    onChange={(e) => handleGlobalChange("navStyle", e.target.value)}
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </div>
+              </div>
               <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
                   <label>Header Background Color</label>

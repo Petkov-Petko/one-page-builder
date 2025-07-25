@@ -48,6 +48,7 @@ function App() {
     privacyOrTerms : 'privacy',
     privacyOption : '1',
     termsOption : '1',
+    navStyle: '1',
   });
 
   // Get current page data
