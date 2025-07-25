@@ -98,7 +98,7 @@ try {
       }
     }
     // Add .htaccess
-    zip.file(".htaccess", exportHtaccess());
+    zip.file(".htaccess", exportHtaccess(globalSettings.url));
 
     // Add images if they exist
     if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {

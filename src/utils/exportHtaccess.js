@@ -1,14 +1,19 @@
-export function exportHtaccess() {
+export function exportHtaccess(url) {
+
+    const hasWww = url && url.includes('www.');
+    const wwwRedirectRules = hasWww ?
+        `# non-www to www redirect
+    RewriteCond %{HTTP_HOST} !^www\\. [NC]
+    RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]` :
+        `# www to non-www redirect
+    RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]`;
+
     return `RewriteEngine on
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     
-    #the following two lines are non-www to www redirect
-    # RewriteCond %{HTTP_HOST} !^www\\. [NC]
-    # RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-    RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]
-    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+    ${wwwRedirectRules}
     
     RewriteRule ^index\\.php$ / [R=301,L]
     RewriteRule ^(.*)/index\\.php$ /$1/ [R=301,L]

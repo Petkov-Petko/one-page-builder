@@ -509,7 +509,7 @@ function BuilderForm({
               placeholder="Enter your website URL (e.g., https://yourdomain.com)"
             />
                   <small className="form-text text-muted">
-              The url will be used in the robots.txt file also.
+              The url will be used in the robots.txt and htaccess files also.
             </small>
           </div>
           <div>
