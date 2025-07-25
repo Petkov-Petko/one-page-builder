@@ -40,6 +40,37 @@ function BuilderForm({
       reader.readAsDataURL(file);
     }
   };
+  const handleApplyBoldWords = () => {
+    if (!formData.mainContent || !formData.boldWords) return;
+
+    let updatedContent = formData.mainContent;
+    const wordsToBold = formData.boldWords
+      .split(",")
+      .map((word) => word.trim())
+      .filter((word) => word.length > 0);
+
+    wordsToBold.forEach((word) => {
+      // Escape special regex characters
+      const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      // Create regex to find the word (case-insensitive, whole word, not already in tags)
+      const regex = new RegExp(
+        `(?<!<[^>]*>)\\b(${escapedWord})\\b(?![^<]*>)(?!<\/strong>)`,
+        "i",
+      );
+
+      // Replace only the first occurrence that's not already in a strong tag
+      const match = updatedContent.match(regex);
+      if (match) {
+        updatedContent = updatedContent.replace(regex, `<strong>$1</strong>`);
+      }
+    });
+    // Update the content
+    handlePageChange("mainContent", updatedContent);
+
+    // Optional: Clear the bold words input after applying
+    handlePageChange("boldWords", "");
+  };
 
   return (
     <div className="builder-form">
@@ -137,6 +168,28 @@ function BuilderForm({
               Use HTML tags like &lt;h2&gt;Section Title&lt;/h2&gt; and
               &lt;p&gt;Paragraph text&lt;/p&gt;
             </small>
+          </div>
+          <div className="form-group">
+            <label>Bold Words (Optional)</label>
+            <input
+              type="text"
+              className="form-control"
+              value={formData.boldWords || ""}
+              onChange={(e) => handlePageChange("boldWords", e.target.value)}
+              placeholder="Enter words to make bold, one by one or separated by commas (e.g., important, featured, special)"
+            />
+            <small className="form-text text-muted">
+              Type words one by one or all separated by commas. Only the first
+              occurrence of each word will be bolded.
+            </small>
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary mt-2 ms-2"
+              onClick={handleApplyBoldWords}
+              disabled={!formData.mainContent || !formData.boldWords}
+            >
+              Apply Bold Words
+            </button>
           </div>
         </div>
       )}
@@ -342,7 +395,9 @@ function BuilderForm({
                   <select
                     className="form-control"
                     value={globalSettings.navStyle || "1"}
-                    onChange={(e) => handleGlobalChange("navStyle", e.target.value)}
+                    onChange={(e) =>
+                      handleGlobalChange("navStyle", e.target.value)
+                    }
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -508,7 +563,7 @@ function BuilderForm({
               onChange={(e) => handleGlobalChange("url", e.target.value)}
               placeholder="Enter your website URL (e.g., https://yourdomain.com)"
             />
-                  <small className="form-text text-muted">
+            <small className="form-text text-muted">
               The url will be used in the robots.txt and htaccess files also.
             </small>
           </div>
