@@ -7,10 +7,44 @@ import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
 import { exportRobots } from "../../utils/exportRobots";
+import { exportSitemap } from "../../utils/exportSitemap";
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
+  const validateRequiredFields = () => {
+    const missingFields = [];
+    
+    if (!globalSettings.url?.trim()) {
+      missingFields.push('Website URL');
+    }
+    if (!globalSettings.name?.trim()) {
+      missingFields.push('Website Name');
+    }
+    if (!globalSettings.domain?.trim()) {
+      missingFields.push('Website Domain');
+    }
+    if (!globalSettings.email?.trim()) {
+      missingFields.push('Website Email');
+    }
+    
+    return {
+      isValid: missingFields.length === 0,
+      missingFields
+    };
+  };
+  
+
+  const validation = validateRequiredFields();
+  const isDownloadDisabled = !validation.isValid;
+  const handleDownloadClick = () => {
+    if (!validation.isValid) {
+      alert(`Please fill in the following required fields in Global Settings:\n\n• ${validation.missingFields.join('\n• ')}\n\nThese fields are required for generating the website files.`);
+      return;
+    }
+    
+    handleDownloadZip();
+  };
+
   async function handleDownloadZip() {
-    console.log(globalSettings);
     
     const zip = new JSZip();
 
@@ -45,6 +79,10 @@ try {
     zip.file("404.php", export404());
     // Add robots.txt
       zip.file("robots.txt", exportRobots(globalSettings.url, pages));
+    // Add sitemap.xml
+    if(pages.length > 1) {
+      zip.file("sitemap.xml", exportSitemap(globalSettings.url, pages, globalSettings.privacyOrTerms));
+    }
     // Add privacy or terms
     if (globalSettings.privacyOrTerms === "privacy") {
       switch (globalSettings.privacyOption) {
@@ -170,9 +208,22 @@ try {
             {pages.length} page{pages.length !== 1 ? "s" : ""} total
           </small>
         </div>
-        <button className="btn btn-success" onClick={handleDownloadZip}>
-          <i className="bi bi-download"></i> Download Multi-Page Site
-        </button>
+              <div className="d-flex flex-column align-items-end">
+          <button 
+            className={`btn ${isDownloadDisabled ? 'btn-secondary' : 'btn-success'}`}
+            onClick={handleDownloadClick}
+            disabled={isDownloadDisabled}
+            title={isDownloadDisabled ? `Missing required fields: ${validation.missingFields.join(', ')}` : 'Download your website'}
+          >
+            <i className="bi bi-download"></i> Download Multi-Page Site
+          </button>
+          
+          {isDownloadDisabled && (
+            <small className="text-danger mt-1 text-end">
+              Missing: {validation.missingFields.join(', ')}
+            </small>
+          )}
+        </div>
       </div>
 
       <div className="website-preview" lang={globalSettings.lang || "en"}>
