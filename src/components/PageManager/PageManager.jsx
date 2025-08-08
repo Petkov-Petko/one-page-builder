@@ -9,6 +9,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
     navLabel: "",
     isDropdown: false,
     parentId: null,
+    dropdownHasOwnPage: false,
   });
 
   const handleDeleteDropdown = (pageId) => {
@@ -60,12 +61,13 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
       const dropdownParent = {
         id: Date.now().toString(),
         title: newPageData.dropdownTitle,
-        slug: normalizedSlug,
+        slug: newPageData.dropdownHasOwnPage ? normalizedSlug : null,
         navLabel: newPageData.dropdownTitle,
         isDropdown: true,
         isDropdownParent: true,
+        hasOwnPage: newPageData.dropdownHasOwnPage,
         children: [],
-        formData: {
+        formData: newPageData.dropdownHasOwnPage ? {
           title: newPageData.dropdownTitle,
           desc: "",
           h1: newPageData.dropdownTitle,
@@ -79,12 +81,15 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
           footerBgColor: "#0d0d0d",
           linkColor: "#2563eb",
           headerBgColor: "#ffffff",
-        },
+        } : null,
       };
 
       // Only add the dropdown parent
       setPages((prev) => [...prev, dropdownParent]);
-      setCurrentPageId(dropdownParent.id);
+
+         if (newPageData.dropdownHasOwnPage) {
+           setCurrentPageId(dropdownParent.id);
+         }
     }
     // If adding a page under an existing dropdown
     else if (newPageData.parentId) {
@@ -151,6 +156,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
       navLabel: "",
       parentId: null,
       dropdownTitle: "",
+      dropdownHasOwnPage: false,
     });
     setShowAddPage(false);
   };
@@ -287,9 +293,32 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
                     }))
                   }
                 />
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="dropdownHasOwnPage"
+                    checked={newPageData.dropdownHasOwnPage}
+                    onChange={(e) =>
+                      setNewPageData((prev) => ({
+                        ...prev,
+                        dropdownHasOwnPage: e.target.checked,
+                      }))
+                    }
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="dropdownHasOwnPage"
+                  >
+                    Dropdown menu should also be a clickable link to its own
+                    page
+                  </label>
+                </div>
+
                 <small className="text-muted">
-                  This will create a dropdown menu. You can add pages under it
-                  later.
+                  {newPageData.dropdownHasOwnPage
+                    ? "The dropdown title will be clickable and lead to its own page, plus show dropdown items on hover."
+                    : "The dropdown title will only show dropdown items on hover, not be a clickable link."}
                 </small>
               </div>
             )}
@@ -333,8 +362,15 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
         {pages.map((page) => (
           <div
             key={page.id}
-            className={`page-item ${page.id === currentPageId ? "active" : ""} ${page.parentId ? "child-page" : ""}`}
-            onClick={() => setCurrentPageId(page.id)}
+            className={`page-item ${
+              page.id === currentPageId ? "active" : ""
+            } ${page.parentId ? "child-page" : ""}`}
+            onClick={() => {
+    
+              if (page.formData) {
+                setCurrentPageId(page.id);
+              }
+            }}
           >
             <div className="page-info">
               <div className="page-title">
@@ -345,9 +381,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
                   <span className="dropdown-badge">DROPDOWN</span>
                 )}
               </div>
-              <div className="page-slug">
-                {`/${page.slug}`}
-              </div>
+              <div className="page-slug">{`/${page.slug}`}</div>
             </div>
             <div className="page-actions">
               {!page.isDropdownParent && (

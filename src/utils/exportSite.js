@@ -39,26 +39,60 @@ export function generateMultiPageExport(pages, globalSettings) {
     const topLevelPages = visiblePages.filter(page => !page.parentId);
     const childPages = visiblePages.filter(page => page.parentId);
 
-    topLevelPages.forEach(page => {
+    topLevelPages.forEach((page) => {
       if (page.isDropdownParent) {
         // Create dropdown
-        const children = childPages.filter(child => child.parentId === page.id);
-        navHtml += `
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/${page.slug}" role="button">
-            ${page.navLabel || page.title}
-          </a>
-          <ul class="custom-dropdown dropdown-menu">
-            ${children.map(child =>
-          `<li><a class="dropdown-item" href="/${child.slug}">${child.navLabel || child.title}</a></li>`
-        ).join('\n')}
-          </ul>
-        </li>
-      `;
+        const children = childPages.filter(
+          (child) => child.parentId === page.id
+        );
+
+        // Check if dropdown has its own page
+        if (page.hasOwnPage && page.slug) {
+          navHtml += `
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/${
+              page.slug
+            }" role="button">
+              ${page.navLabel || page.title}
+            </a>
+            <ul class="custom-dropdown dropdown-menu">
+              ${children
+                .map(
+                  (child) =>
+                    `<li><a class="dropdown-item" href="/${child.slug}">${
+                      child.navLabel || child.title
+                    }</a></li>`
+                )
+                .join("\n")}
+            </ul>
+          </li>
+        `;
+        } else {
+          // Dropdown without own page - no href
+          navHtml += `
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button">
+              ${page.navLabel || page.title}
+            </a>
+            <ul class="custom-dropdown dropdown-menu">
+              ${children
+                .map(
+                  (child) =>
+                    `<li><a class="dropdown-item" href="/${child.slug}">${
+                      child.navLabel || child.title
+                    }</a></li>`
+                )
+                .join("\n")}
+            </ul>
+          </li>
+        `;
+        }
       } else {
         // Regular nav item
-        const href = page.isHome ? '/' : `/${page.slug}`;
-        navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.navLabel || page.title}</a></li>\n`;
+        const href = page.isHome ? "/" : `/${page.slug}`;
+        navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${
+          page.navLabel || page.title
+        }</a></li>\n`;
       }
     });
 
@@ -83,11 +117,20 @@ export function generateMultiPageExport(pages, globalSettings) {
   // Generate individual page files
   const pageFiles = {};
 
-  pages.forEach(page => {
-    const filename = page.isHome ? 'index.php' : `${page.slug}.php`;
-    pageFiles[filename] = generatePagePhp(page, globalSettings);
-  });
+    pages.forEach((page) => {
+      // Skip dropdown parents that don't have their own page
+      if (page.isDropdownParent && !page.hasOwnPage) {
+        return;
+      }
 
+      // Skip pages without formData
+      if (!page.formData) {
+        return;
+      }
+
+      const filename = page.isHome ? "index.php" : `${page.slug}.php`;
+      pageFiles[filename] = generatePagePhp(page, globalSettings);
+    });
   return {
     pages: pageFiles,
     functions,

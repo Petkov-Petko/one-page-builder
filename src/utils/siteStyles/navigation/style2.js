@@ -43,7 +43,11 @@ export function NavigationCSS2(globalSettings) {
     return `
  .navbar {
   background-color: var(--header-bg-color) !important;
-  ${globalSettings.stickyNavbar ? 'position: sticky; top: 0; z-index: 1020;' : ''}
+  ${
+    globalSettings.stickyNavbar
+      ? "position: sticky; top: 0; z-index: 1020;"
+      : ""
+  }
 }
 
 .hero-section {
@@ -207,6 +211,7 @@ export function NavigationCSS2(globalSettings) {
 
 @media (max-width:1199.98px) {
   .custom-dropdown {
+    display: none;
     background: #f8f9fa;
     box-shadow: none;
     border-radius: 0;
@@ -236,7 +241,7 @@ export function NavigationCSS2(globalSettings) {
 
 .floating-rounded-navbar {
   background-color: var(--header-bg-color) !important;
-  position: ${globalSettings.stickyNavbar ? 'fixed' : 'absolute'} !important;
+  position: ${globalSettings.stickyNavbar ? "fixed" : "absolute"} !important;
   top: 15px !important;
   left: 7px !important;
   right: 7px !important;
@@ -256,5 +261,5 @@ export function NavigationCSS2(globalSettings) {
 .navbar-brand {
   margin-right: 0 !important;
 }
-            `
+            `;
 }
