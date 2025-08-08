@@ -200,7 +200,7 @@ const handleApplyBoldWords = () => {
           <h3>Global Settings</h3>
 
           <div className="form-group">
-            <label>Website Domain</label>
+            <label>Website Domain name</label>
             <input
               type="text"
               className="form-control"
@@ -208,6 +208,19 @@ const handleApplyBoldWords = () => {
               onChange={(e) => handleGlobalChange("domain", e.target.value)}
               placeholder="yourdomain.com"
             />
+          </div>
+          <div className="form-group">
+            <label>Website full URL</label>
+            <input
+              type="text"
+              className="form-control"
+              value={globalSettings.url || ""}
+              onChange={(e) => handleGlobalChange("url", e.target.value)}
+              placeholder="Enter your website URL (e.g., https://yourdomain.com)"
+            />
+            <small className="form-text text-muted">
+              The url will be used in the robots.txt, sitemap and htaccess files also.
+            </small>
           </div>
           <div className="form-group">
             <label>Website Name</label>
@@ -554,19 +567,6 @@ const handleApplyBoldWords = () => {
               <option value="privacy">Privacy Policy</option>
               <option value="terms">Terms &amp; Conditions</option>
             </select>
-          </div>
-          <div className="form-group">
-            <label>Website full URL</label>
-            <input
-              type="text"
-              className="form-control"
-              value={globalSettings.url || ""}
-              onChange={(e) => handleGlobalChange("url", e.target.value)}
-              placeholder="Enter your website URL (e.g., https://yourdomain.com)"
-            />
-            <small className="form-text text-muted">
-              The url will be used in the robots.txt and htaccess files also.
-            </small>
           </div>
           <div>
             <div className="form-group">

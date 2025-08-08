@@ -1,5 +1,6 @@
-import { NavigationHtml1, NavigationHero1, NavigationCSS1 } from "./siteStyles/navigation/style1";
-import { NavigationHtml2, NavigationHero2, NavigationCSS2 } from "./siteStyles/navigation/style2";
+import { NavigationHtml1, NavigationHero1 } from "./siteStyles/navigation/style1";
+import { NavigationHtml2, NavigationHero2 } from "./siteStyles/navigation/style2";
+import { exportCss } from "./exportCss";
 
 export function splitHtmlToSections(html) {
   const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
@@ -77,7 +78,7 @@ export function generateMultiPageExport(pages, globalSettings) {
   const functions = generateMultiPageFunctions(globalSettings, generateNavigation(), visiblePages);
 
   // Generate combined CSS for all pages
-  const styles = generateMultiPageCss(pages, globalSettings);
+  const styles = exportCss(globalSettings);
 
   // Generate individual page files
   const pageFiles = {};
@@ -115,10 +116,10 @@ function site_header($title, $description)
     <title><?php echo $title; ?></title>
     <meta name="description" content="<?php echo $description; ?>">
     <link rel="canonical" href="<?php echo $canonical; ?>">
-    <link rel="stylesheet" href="/style.css">
     ${globalSettings.favicon ? '<link rel="icon" type="image/png" href="/images/favicon.png">' : ''}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 ${globalSettings.navStyle === "1" ? NavigationHtml1(globalSettings, navigationHtml) : NavigationHtml2(globalSettings, navigationHtml)}
@@ -187,122 +188,6 @@ function site_footer()
 ?>`;
 }
 
-function generateMultiPageCss(pages, globalSettings) {
-  // Use global settings for all styles
-  return `
-:root {
-  --body-bg-color: ${globalSettings.bodyBgColor || '#f8fafc'};
-  --body-text-color: ${globalSettings.bodyTextColor || '#222222'};
-  --heading-color: ${globalSettings.headingColor || '#222222'};
-  --hero-gradient1: ${globalSettings.heroGradient1 || '#667eea'};
-  --hero-gradient2: ${globalSettings.heroGradient2 || '#764ba2'};
-  --footer-bg-color: ${globalSettings.footerBgColor || '#0d0d0d'};
-  --link-color: ${globalSettings.linkColor || '#2563eb'};
-  --header-bg-color: ${globalSettings.headerBgColor || '#ffffff'};
-  --font-family: ${globalSettings.fontFamily && globalSettings.fontFamily !== 'system' ? globalSettings.fontFamily : 'system-ui'};
-  --nav-link-color: ${globalSettings.navLinkColor || '#141414'};
-}
-
-body {
-  background-color: var(--body-bg-color) !important;
-  color: var(--body-text-color) !important;
-  font-family: var(--font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-h1 {
-    font-size: clamp(2rem, 4vw, 2.5rem) !important;
-}
-h2 {
-    font-size: clamp(1.6rem, 3vw, 2rem) !important;
-}
-h3 {
-    font-size: clamp(1.4rem, 3vw, 1.7rem) !important;
-}
-p {
-  margin-bottom: 0.5rem !important;
-}
-  
-  section {
-  padding: 15px 0;
-}
-
-
-h2, h3 {
-  color: var(--heading-color) !important;
-}
-
-.content-area a {
-  color: var(--link-color) !important;
-  text-decoration: none !important;
-}
-
-.content-area a:hover {
-  color: var(--link-color) !important;
-  opacity: 0.8;
-}
-
-.footer {
-  background-color: var(--footer-bg-color);
-  color: white;
-}
-
-.footer a {
-  text-decoration: none;
-  color: var(--link-color) !important;
-}
-
-  
-  .sidebar-page-list {
-  padding: 0;
-  margin: 0;
-  margin-bottom: 17px;
-  width: 279px;
-}
-
-.sidebar-page-list li {
-  list-style-type: disc;
-  list-style-position: inside;
-  color: var(--heading-color);
-}
-
-.sidebar-page-list li::marker {
-  color: var(--link-color);
-  font-size: 1.2em;
-}
-.sidebar-page-list li:last-child {
-  border-bottom: none;
-}
-
-.sidebar-page-list li a {
-  padding: 12px 0;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-  color: var(--link-color);
-}
-
-.sidebar-page-list li a:hover {
-  padding-left: 11px;
-}
-  ${globalSettings.sidebar ? `.twitter-tweet {
-  width: 279px !important;
-}
-
-.x {
-  display: flex;
-  justify-content: center;
-}` : ""}
-.error_page {
-  min-height: 70vh;
-}
-
-${globalSettings.navStyle === "1" ? NavigationCSS1(globalSettings) : NavigationCSS2(globalSettings)}
-`;
-}
 
 function generatePagePhp(page, globalSettings) {
   return `<?php
