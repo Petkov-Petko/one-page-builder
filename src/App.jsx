@@ -13,7 +13,6 @@ function App() {
       id: '1',
       title: 'Home',
       slug: '',
-      navLabel: 'Home',
       isHome: true,
       formData: {
         title: "Welcome to Your Website",

@@ -6,7 +6,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
   const [newPageData, setNewPageData] = useState({
     title: "",
     slug: "",
-    navLabel: "",
     isDropdown: false,
     parentId: null,
     dropdownHasOwnPage: false,
@@ -62,7 +61,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
         id: Date.now().toString(),
         title: newPageData.dropdownTitle,
         slug: newPageData.dropdownHasOwnPage ? normalizedSlug : null,
-        navLabel: newPageData.dropdownTitle,
         isDropdown: true,
         isDropdownParent: true,
         hasOwnPage: newPageData.dropdownHasOwnPage,
@@ -98,7 +96,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
         id: Date.now().toString(),
         title: newPageData.title,
         slug: normalizedSlug,
-        navLabel: newPageData.navLabel || newPageData.title,
         parentId: newPageData.parentId,
         isDropdown: false,
         formData: {
@@ -126,7 +123,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
         id: Date.now().toString(),
         title: newPageData.title,
         slug: normalizedSlug,
-        navLabel: newPageData.navLabel || newPageData.title,
         parentId: newPageData.parentId,
         isHome: pages.length === 0,
         formData: {
@@ -153,7 +149,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
     setNewPageData({
       title: "",
       slug: "",
-      navLabel: "",
       parentId: null,
       dropdownTitle: "",
       dropdownHasOwnPage: false,
@@ -238,20 +233,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
                     slug: e.target.value
                       .toLowerCase()
                       .replace(/[^a-z0-9-]/g, "-"),
-                  }))
-                }
-              />
-            </div>
-            <div className="mb-3">
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="Navigation Label (optional)"
-                value={newPageData.navLabel}
-                onChange={(e) =>
-                  setNewPageData((prev) => ({
-                    ...prev,
-                    navLabel: e.target.value,
                   }))
                 }
               />
@@ -348,7 +329,13 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
                 className="btn btn-secondary btn-sm"
                 onClick={() => {
                   setShowAddPage(false);
-                  setNewPageData({ title: "", slug: "", navLabel: "" });
+                  setNewPageData({
+                    title: "",
+                    slug: "",
+                    parentId: null,
+                    dropdownTitle: "",
+                    dropdownHasOwnPage: false,
+                  });
                 }}
               >
                 Cancel
