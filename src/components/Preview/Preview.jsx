@@ -377,7 +377,7 @@ try {
             <div className="row">
               <div className="col-md-6">
                 <p className="mb-0">
-                  © {currentYear} {globalSettings.domain || "Your Website"}.
+                  © Copyright  {currentYear} {globalSettings.domain || "Your Website"}.
                   All rights reserved.
                 </p>
               </div>
