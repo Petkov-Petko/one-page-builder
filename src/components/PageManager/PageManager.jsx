@@ -11,6 +11,18 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
     dropdownHasOwnPage: false,
   });
 
+    const defaultPageSettings = {
+      lang: "en",
+      bodyBgColor: "#f8fafc",
+      bodyTextColor: "#222222",
+      headingColor: "#222222",
+      heroGradient1: "#667eea",
+      heroGradient2: "#764ba2",
+      footerBgColor: "#0d0d0d",
+      linkColor: "#2563eb",
+      headerBgColor: "#ffffff",
+    };
+
   const handleDeleteDropdown = (pageId) => {
     if (
       window.confirm(
@@ -70,15 +82,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
           desc: "",
           h1: newPageData.dropdownTitle,
           mainContent: `<h2>${newPageData.dropdownTitle}</h2>\n<p>This is a dropdown menu parent page.</p>`,
-          lang: "en",
-          bodyBgColor: "#f8fafc",
-          bodyTextColor: "#222222",
-          headingColor: "#222222",
-          heroGradient1: "#667eea",
-          heroGradient2: "#764ba2",
-          footerBgColor: "#0d0d0d",
-          linkColor: "#2563eb",
-          headerBgColor: "#ffffff",
+          ...defaultPageSettings,
         } : null,
       };
 
@@ -103,15 +107,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
           desc: "",
           h1: newPageData.title,
           mainContent: `<h2>Welcome to ${newPageData.title}</h2>\n<p>This is your new page content. Edit it as needed.</p>`,
-          lang: "en",
-          bodyBgColor: "#f8fafc",
-          bodyTextColor: "#222222",
-          headingColor: "#222222",
-          heroGradient1: "#667eea",
-          heroGradient2: "#764ba2",
-          footerBgColor: "#0d0d0d",
-          linkColor: "#2563eb",
-          headerBgColor: "#ffffff",
+          ...defaultPageSettings,
         },
       };
 
@@ -130,15 +126,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
           desc: "",
           h1: newPageData.title,
           mainContent: `<h2>Welcome to ${newPageData.title}</h2>\n<p>This is your new page content. Edit it as needed.</p>`,
-          lang: "en",
-          bodyBgColor: "#f8fafc",
-          bodyTextColor: "#222222",
-          headingColor: "#222222",
-          heroGradient1: "#667eea",
-          heroGradient2: "#764ba2",
-          footerBgColor: "#0d0d0d",
-          linkColor: "#2563eb",
-          headerBgColor: "#ffffff",
+          ...defaultPageSettings,
         },
       };
 
