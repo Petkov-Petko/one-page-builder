@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./BuilderForm.css";
+import { languageOptions } from "../../data/languageOptions";
 
 function BuilderForm({
   formData,
@@ -219,7 +220,8 @@ const handleApplyBoldWords = () => {
               placeholder="Enter your website URL (e.g., https://yourdomain.com)"
             />
             <small className="form-text text-muted">
-              The url will be used in the robots.txt, sitemap and htaccess files also.
+              The url will be used in the robots.txt, sitemap and htaccess files
+              also.
             </small>
           </div>
           <div className="form-group">
@@ -232,19 +234,21 @@ const handleApplyBoldWords = () => {
               placeholder="Your Website Name"
             />
           </div>
-
           <div className="form-group">
             <label>Website Language</label>
-            <input
-              type="text"
+            <select
               className="form-control"
               value={globalSettings.lang || "en"}
               onChange={(e) => handleGlobalChange("lang", e.target.value)}
-              placeholder="Language code (e.g., en, es, fr, de, etc.)"
-            />
+            >
+              {languageOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             <small className="form-text text-muted">
-              Enter the language code for your website (e.g., en for English, es
-              for Spanish, fr for French)
+              Select the language code for your website
             </small>
           </div>
           <div className="form-group">
