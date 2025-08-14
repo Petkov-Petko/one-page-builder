@@ -8,8 +8,25 @@ import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
 import { exportRobots } from "../../utils/exportRobots";
 import { exportSitemap } from "../../utils/exportSitemap";
+import { storage } from "../../utils/localStorage";
+
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
+const handleClearStorage = () => {
+  if (
+    window.confirm(
+      "⚠️ This will delete all your work and start fresh.\n\nAre you sure you want to clear all saved data? This action cannot be undone."
+    )
+  ) {
+    storage.clearAll();
+
+    alert(
+      "✅ All data has been cleared successfully!\n\nThe page will now reload with a fresh start."
+    );
+    window.location.reload();
+  }
+};
+
   const validateRequiredFields = () => {
     const missingFields = [];
     
@@ -208,19 +225,35 @@ try {
             {pages.length} page{pages.length !== 1 ? "s" : ""} total
           </small>
         </div>
-              <div className="d-flex flex-column align-items-end">
-          <button 
-            className={`btn ${isDownloadDisabled ? 'btn-secondary' : 'btn-success'}`}
+        <div className="d-flex flex-column gap-3 align-items-end">
+          <button
+            className="btn btn-outline-danger btn-sm"
+            onClick={handleClearStorage}
+            title="Clear all saved data and start fresh"
+          >
+            <i className="bi bi-trash3"></i> Clear All Data
+          </button>
+
+          <button
+            className={`btn ${
+              isDownloadDisabled ? "btn-secondary" : "btn-success"
+            }`}
             onClick={handleDownloadClick}
             disabled={isDownloadDisabled}
-            title={isDownloadDisabled ? `Missing required fields: ${validation.missingFields.join(', ')}` : 'Download your website'}
+            title={
+              isDownloadDisabled
+                ? `Missing required fields: ${validation.missingFields.join(
+                    ", "
+                  )}`
+                : "Download your website"
+            }
           >
             <i className="bi bi-download"></i> Download Multi-Page Site
           </button>
-          
+
           {isDownloadDisabled && (
             <small className="text-danger mt-1 text-end">
-              Missing: {validation.missingFields.join(', ')}
+              Missing: {validation.missingFields.join(", ")}
             </small>
           )}
         </div>
@@ -229,7 +262,13 @@ try {
       <div className="website-preview" lang={globalSettings.lang || "en"}>
         {/* Navigation */}
         <nav
-          className={`navbar navbar-expand-lg navbar-light${globalSettings.stickyNavbar ? " sticky-top" : ""} ${globalSettings.navStyle === "1" ? "" : "floating-rounded-navbar container"}`}
+          className={`navbar navbar-expand-lg navbar-light${
+            globalSettings.stickyNavbar ? " sticky-top" : ""
+          } ${
+            globalSettings.navStyle === "1"
+              ? ""
+              : "floating-rounded-navbar container"
+          }`}
         >
           <div className="container-fluid">
             <a className="navbar-brand d-flex align-items-center" href="#">
@@ -260,7 +299,7 @@ try {
                   if (page.isDropdownParent) {
                     // Render as dropdown
                     const children = childPages.filter(
-                      (child) => child.parentId === page.id,
+                      (child) => child.parentId === page.id
                     );
                     return (
                       <li key={page.id} className="nav-item dropdown">
@@ -277,7 +316,9 @@ try {
                           {children.map((child) => (
                             <li key={child.id}>
                               <a
-                                className={`dropdown-item ${child.id === currentPage?.id ? "active" : ""}`}
+                                className={`dropdown-item ${
+                                  child.id === currentPage?.id ? "active" : ""
+                                }`}
                                 href={`#${child.slug}`}
                               >
                                 {child.navLabel || child.title}
@@ -292,7 +333,9 @@ try {
                     return (
                       <li key={page.id} className="nav-item">
                         <a
-                          className={`nav-link ${page.id === currentPage?.id ? "active" : ""}`}
+                          className={`nav-link ${
+                            page.id === currentPage?.id ? "active" : ""
+                          }`}
                           href={page.isHome ? "#" : `#${page.slug}`}
                         >
                           {page.navLabel || page.title}
@@ -320,7 +363,9 @@ try {
 
         {/* Hero Section */}
         <section
-          className={`${heroClass} ${globalSettings.navStyle === "2" && "second-style"}`}
+          className={`${heroClass} ${
+            globalSettings.navStyle === "2" && "second-style"
+          }`}
           style={
             globalSettings.heroBg
               ? {
@@ -377,8 +422,9 @@ try {
             <div className="row">
               <div className="col-md-6">
                 <p className="mb-0">
-                  © Copyright  {currentYear} {globalSettings.domain || "Your Website"}.
-                  All rights reserved.
+                  © Copyright {currentYear}{" "}
+                  {globalSettings.domain || "Your Website"}. All rights
+                  reserved.
                 </p>
               </div>
               <div className="col-md-6 text-md-end">
