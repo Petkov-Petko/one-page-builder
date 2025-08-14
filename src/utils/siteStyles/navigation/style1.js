@@ -34,12 +34,12 @@ export function NavigationHero1(globalSettings, page) {
 <section class="${heroClass}">
   <div class="container">
     <div class="justify-content-center text-center">
-        <h1 class="text-white">
+        <h1>
           ${page.formData.h1 || page.title}
         </h1>
         ${
           page.formData.afterH1
-            ? `<div class="text-white">${page.formData.afterH1}</div>`
+            ? `<div>${page.formData.afterH1}</div>`
             : ""
         }
     </div>
@@ -63,6 +63,7 @@ export function NavigationCSS1(globalSettings) {
   padding: 55px 0;
   position: relative;
   overflow: hidden;
+  color: var(--header-text-color);
 }
 
 .hero-section.gradient-bg {

@@ -217,6 +217,8 @@ try {
             ? globalSettings.fontFamily
             : "system-ui",
         "--nav-link-color": globalSettings.navLinkColor || "#141414",
+        "--footer-text-color": globalSettings.footerTextColor || "#ffffff",
+        "--header-text-color": globalSettings.headerTextColor || "#ffffffff",
       }}
     >
       <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
@@ -386,12 +388,11 @@ try {
           >
             <div className="row justify-content-center text-center">
               <div className="col-lg-11">
-                <h1 className="display-4 fw-bold text-white mb-4">
+                <h1 className="display-4 fw-bold mb-4">
                   {formData.h1 || "Welcome to Your Website"}
                 </h1>
                 {formData.afterH1 && (
                   <div
-                    className="text-white"
                     dangerouslySetInnerHTML={{ __html: formData.afterH1 }}
                   />
                 )}

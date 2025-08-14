@@ -19,6 +19,8 @@ export function exportCss(globalSettings) {
       : "system-ui"
   };
   --nav-link-color: ${globalSettings.navLinkColor || "#141414"};
+  --footer-text-color: ${globalSettings.footerTextColor || "#ffffff"};
+  --header-text-color: ${globalSettings.headerTextColor || "#ffffffff"};
 }
 
 body {
@@ -64,7 +66,7 @@ h2, h3 {
 
 .footer {
   background-color: var(--footer-bg-color);
-  color: white;
+  color: var(--footer-text-color);
 }
 
 .footer a {

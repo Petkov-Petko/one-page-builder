@@ -27,6 +27,8 @@
     --header-bg-color: #ffffff;
     --font-family: system-ui;
     --nav-link-color: #141414;
+    --footer-text-color: #ffffff;
+    --header-text-color: #fffefe;
 }
 
 .website-preview {
@@ -148,6 +150,7 @@ p {
     align-items: center;
     justify-content: center;
     padding: 60px 0;
+    color: var(--header-text-color) !important;
 }
 
 .website-preview .hero-section.with-bg {
@@ -204,7 +207,7 @@ p {
 }
 
 .website-preview .footer {
-    color: #fff;
+    color: var(--footer-text-color);
     background-color: var(--footer-bg-color);
     font-size: 14px;
     padding: 11px 0;

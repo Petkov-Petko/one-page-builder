@@ -437,6 +437,19 @@ const handleApplyBoldWords = () => {
               </div>
               <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
+                  <label>Header Text Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.headerTextColor || "#ffffff"}
+                    onChange={(e) =>
+                      handleGlobalChange("headerTextColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4 col-xl-3">
+                <div className="form-group">
                   <label>Hero Gradient Color 1</label>
                   <input
                     type="color"
@@ -549,6 +562,19 @@ const handleApplyBoldWords = () => {
                     value={globalSettings.footerBgColor || "#0d0d0d"}
                     onChange={(e) =>
                       handleGlobalChange("footerBgColor", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>Footer Text Color</label>
+                  <input
+                    type="color"
+                    className="form-control"
+                    value={globalSettings.footerTextColor || "#ffffff"}
+                    onChange={(e) =>
+                      handleGlobalChange("footerTextColor", e.target.value)
                     }
                   />
                 </div>
