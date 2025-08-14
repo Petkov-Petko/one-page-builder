@@ -424,7 +424,7 @@ const handleApplyBoldWords = () => {
               </div>
               <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
-                  <label>Header Background Color</label>
+                  <label>Navigation Background Color</label>
                   <input
                     type="color"
                     className="form-control"
@@ -437,7 +437,7 @@ const handleApplyBoldWords = () => {
               </div>
               <div className="col-lg-4 col-xl-3">
                 <div className="form-group">
-                  <label>Header Text Color</label>
+                  <label>Hero Text Color</label>
                   <input
                     type="color"
                     className="form-control"
