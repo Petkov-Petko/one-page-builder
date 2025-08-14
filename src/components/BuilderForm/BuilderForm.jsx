@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./BuilderForm.css";
 import { languageOptions } from "../../data/languageOptions";
+import { fontFamilyOptions } from "../../data/fontFamilyOptions";
 
 function BuilderForm({
   formData,
@@ -394,12 +395,11 @@ const handleApplyBoldWords = () => {
               value={globalSettings.fontFamily || "system"}
               onChange={(e) => handleGlobalChange("fontFamily", e.target.value)}
             >
-              <option value="system">System Default</option>
-              <option value="Arial">Arial</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Verdana">Verdana</option>
+              {fontFamilyOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 

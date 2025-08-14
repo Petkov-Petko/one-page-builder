@@ -26,7 +26,7 @@ export function exportCss(globalSettings) {
 body {
   background-color: var(--body-bg-color) !important;
   color: var(--body-text-color) !important;
-  font-family: var(--font-family), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family);
   line-height: 1.6;
   min-height: 100vh;
   display: flex;
