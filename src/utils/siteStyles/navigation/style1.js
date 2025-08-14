@@ -1,10 +1,15 @@
 export function NavigationHtml1(globalSettings, navigationHtml) {
-
-    return `
-        <nav class="navbar navbar-expand-xl navbar-light${globalSettings.stickyNavbar ? ' sticky-top' : ''}">
+  return `
+        <nav class="navbar navbar-expand-xl navbar-light${
+          globalSettings.stickyNavbar ? " sticky-top" : ""
+        }">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" href="/">
-      <img src="${globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"}" alt="${globalSettings.name || globalSettings.domain || 'Domain'}" width="220" height="50">
+      <img src="${
+        globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"
+      }" alt="${
+    globalSettings.name || globalSettings.domain || "Domain"
+  }" width="220" height="50">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,28 +22,34 @@ export function NavigationHtml1(globalSettings, navigationHtml) {
     </div>
   </div>
 </nav>
-    `
+    `;
 }
 
 export function NavigationHero1(globalSettings, page) {
-    const heroClass = globalSettings.heroBg ? 'hero-section with-bg' : 'hero-section gradient-bg';
+  const heroClass = globalSettings.heroBg
+    ? "hero-section with-bg"
+    : "hero-section gradient-bg";
 
-    return `
+  return `
 <section class="${heroClass}">
   <div class="container">
     <div class="justify-content-center text-center">
         <h1 class="text-white">
           ${page.formData.h1 || page.title}
         </h1>
-        ${page.formData.afterH1 ? `<div class="text-white">${page.formData.afterH1}</div>` : ''}
+        ${
+          page.formData.afterH1
+            ? `<div class="text-white">${page.formData.afterH1}</div>`
+            : ""
+        }
     </div>
   </div>
 </section>
-    `
+    `;
 }
 
 export function NavigationCSS1(globalSettings) {
-    return `
+  return `
  .navbar {
   background-color: var(--header-bg-color) !important;
   ${
@@ -100,6 +111,11 @@ export function NavigationCSS1(globalSettings) {
   .navbar-light .navbar-nav .nav-link {
     color: var(--nav-link-color, #141414) !important;
   }
+
+  .navbar-light .navbar-nav .nav-link.active {
+  color: var(--link-color) !important;
+  font-weight: bold;
+}
   /* Mobile nav */
 @media (max-width: 1199.98px) {
   .navbar-collapse {

@@ -9,6 +9,7 @@ import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
 import { exportRobots } from "../../utils/exportRobots";
 import { exportSitemap } from "../../utils/exportSitemap";
 import { storage } from "../../utils/localStorage";
+import { exportMainJs } from "../../utils/exportJs";
 
 
 const Preview = ({ formData, globalSettings, pages, currentPage }) => {
@@ -67,7 +68,8 @@ const handleClearStorage = () => {
 
     // Generate multi-page website files
     const multiPageExport = generateMultiPageExport(pages, globalSettings);
-
+    console.log(globalSettings);
+    
     // Add all PHP files
     Object.entries(multiPageExport.pages).forEach(([filename, content]) => {
       zip.file(filename, content);
@@ -154,7 +156,8 @@ try {
     }
     // Add .htaccess
     zip.file(".htaccess", exportHtaccess(globalSettings.url));
-
+    // Add main.js
+    zip.file("assets/js/main.js", exportMainJs());
     // Add images if they exist
     if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
       const res = await fetch(globalSettings.logo);
