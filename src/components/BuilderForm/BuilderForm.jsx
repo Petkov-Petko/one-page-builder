@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./BuilderForm.css";
 import { languageOptions } from "../../data/languageOptions";
 import { fontFamilyOptions } from "../../data/fontFamilyOptions";
+import AIImageGenerator from "../AIImages/AIImageGenerator";
 
 function BuilderForm({
   formData,
@@ -12,6 +13,9 @@ function BuilderForm({
 }) {
   const [activeTab, setActiveTab] = useState("page");
 
+  const handleImageInsert = (newContent) => {
+    handlePageChange("mainContent", newContent);
+  };
   const handleGlobalChange = (field, value) => {
     setGlobalSettings((prev) => ({
       ...prev,
@@ -42,38 +46,38 @@ function BuilderForm({
       reader.readAsDataURL(file);
     }
   };
-const handleApplyBoldWords = () => {
-  if (!formData.mainContent || !formData.boldWords) return;
+  const handleApplyBoldWords = () => {
+    if (!formData.mainContent || !formData.boldWords) return;
 
-  let updatedContent = formData.mainContent;
-  const wordsToBold = formData.boldWords
-    .split(",")
-    .map((word) => word.trim())
-    .filter((word) => word.length > 0);
+    let updatedContent = formData.mainContent;
+    const wordsToBold = formData.boldWords
+      .split(",")
+      .map((word) => word.trim())
+      .filter((word) => word.length > 0);
 
-  wordsToBold.forEach((word) => {
-    // Escape special regex characters
-    const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    wordsToBold.forEach((word) => {
+      // Escape special regex characters
+      const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    // Create regex to find the word (case-insensitive, whole word, not already in tags, not in headings)
-    const regex = new RegExp(
-      `(?<!<[^>]*>)(?<!<h[1-6][^>]*>)(?<!<h[1-6][^>]*>[^<]*)\\b(${escapedWord})\\b(?![^<]*<\/h[1-6]>)(?![^<]*>)(?!<\/strong>)`,
-      "i",
-    );
+      // Create regex to find the word (case-insensitive, whole word, not already in tags, not in headings)
+      const regex = new RegExp(
+        `(?<!<[^>]*>)(?<!<h[1-6][^>]*>)(?<!<h[1-6][^>]*>[^<]*)\\b(${escapedWord})\\b(?![^<]*<\/h[1-6]>)(?![^<]*>)(?!<\/strong>)`,
+        "i"
+      );
 
-    // Replace only the first occurrence that's not already in a strong tag or heading
-    const match = updatedContent.match(regex);
-    if (match) {
-      updatedContent = updatedContent.replace(regex, `<strong>$1</strong>`);
-    }
-  });
+      // Replace only the first occurrence that's not already in a strong tag or heading
+      const match = updatedContent.match(regex);
+      if (match) {
+        updatedContent = updatedContent.replace(regex, `<strong>$1</strong>`);
+      }
+    });
 
-  // Update the content
-  handlePageChange("mainContent", updatedContent);
+    // Update the content
+    handlePageChange("mainContent", updatedContent);
 
-  // Optional: Clear the bold words input after applying
-  handlePageChange("boldWords", "");
-};
+    // Optional: Clear the bold words input after applying
+    handlePageChange("boldWords", "");
+  };
 
   return (
     <div className="builder-form">
@@ -96,6 +100,7 @@ const handleApplyBoldWords = () => {
         >
           Styling
         </button>
+
         <button
           className={`tab-btn ${activeTab === "privacy" ? "active" : ""}`}
           onClick={() => setActiveTab("privacy")}
@@ -581,6 +586,14 @@ const handleApplyBoldWords = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {activeTab === "ai-images" && (
+        <div className="tab-content">
+          <AIImageGenerator
+            formData={formData}
+            onImageInsert={handleImageInsert}
+          />
         </div>
       )}
       {activeTab === "privacy" && (
