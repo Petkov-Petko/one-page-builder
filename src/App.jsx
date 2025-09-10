@@ -8,6 +8,11 @@ import { useState, useEffect } from "react";
 import { storage, STORAGE_KEYS } from "./utils/localStorage";
 
 function App() {
+  // 🔥 ADD: State for storing AI-generated images
+  const [storedImages, setStoredImages] = useState(() => {
+    const saved = storage.load(STORAGE_KEYS.STORED_IMAGES);
+    return saved || [];
+  });
   // Initialize with a default home page
   const [pages, setPages] = useState(() => {
     const saved = storage.load(STORAGE_KEYS.PAGES);
@@ -64,6 +69,11 @@ function App() {
   const [currentPageId, setCurrentPageId] = useState(() => {
     return storage.load(STORAGE_KEYS.CURRENT_PAGE_ID, "1");
   });
+
+  useEffect(() => {
+    storage.save(STORAGE_KEYS.STORED_IMAGES, storedImages);
+  }, [storedImages]);
+
   // Auto-save effects
   useEffect(() => {
     storage.save(STORAGE_KEYS.PAGES, pages);
@@ -98,6 +108,21 @@ function App() {
     );
   };
 
+  //Handle image insertion and storage
+  const handleImageInsert = (updatedContent, imageData = null) => {
+    setCurrentPageFormData((prev) => ({
+      ...prev,
+      mainContent: updatedContent,
+    }));
+    if (imageData) {
+      setStoredImages((prev) => {
+        const newStored = [...prev, imageData];
+        console.log("Image stored for download:", newStored);
+
+        return newStored;
+      });
+    }
+  };
   return (
     <>
       <div className="container-fluid">
@@ -123,6 +148,7 @@ function App() {
                 globalSettings={globalSettings}
                 setGlobalSettings={setGlobalSettings}
                 currentPage={currentPage}
+                onImageInsert={handleImageInsert}
               />
             </div>
           </div>
@@ -132,6 +158,7 @@ function App() {
               globalSettings={globalSettings}
               pages={pages}
               currentPage={currentPage}
+              storedImages={storedImages}
             />
           </div>
         </div>

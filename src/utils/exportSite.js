@@ -144,6 +144,12 @@ export function generateMultiPageExport(pages, globalSettings) {
 function generateMultiPageFunctions(globalSettings, navigationHtml, pages) {
   // Generate sidebar links dynamically from pages
   const sidebarLinks = pages
+    .filter((page) => {
+      if (page.isDropdownParent && !page.hasOwnPage) {
+        return false;
+      }
+      return true;
+    })
     .map((page) => {
       const href = page.isHome ? "/" : `/${page.slug}`;
       const label = page.title;

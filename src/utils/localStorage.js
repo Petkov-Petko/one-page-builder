@@ -2,6 +2,7 @@ const STORAGE_KEYS = {
   PAGES: "websiteBuilder_pages",
   GLOBAL_SETTINGS: "websiteBuilder_globalSettings",
   CURRENT_PAGE_ID: "websiteBuilder_currentPageId",
+  STORED_IMAGES: "one-page-builder-stored-images", 
 };
 
 export const storage = {

@@ -10,11 +10,21 @@ function BuilderForm({
   globalSettings,
   setGlobalSettings,
   currentPage,
+  onImageInsert,
 }) {
   const [activeTab, setActiveTab] = useState("page");
 
-  const handleImageInsert = (newContent) => {
-    handlePageChange("mainContent", newContent);
+  const handleImageInsert = (updatedContent, imageData = null) => {
+    // Use the parent's handler if available, otherwise fall back to local update
+    if (onImageInsert) {
+      onImageInsert(updatedContent, imageData);
+    } else {
+      // Fallback to local update
+      setFormData((prev) => ({
+        ...prev,
+        mainContent: updatedContent,
+      }));
+    }
   };
   const handleGlobalChange = (field, value) => {
     setGlobalSettings((prev) => ({
@@ -100,7 +110,12 @@ function BuilderForm({
         >
           Styling
         </button>
-
+        <button
+          className={`tab-btn ${activeTab === "ai-images" ? "active" : ""}`}
+          onClick={() => setActiveTab("ai-images")}
+        >
+          AI Images
+        </button>
         <button
           className={`tab-btn ${activeTab === "privacy" ? "active" : ""}`}
           onClick={() => setActiveTab("privacy")}

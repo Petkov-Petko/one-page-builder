@@ -11,65 +11,134 @@ import { exportSitemap } from "../../utils/exportSitemap";
 import { storage } from "../../utils/localStorage";
 import { exportMainJs } from "../../utils/exportJs";
 
+const Preview = ({
+  formData,
+  globalSettings,
+  pages,
+  currentPage,
+  storedImages = [],
+}) => {
+  const handleClearStorage = () => {
+    if (
+      window.confirm(
+        "⚠️ This will delete all your work and start fresh.\n\nAre you sure you want to clear all saved data? This action cannot be undone."
+      )
+    ) {
+      storage.clearAll();
 
-const Preview = ({ formData, globalSettings, pages, currentPage }) => {
-const handleClearStorage = () => {
-  if (
-    window.confirm(
-      "⚠️ This will delete all your work and start fresh.\n\nAre you sure you want to clear all saved data? This action cannot be undone."
-    )
-  ) {
-    storage.clearAll();
+      alert(
+        "✅ All data has been cleared successfully!\n\nThe page will now reload with a fresh start."
+      );
+      window.location.reload();
+    }
+  };
 
-    alert(
-      "✅ All data has been cleared successfully!\n\nThe page will now reload with a fresh start."
-    );
-    window.location.reload();
-  }
-};
+  const replacePreviewImagesWithPaths = (pages, storedImages) => {
+    if (!storedImages || storedImages.length === 0) {
+      console.log("📭 No stored images to process");
+      return pages;
+    }
+
+    const imageReplacements = new Map();
+
+    storedImages.forEach((img, index) => {
+      if (img.b64_json && img.filename) {
+        imageReplacements.set(img.b64_json, img.filename);
+        console.log(`📋 Mapped image ${index + 1}: ${img.filename}`);
+      }
+    });
+
+    console.log(`📋 Created ${imageReplacements.size} image mappings`);
+
+    return pages.map((page) => {
+      if (!page.formData?.mainContent) return page;
+
+      let updatedContent = page.formData.mainContent;
+
+      const dataUrlPattern = /src="data:image\/(jpe?g|png);base64,([^"]+)"/g;
+      let replacementCount = 0;
+
+      updatedContent = updatedContent.replace(
+        dataUrlPattern,
+        (match, imageType, base64Data) => {
+          console.log(
+            `🔍 Found ${imageType} image (${base64Data.length} chars)`
+          );
+
+          const filename = imageReplacements.get(base64Data);
+          if (filename) {
+            replacementCount++;
+            console.log(`✅ Replaced with: images/${filename}`);
+            return `src="images/${filename}"`;
+          }
+
+          console.warn(`⚠️ No mapping found for this base64 data`);
+          return match;
+        }
+      );
+
+      return {
+        ...page,
+        formData: {
+          ...page.formData,
+          mainContent: updatedContent,
+        },
+      };
+    });
+  };
 
   const validateRequiredFields = () => {
     const missingFields = [];
-    
+
     if (!globalSettings.url?.trim()) {
-      missingFields.push('Website URL');
+      missingFields.push("Website URL");
     }
     if (!globalSettings.name?.trim()) {
-      missingFields.push('Website Name');
+      missingFields.push("Website Name");
     }
     if (!globalSettings.domain?.trim()) {
-      missingFields.push('Website Domain');
+      missingFields.push("Website Domain");
     }
     if (!globalSettings.email?.trim()) {
-      missingFields.push('Website Email');
+      missingFields.push("Website Email");
     }
-    
+
     return {
       isValid: missingFields.length === 0,
-      missingFields
+      missingFields,
     };
   };
-  
 
   const validation = validateRequiredFields();
   const isDownloadDisabled = !validation.isValid;
   const handleDownloadClick = () => {
     if (!validation.isValid) {
-      alert(`Please fill in the following required fields in Global Settings:\n\n• ${validation.missingFields.join('\n• ')}\n\nThese fields are required for generating the website files.`);
+      alert(
+        `Please fill in the following required fields in Global Settings:\n\n• ${validation.missingFields.join(
+          "\n• "
+        )}\n\nThese fields are required for generating the website files.`
+      );
       return;
     }
-    
+
     handleDownloadZip();
   };
 
   async function handleDownloadZip() {
-    
     const zip = new JSZip();
 
+    const pagesWithProperPaths = replacePreviewImagesWithPaths(
+      pages,
+      storedImages
+    );
+
     // Generate multi-page website files
-    const multiPageExport = generateMultiPageExport(pages, globalSettings);
+    const multiPageExport = generateMultiPageExport(
+      pagesWithProperPaths,
+      globalSettings
+    );
     console.log(globalSettings);
-    
+
     // Add all PHP files
     Object.entries(multiPageExport.pages).forEach(([filename, content]) => {
       zip.file(filename, content);
@@ -79,28 +148,72 @@ const handleClearStorage = () => {
     zip.file("functions.php", multiPageExport.functions);
     zip.file("style.css", multiPageExport.styles);
 
-// Add Bootstrap files
-try {
-  // Add Bootstrap CSS
-  const bootstrapCssResponse = await fetch('/one-page-builder/bootstrap/css/bootstrap.min.css');
-  const bootstrapCssBlob = await bootstrapCssResponse.blob();
-  zip.file("assets/bootstrap/css/bootstrap.min.css", bootstrapCssBlob);
+    // Add Bootstrap files
+    try {
+      // Add Bootstrap CSS
+      const bootstrapCssResponse = await fetch(
+        "/one-page-builder/bootstrap/css/bootstrap.min.css"
+      );
+      const bootstrapCssBlob = await bootstrapCssResponse.blob();
+      zip.file("assets/bootstrap/css/bootstrap.min.css", bootstrapCssBlob);
 
-  // Add Bootstrap JS
-  const bootstrapJsResponse = await fetch('/one-page-builder/bootstrap/js/bootstrap.min.js');
-  const bootstrapJsBlob = await bootstrapJsResponse.blob();
-  zip.file("assets/bootstrap/js/bootstrap.min.js", bootstrapJsBlob);
-} catch (error) {
-  console.warn('Could not add Bootstrap files to download:', error);
-}
+      // Add Bootstrap JS
+      const bootstrapJsResponse = await fetch(
+        "/one-page-builder/bootstrap/js/bootstrap.min.js"
+      );
+      const bootstrapJsBlob = await bootstrapJsResponse.blob();
+      zip.file("assets/bootstrap/js/bootstrap.min.js", bootstrapJsBlob);
+    } catch (error) {
+      console.warn("Could not add Bootstrap files to download:", error);
+    }
+
+    //AI-generated images to ZIP
+    if (storedImages && storedImages.length > 0) {
+      console.log(
+        `🖼️ Adding ${storedImages.length} AI-generated images to ZIP`
+      );
+      console.log(
+        "📋 Stored images:",
+        storedImages.map((img) => ({
+          filename: img.filename,
+          hasData: !!img.b64_json,
+        }))
+      );
+      for (const imageData of storedImages) {
+        try {
+          if (!imageData.b64_json) {
+            console.error(`❌ No base64 data for ${imageData.filename}`);
+            continue;
+          }
+          // Convert base64 to binary
+          const binaryString = atob(imageData.b64_json);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+
+          // Add image to ZIP in images folder
+          zip.file(`images/${imageData.filename}`, bytes);
+          console.log(`Added AI image: ${imageData.filename}`);
+        } catch (imageError) {
+          console.error(
+            `Error processing AI image ${imageData.filename}:`,
+            imageError
+          );
+        }
+      }
+    }
 
     // Add 404.php
     zip.file("404.php", export404());
     // Add robots.txt
-      zip.file("robots.txt", exportRobots(globalSettings.url, pages));
+    zip.file("robots.txt", exportRobots(globalSettings.url, pages));
     // Add sitemap.xml
-    if(pages.length > 1) {
-      zip.file("sitemap.xml", exportSitemap(globalSettings.url, pages, globalSettings.privacyOrTerms));
+    if (pages.length > 1) {
+      zip.file(
+        "sitemap.xml",
+        exportSitemap(globalSettings.url, pages, globalSettings.privacyOrTerms)
+      );
     }
     // Add privacy or terms
     if (globalSettings.privacyOrTerms === "privacy") {
@@ -112,8 +225,8 @@ try {
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name,
-            ),
+              globalSettings.name
+            )
           );
           break;
         case "2":
@@ -123,8 +236,8 @@ try {
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name,
-            ),
+              globalSettings.name
+            )
           );
           break;
       }
@@ -137,8 +250,8 @@ try {
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name,
-            ),
+              globalSettings.name
+            )
           );
           break;
         case "2":
@@ -148,8 +261,8 @@ try {
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name,
-            ),
+              globalSettings.name
+            )
           );
           break;
       }
@@ -190,7 +303,7 @@ try {
 
   // Generate navigation items
   const visiblePages = pages.filter(
-    (page) => !globalSettings.hiddenFromNav?.includes(page.id),
+    (page) => !globalSettings.hiddenFromNav?.includes(page.id)
   );
   const customNavItems = globalSettings.customNavItems || [];
 
@@ -199,6 +312,13 @@ try {
   const childPages = visiblePages.filter((page) => page.parentId);
 
   const currentYear = new Date().getFullYear();
+
+  const realPageCount = pages.filter((page) => {
+    if (page.isDropdownParent && !page.hasOwnPage) {
+      return false;
+    }
+    return true;
+  }).length;
 
   return (
     <div
@@ -227,7 +347,7 @@ try {
             Preview: {currentPage?.title || "Untitled Page"}
           </h5>
           <small className="text-muted">
-            {pages.length} page{pages.length !== 1 ? "s" : ""} total
+            {realPageCount} page{realPageCount !== 1 ? "s" : ""} total
           </small>
         </div>
         <div className="d-flex flex-column gap-3 align-items-end">
@@ -392,9 +512,7 @@ try {
                   {formData.h1 || "Welcome to Your Website"}
                 </h1>
                 {formData.afterH1 && (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: formData.afterH1 }}
-                  />
+                  <div dangerouslySetInnerHTML={{ __html: formData.afterH1 }} />
                 )}
               </div>
             </div>

@@ -1,17 +1,15 @@
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
 function AIImageGenerator({ formData, onImageInsert }) {
   const [aiSettings, setAiSettings] = useState({
-    websiteTopic: "",
     imageSize: "256x256",
-    imageStyle: "natural",
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState(null);
   const [imageFloat, setImageFloat] = useState("none");
   const [selectedTextInfo, setSelectedTextInfo] = useState(null);
-  const [showImageStyles, setShowImageStyles] = useState(false);
   const [lastInsertedId, setLastInsertedId] = useState(null);
   const [editorAlt, setEditorAlt] = useState("");
   const [editorFloat, setEditorFloat] = useState("none");
@@ -28,13 +26,11 @@ function AIImageGenerator({ formData, onImageInsert }) {
     const h2Matches = [];
     while ((match = h2Regex.exec(htmlContent)) !== null) {
       h2Matches.push({
-        heading: match[1].replace(/<[^>]*>/g, "").trim(), // Clean heading text
+        heading: match[1].replace(/<[^>]*>/g, "").trim(),
         startIndex: match.index,
         endIndex: match.index + match[0].length,
       });
     }
-
-    console.log("Found H2 headings:", h2Matches);
 
     // For each H2, find ONLY the P elements that follow until the next H2
     for (let i = 0; i < h2Matches.length; i++) {
@@ -91,8 +87,6 @@ function AIImageGenerator({ formData, onImageInsert }) {
     // Pick random section from available ones
     const randomSection =
       availableSections[Math.floor(Math.random() * availableSections.length)];
-
-    console.log("Selected section (no image):", randomSection);
     return randomSection;
   };
 
@@ -103,10 +97,10 @@ function AIImageGenerator({ formData, onImageInsert }) {
     let classes = "img-fluid rounded";
     switch (floatValue) {
       case "start":
-        classes += " float-start me-3 mb-2";
+        classes += " float-md-start mb-2 mb-md-0 me-md-3 d-block mx-auto";
         break;
       case "end":
-        classes += " float-end ms-3 mb-2";
+        classes += " float-md-end mb-2 mb-md-0 ms-md-3 d-block mx-auto";
         break;
       case "center":
         classes += " d-block mx-auto mb-2";
@@ -116,31 +110,57 @@ function AIImageGenerator({ formData, onImageInsert }) {
         break;
     }
     const altText =
-      altValue && altValue.trim().length
-        ? altValue.trim()
-        : "AI generated image";
+      altValue && altValue.trim().length > 0 ? altValue.trim() : "Image alt";
     const idAttr = id ? ` data-ai-id="${id}"` : "";
     return `<img src="${imageData.url}" alt="${altText}" class="${classes}"${idAttr}>`;
   };
 
-  const handleImageGeneration = async () => {
-    if (!aiSettings.websiteTopic) {
-      alert("Please enter your website topic first");
-      return;
+  const createUniversalPrompt = (selectedSection) => {
+    let prompt;
+
+    if (!selectedSection) {
+      prompt = `Image`;
+    } else {
+      // Section-specific image with paragraph content
+      prompt = `Image related to ${selectedSection.heading}`;
+
+      if (selectedSection.paragraphs && selectedSection.paragraphs.length > 0) {
+        // Combine first 2 paragraphs (or all if less than 2)
+        const relevantParagraphs = selectedSection.paragraphs.slice(0, 2);
+        const combinedText = relevantParagraphs.join(" ");
+
+        const maxDescLength = 200;
+        const shortDescription =
+          combinedText.length > maxDescLength
+            ? combinedText.substring(0, maxDescLength) + "..."
+            : combinedText;
+
+        prompt += `, showing ${shortDescription}`;
+      }
+    }
+    // Keep it under 800 characters for DALL-E 2
+    if (prompt.length > 800) {
+      prompt = prompt.substring(0, 797) + "...";
     }
 
+    return prompt;
+  };
+
+  const handleImageGeneration = async () => {
+    if (!formData.mainContent) {
+      alert(
+        "Please add some content to your page first, then generate images for specific sections."
+      );
+      return;
+    }
     setIsGenerating(true);
 
     try {
       let selectedSection = null;
 
-      // Create mock prompt for testing
-      let basePrompt = `Professional business image for ${aiSettings.websiteTopic}`;
-
       if (formData.mainContent) {
         selectedSection = extractRandomSectionFromContent(formData.mainContent);
 
-        // 🆕 CHECK if all sections have images
         if (selectedSection && selectedSection.allHaveImages) {
           alert(
             "All sections already have an image under their heading. Remove an existing image first to add a new one."
@@ -149,26 +169,29 @@ function AIImageGenerator({ formData, onImageInsert }) {
           return;
         }
 
-        if (selectedSection) {
-          basePrompt += `, related to: ${selectedSection.heading}. ${
-            selectedSection.paragraphs[0] || ""
-          }`;
-          setSelectedTextInfo(selectedSection);
+        if (!selectedSection) {
+          alert(
+            "No suitable sections found for image generation. Please add some headings and paragraphs to your content."
+          );
+          setIsGenerating(false);
+          return;
         }
+
+        setSelectedTextInfo(selectedSection);
       }
 
-      const enhancedPrompt = `${basePrompt}`;
+      // Create basic prompt
+      const basicPrompt = createUniversalPrompt(selectedSection);
 
-      // 🔥 ACTUAL API CALL TO YOUR VERCEL ENDPOINT
       const response = await fetch(
         "https://one-page-builder.vercel.app/api/images",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            prompt: enhancedPrompt,
+            prompt: basicPrompt,
+            size: aiSettings.imageSize || "256x256",
+            enhancePrompt: true,
           }),
         }
       );
@@ -180,24 +203,22 @@ function AIImageGenerator({ formData, onImageInsert }) {
 
       const data = await response.json();
 
-      // Handle the response from your Hugging Face API
       const imageB64 = data.data[0].b64_json;
+      const imageUrl = `data:image/jpeg;base64,${imageB64}`;
 
-      // Convert base64 to blob URL for preview
-      const imageBlob = new Blob(
-        [Uint8Array.from(atob(imageB64), (c) => c.charCodeAt(0))],
-        { type: "image/png" }
-      );
-      const imageUrl = URL.createObjectURL(imageBlob);
+      // 🔥 NEW: Show both original and enhanced prompts
+      console.log("📝 Original prompt:", data.data[0].original_prompt);
+      console.log("✨ Enhanced prompt:", data.data[0].revised_prompt);
 
       setGeneratedImage({
-        url: imageUrl, // Blob URL for preview
-        prompt: enhancedPrompt,
-        b64_json: imageB64, // Base64 for download
-        alt: "", // Default alt text
+        url: imageUrl,
+        prompt: data.data[0].revised_prompt,
+        originalPrompt: data.data[0].original_prompt,
+        b64_json: imageB64,
+        alt: `Image for ${selectedSection.heading}`,
       });
 
-      console.log("Image generated successfully");
+      console.log("Image generated successfully with enhanced prompt");
     } catch (error) {
       console.error("Image generation error:", error);
       alert("Error generating image: " + error.message);
@@ -208,11 +229,26 @@ function AIImageGenerator({ formData, onImageInsert }) {
 
   const insertImageAtCursor = (imageData) => {
     const currentContent = formData.mainContent || "";
-    const id = `aiimg-${Date.now()}`;
+    const id = nanoid();
 
-    const imageHTML = generateImageHTML(
-      { url: imageData.url, alt: imageData.alt || "" },
-      { id, floatValue: "none", altValue: imageData.alt || "" }
+    const timestamp = Date.now();
+    const filename = `ai-image-${timestamp}.jpg`;
+
+    const imageForStorage = {
+      id,
+      filename: filename,
+      b64_json: imageData.b64_json,
+      prompt: imageData.prompt,
+      alt: "",
+    };
+
+  
+    const previewImageHTML = generateImageHTML(
+      {
+        url: `data:image/jpeg;base64,${imageData.b64_json}`,
+        alt: "",
+      },
+      { id, floatValue: "none", altValue: "" }
     );
 
     if (selectedTextInfo && selectedTextInfo.heading) {
@@ -227,22 +263,25 @@ function AIImageGenerator({ formData, onImageInsert }) {
       if (h2Pattern.test(currentContent)) {
         const newContent = currentContent.replace(
           h2Pattern,
-          `$1\n${imageHTML}`
+          `$1\n${previewImageHTML}`
         );
-        onImageInsert(newContent);
-        setLastInsertedId(id);
-        setEditorAlt(imageData.alt || "");
-        setEditorFloat(imageFloat);
+
+        // Pass both content and image data to parent
+        onImageInsert(newContent, imageForStorage);
         setGeneratedImage(null);
         setSelectedTextInfo(null);
+        setLastInsertedId(id);
+        setEditorAlt("");
+        setEditorFloat(imageFloat);
         return;
       }
     }
+
     // Fallback append
-    const newContent = currentContent + "\n" + imageHTML;
-    onImageInsert(newContent);
+    const newContent = currentContent + "\n" + previewImageHTML;
+    onImageInsert(newContent, imageForStorage);
     setLastInsertedId(id);
-    setEditorAlt(imageData.alt || "");
+    setEditorAlt("");
     setEditorFloat(imageFloat);
     setGeneratedImage(null);
     setSelectedTextInfo(null);
@@ -268,7 +307,6 @@ function AIImageGenerator({ formData, onImageInsert }) {
     onImageInsert(updated);
   };
 
-  // NEW: remove inserted image
   const removeInsertedImage = () => {
     if (!lastInsertedId) return;
     const currentContent = formData.mainContent || "";
@@ -285,35 +323,16 @@ function AIImageGenerator({ formData, onImageInsert }) {
   return (
     <div className="ai-image-generator">
       <h3>AI Image Generator</h3>
-
-      {/* Website Topic Input */}
-      <div className="form-group">
-        <label>Website Topic/Business Type</label>
-        <input
-          type="text"
-          className="form-control"
-          value={aiSettings.websiteTopic || ""}
-          onChange={(e) =>
-            setAiSettings((prev) => ({
-              ...prev,
-              websiteTopic: e.target.value,
-            }))
-          }
-          placeholder="e.g., restaurant, law firm, web design agency, fitness gym, etc."
-        />
-      </div>
-
-      {/* Generate Button */}
       <button
         type="button"
         className="btn btn-primary"
         onClick={handleImageGeneration}
-        disabled={!aiSettings.websiteTopic || isGenerating}
+        // disabled={!formData.mainContent || isGenerating}
+        disabled
       >
-        {isGenerating ? "Generating..." : "🎨 Generate Image (256x256)"}
+        {isGenerating ? "Generating..." : "🎨 Generate Image"}
       </button>
 
-      {/* Generated Image Preview */}
       {generatedImage && (
         <div className="mt-4">
           <h4>Generated Image</h4>
