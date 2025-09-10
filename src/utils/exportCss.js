@@ -47,6 +47,7 @@ p {
   
   section {
   padding: 15px 0;
+  scroll-margin-top: 70px;
 }
 
 

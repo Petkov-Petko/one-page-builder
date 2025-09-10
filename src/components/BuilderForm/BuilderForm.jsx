@@ -66,27 +66,74 @@ function BuilderForm({
       .filter((word) => word.length > 0);
 
     wordsToBold.forEach((word) => {
-      // Escape special regex characters
       const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-      // Create regex to find the word (case-insensitive, whole word, not already in tags, not in headings)
       const regex = new RegExp(
         `(?<!<[^>]*>)(?<!<h[1-6][^>]*>)(?<!<h[1-6][^>]*>[^<]*)\\b(${escapedWord})\\b(?![^<]*<\/h[1-6]>)(?![^<]*>)(?!<\/strong>)`,
-        "i"
+        "gi"
       );
 
-      // Replace only the first occurrence that's not already in a strong tag or heading
-      const match = updatedContent.match(regex);
-      if (match) {
-        updatedContent = updatedContent.replace(regex, `<strong>$1</strong>`);
+      const matches = [];
+      let match;
+      while ((match = regex.exec(updatedContent)) !== null) {
+        matches.push({
+          match: match[0],
+          index: match.index,
+          length: match[0].length,
+        });
+        if (regex.lastIndex === match.index) {
+          regex.lastIndex++;
+        }
+      }
+
+      if (matches.length > 0) {
+        console.log(`🎲 Found ${matches.length} occurrences of "${word}"`);
+
+        // Pick a random match
+        const randomIndex = Math.floor(Math.random() * matches.length);
+        const selectedMatch = matches[randomIndex];
+
+        console.log(
+          `🎯 Selected occurrence #${randomIndex + 1} at position ${
+            selectedMatch.index
+          }`
+        );
+
+        const before = updatedContent.substring(0, selectedMatch.index);
+        const after = updatedContent.substring(
+          selectedMatch.index + selectedMatch.length
+        );
+        const replacement = `<strong>${selectedMatch.match}</strong>`;
+
+        updatedContent = before + replacement + after;
       }
     });
 
-    // Update the content
     handlePageChange("mainContent", updatedContent);
-
-    // Optional: Clear the bold words input after applying
     handlePageChange("boldWords", "");
+  };
+
+  const handleAfterH1Change = (value) => {
+    const textToHtml = (text) => {
+      if (!text || text.trim() === "") return "";
+
+      const hasHtmlTags = /<[^>]+>/.test(text);
+
+      if (hasHtmlTags) {
+        return text;
+      }
+
+      return text
+        .split("\n") // Split by line breaks
+        .map((line) => line.trim()) // Remove extra whitespace
+        .filter((line) => line !== "") // Remove empty lines
+        .map((line) => `<p>${line}</p>`) // Wrap each line in <p> tags
+        .join("\n"); // Join with line breaks
+    };
+
+    // Convert and update the form data
+    const htmlContent = textToHtml(value);
+    handlePageChange("afterH1", htmlContent);
   };
 
   return (
@@ -163,14 +210,13 @@ function BuilderForm({
 
           <div className="form-group">
             <label>
-              Hero Subtext(The subtext must be valid HTML. For example:{" "}
-              <code>&lt;p&gt;Text&lt;/p&gt;</code>)
+              Hero Subtext
             </label>
             <textarea
               className="form-control"
               rows="3"
               value={formData.afterH1 || ""}
-              onChange={(e) => handlePageChange("afterH1", e.target.value)}
+              onChange={(e) => handleAfterH1Change(e.target.value)}
               placeholder="Text that appears below the main heading"
             />
           </div>
