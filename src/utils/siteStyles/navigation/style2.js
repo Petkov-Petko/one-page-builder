@@ -35,11 +35,7 @@ export function NavigationHero2(globalSettings, page) {
         <h1>
           ${page.formData.h1 || page.title}
         </h1>
-        ${
-          page.formData.afterH1
-            ? `<div>${page.formData.afterH1}</div>`
-            : ""
-        }
+        ${page.formData.afterH1 ? `<div>${page.formData.afterH1}</div>` : ""}
     </div>
   </div>
 </section>
@@ -63,12 +59,10 @@ export function NavigationCSS2(globalSettings) {
   overflow: hidden;
   color: var(--header-text-color);
 }
-
-.hero-section.gradient-bg {
-  background: linear-gradient(135deg, var(--hero-gradient1), var(--hero-gradient2));
-}
-
-.hero-section.with-bg {
+${
+  globalSettings.heroBg
+    ? `
+  .hero-section.with-bg {
   background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
@@ -85,6 +79,10 @@ export function NavigationCSS2(globalSettings) {
   background: linear-gradient(135deg, rgb(0, 0, 0));
   opacity: 0.5;
   z-index: 1;
+}`
+    : `.hero-section.gradient-bg {
+  background: linear-gradient(135deg, var(--hero-gradient1), var(--hero-gradient2));
+}`
 }
 
 .hero-section .container {
@@ -92,15 +90,6 @@ export function NavigationCSS2(globalSettings) {
   z-index: 2;
 }
 
-.hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-}
-  
   .navbar-light .navbar-nav .nav-link {
     color: var(--nav-link-color, #141414) !important;
   }
