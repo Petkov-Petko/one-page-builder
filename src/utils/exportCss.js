@@ -118,11 +118,11 @@ h2, h3 {
 
 ${globalSettings.footerStyle === "1" ? FooterCss1() : FooterCss2()}
 ${
-  globalSettings.whiteLogo &&
-  `.footer img {
-  filter: brightness(0) invert(1);
-}
-`
+  globalSettings.whiteLogo
+    ? `.footer img {
+        filter: brightness(0) invert(1);
+      }`
+    : ""
 }
 ${
   globalSettings.navStyle === "1"
