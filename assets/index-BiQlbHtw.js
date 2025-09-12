@@ -673,10 +673,9 @@ h2, h3 {
 }
 
 ${M.footerStyle==="1"?Ts():Cs()}
-${M.whiteLogo&&`.footer img {
-  filter: brightness(0) invert(1);
-}
-`}
+${M.whiteLogo?`.footer img {
+        filter: brightness(0) invert(1);
+      }`:""}
 ${M.navStyle==="1"?lm(M):sm(M)}
 `}function cm(M){const I=M.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);let _=[],x="";return I.forEach(N=>{N.match(/<h2[\s\S]*?<\/h2>/i)&&x&&(_.push(`<section>${x}</section>`),x=""),x+=N}),x&&_.push(`<section>${x}</section>`),_.join(`
 `)}function fm(M,I){const _=I.hiddenFromNav||[],x=M.filter(m=>!_.includes(m.id)),S=dm(I,(()=>{let m="";const c=I.customNavItems||[],E=x.filter(b=>!b.parentId),A=x.filter(b=>b.parentId);return E.forEach(b=>{if(b.isDropdownParent){const h=A.filter(f=>f.parentId===b.id);b.hasOwnPage&&b.slug?m+=`
