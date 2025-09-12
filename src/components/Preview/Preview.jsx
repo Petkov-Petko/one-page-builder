@@ -10,6 +10,14 @@ import { exportRobots } from "../../utils/exportRobots";
 import { exportSitemap } from "../../utils/exportSitemap";
 import { storage } from "../../utils/localStorage";
 import { exportMainJs } from "../../utils/exportJs";
+import {
+  FooterHtml1,
+  FooterCss1,
+} from "../../utils/siteStyles/footer/footerStyle1";
+import {
+  FooterHtml2,
+  FooterCss2,
+} from "../../utils/siteStyles/footer/footerStyle2";
 
 const Preview = ({
   formData,
@@ -320,6 +328,58 @@ const Preview = ({
     return true;
   }).length;
 
+  const getFooterCss = () => {
+    const footerStyle = globalSettings.footerStyle || "1";
+
+    let css = "";
+    switch (footerStyle) {
+      case "2":
+        css = FooterCss2 ? FooterCss2() : FooterCss1();
+        break;
+      case "1":
+      default:
+        css = FooterCss1();
+    }
+
+    // 🔥 NEW: Add white logo CSS if enabled
+    if (globalSettings.whiteLogo) {
+      css += `
+      .footer img {
+        filter: brightness(0) invert(1);
+      }
+    `;
+    }
+
+    return css;
+  };
+
+  const getFooterHtml = () => {
+    const footerStyle = globalSettings.footerStyle || "1";
+
+    let footerHtml;
+    switch (footerStyle) {
+      case "2":
+        footerHtml = FooterHtml2
+          ? FooterHtml2(globalSettings)
+          : FooterHtml1(globalSettings);
+        break;
+      case "1":
+      default:
+        footerHtml = FooterHtml1(globalSettings);
+    }
+
+    const currentYear = new Date().getFullYear();
+    footerHtml = footerHtml.replace("<?php echo date('Y'); ?>", currentYear);
+
+    if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
+      footerHtml = footerHtml.replace(
+        /src="\/images\/logo\.svg"/g,
+        `src="${globalSettings.logo}"`
+      );
+    }
+    return footerHtml;
+  };
+
   return (
     <div
       className="preview-container"
@@ -341,6 +401,8 @@ const Preview = ({
         "--header-text-color": globalSettings.headerTextColor || "#ffffffff",
       }}
     >
+      <style dangerouslySetInnerHTML={{ __html: getFooterCss() }} />
+
       <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
         <div>
           <h5 className="mb-0">
@@ -539,31 +601,7 @@ const Preview = ({
         </main>
 
         {/* Footer */}
-        <footer className="footer mt-auto py-4">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6">
-                <p className="mb-0">
-                  © Copyright {currentYear}{" "}
-                  {globalSettings.domain || "Your Website"}. All rights
-                  reserved.
-                </p>
-              </div>
-              <div className="col-md-6 text-md-end">
-                <span className="me-3">
-                  Email:{" "}
-                  {globalSettings.email ||
-                    `info[@]${globalSettings.domain || "domain.com"}`}
-                </span>
-                <a href="#">
-                  {globalSettings.privacyOrTerms === "privacy"
-                    ? "Privacy Policy"
-                    : "Terms & Conditions"}
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <div dangerouslySetInnerHTML={{ __html: getFooterHtml() }} />
       </div>
     </div>
   );

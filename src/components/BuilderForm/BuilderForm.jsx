@@ -209,9 +209,7 @@ function BuilderForm({
           </div>
 
           <div className="form-group">
-            <label>
-              Hero Subtext
-            </label>
+            <label>Hero Subtext</label>
             <textarea
               className="form-control"
               rows="3"
@@ -619,6 +617,33 @@ function BuilderForm({
           <div className="style-section">
             <h4 className="section-title">Footer</h4>
             <div className="row">
+              <div className="col-12">
+                <div className="form-group">
+                  <label>Footer Style:</label>
+                  <select
+                    className="form-control"
+                    value={globalSettings.footerStyle || "1"}
+                    onChange={(e) =>
+                      handleGlobalChange("footerStyle", e.target.value)
+                    }
+                  >
+                    <option value="1">Style 1</option>
+                    <option value="2">Style 2</option>
+                  </select>
+                </div>
+              </div>
+              <div className="col-lg-4">
+                <div className="form-group">
+                  <label>White logo</label>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    checked={globalSettings.whiteLogo || false}
+                    onChange={(e) => handleGlobalChange("whiteLogo", e.target.checked)}
+                    id="whiteLogoCheckbox"
+                  />
+                </div>
+              </div>
               <div className="col-lg-4">
                 <div className="form-group">
                   <label>Footer Background Color</label>

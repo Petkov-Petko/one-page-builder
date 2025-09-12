@@ -1,5 +1,7 @@
 import { NavigationCSS1 } from "./siteStyles/navigation/style1";
 import { NavigationCSS2 } from "./siteStyles/navigation/style2";
+import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
+import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 
 export function exportCss(globalSettings) {
   return `
@@ -65,17 +67,6 @@ h2, h3 {
   opacity: 0.8;
 }
 
-.footer {
-  background-color: var(--footer-bg-color);
-  color: var(--footer-text-color);
-}
-
-.footer a {
-  text-decoration: none;
-  color: var(--link-color) !important;
-}
-
-  
   .sidebar-page-list {
   padding: 0;
   margin: 0;
@@ -125,6 +116,14 @@ h2, h3 {
   min-height: 70vh;
 }
 
+${globalSettings.footerStyle === "1" ? FooterCss1() : FooterCss2()}
+${
+  globalSettings.whiteLogo &&
+  `.footer img {
+  filter: brightness(0) invert(1);
+}
+`
+}
 ${
   globalSettings.navStyle === "1"
     ? NavigationCSS1(globalSettings)
