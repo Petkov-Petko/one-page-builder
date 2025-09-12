@@ -14,6 +14,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
   const [editorAlt, setEditorAlt] = useState("");
   const [editorFloat, setEditorFloat] = useState("none");
   const [customImageName, setCustomImageName] = useState("");
+  const [tempImageData, setTempImageData] = useState(null);
 
   const extractRandomSectionFromContent = (htmlContent) => {
     if (!htmlContent) return null;
@@ -272,14 +273,13 @@ function AIImageGenerator({ formData, onImageInsert }) {
     const currentContent = formData.mainContent || "";
     const id = nanoid();
 
-    const filename = generateFilename();
-
-    const imageForStorage = {
+    const tempImageData = {
       id,
-      filename: filename,
+      filename: generateFilename(),
       b64_json: imageData.b64_json,
       prompt: imageData.prompt,
       alt: "",
+      isTemporary: true,
     };
 
     const previewImageHTML = generateImageHTML(
@@ -306,27 +306,51 @@ function AIImageGenerator({ formData, onImageInsert }) {
         );
 
         // Pass both content and image data to parent
-        onImageInsert(newContent, imageForStorage);
+        onImageInsert(newContent);
         setGeneratedImage(null);
         setSelectedTextInfo(null);
         setLastInsertedId(id);
         setEditorAlt("");
         setEditorFloat(imageFloat);
-        setCustomImageName("");
+        setTempImageData(tempImageData);
         return;
       }
     }
 
     // Fallback append
     const newContent = currentContent + "\n" + previewImageHTML;
-    onImageInsert(newContent, imageForStorage);
+    onImageInsert(newContent);
     setLastInsertedId(id);
     setEditorAlt("");
     setEditorFloat(imageFloat);
     setGeneratedImage(null);
     setSelectedTextInfo(null);
+    setTempImageData(tempImageData);
+  };
+
+  const saveImageToFiles = () => {
+    if (!tempImageData) {
+      console.log("No temporary image data to save");
+      return;
+    }
+
+    const finalImageData = {
+      ...tempImageData,
+      alt: editorAlt || tempImageData.alt,
+      isTemporary: false,
+    };
+
+    onImageInsert(formData.mainContent, finalImageData);
+
+    console.log("✅ Image saved to files:", finalImageData.filename);
+
+    setTempImageData(null);
+    setLastInsertedId(null);
+    setEditorAlt("");
+    setEditorFloat("none");
     setCustomImageName("");
   };
+
   const updateInsertedImage = () => {
     if (!lastInsertedId) return;
     const currentContent = formData.mainContent || "";
@@ -346,6 +370,13 @@ function AIImageGenerator({ formData, onImageInsert }) {
     );
     const updated = currentContent.replace(imgRegex, newHTML);
     onImageInsert(updated);
+
+    if (tempImageData) {
+      setTempImageData({
+        ...tempImageData,
+        alt: editorAlt,
+      });
+    }
   };
 
   const removeInsertedImage = () => {
@@ -356,10 +387,11 @@ function AIImageGenerator({ formData, onImageInsert }) {
       "i"
     );
     const updated = currentContent.replace(imgRegex, "");
-    onImageInsert(updated);
     setLastInsertedId(null);
     setEditorAlt("");
     setEditorFloat("none");
+    setTempImageData(null);
+    setCustomImageName("");
   };
   return (
     <div className="ai-image-generator">
@@ -489,6 +521,13 @@ function AIImageGenerator({ formData, onImageInsert }) {
       {lastInsertedId && !generatedImage && (
         <div className="mt-4 border rounded p-3">
           <h5>Edit Inserted Image</h5>
+          <div className="alert alert-warning mb-3">
+            <small>
+              📝 <strong>Preview Mode:</strong> This image is only visible in
+              preview. Click "Save to Files" to include it in your downloaded
+              website.
+            </small>
+          </div>
           <div className="row g-3">
             <div className="col-md-6">
               <label className="form-label">Alt text</label>
@@ -523,20 +562,29 @@ function AIImageGenerator({ formData, onImageInsert }) {
           </div>
           <div className="mt-3 d-flex gap-2">
             <button
+              className="btn btn-success"
+              onClick={saveImageToFiles}
+              disabled={!tempImageData}
+              title="Save image to files for download"
+            >
+              💾 Save to Files
+            </button>
+            <button
               className="btn btn-outline-danger"
               onClick={removeInsertedImage}
             >
-              Remove
-            </button>
-            <button
-              className="btn btn-outline-success"
-              onClick={() => setLastInsertedId(null)}
-            >
-              Save
+              🗑️ Remove from Preview
             </button>
           </div>
           <small className="text-muted d-block mt-2">
-            Editing image with id: {lastInsertedId}
+            • Editing image with id: {lastInsertedId}
+            <br />• Status: {tempImageData ? "Preview only" : "Not saved"}
+            {tempImageData && (
+              <>
+                <br />• Filename when saved:{" "}
+                <code>{tempImageData.filename}</code>
+              </>
+            )}
           </small>
         </div>
       )}
