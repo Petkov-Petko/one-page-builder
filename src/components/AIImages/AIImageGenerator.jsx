@@ -387,6 +387,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
       "i"
     );
     const updated = currentContent.replace(imgRegex, "");
+    onImageInsert(updated);
     setLastInsertedId(null);
     setEditorAlt("");
     setEditorFloat("none");
