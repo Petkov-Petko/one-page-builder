@@ -70,9 +70,7 @@ p {
 .website-preview h3{
     color: var(--heading-color, #222222);
 }
-.website-preview img {
-    width: 300px;
-}
+
 
 /* Mobile nav improvements */
 

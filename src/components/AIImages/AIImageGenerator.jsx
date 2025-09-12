@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 function AIImageGenerator({ formData, onImageInsert }) {
   const [aiSettings, setAiSettings] = useState({
-    imageSize: "256x256",
+    imageSize: "1024x1024",
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -13,6 +13,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
   const [lastInsertedId, setLastInsertedId] = useState(null);
   const [editorAlt, setEditorAlt] = useState("");
   const [editorFloat, setEditorFloat] = useState("none");
+  const [customImageName, setCustomImageName] = useState("");
 
   const extractRandomSectionFromContent = (htmlContent) => {
     if (!htmlContent) return null;
@@ -112,7 +113,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
     const altText =
       altValue && altValue.trim().length > 0 ? altValue.trim() : "Image alt";
     const idAttr = id ? ` data-ai-id="${id}"` : "";
-    return `<img src="${imageData.url}" alt="${altText}" class="${classes}"${idAttr}>`;
+    return `<img src="${imageData.url}" alt="${altText}" class="${classes}"${idAttr} width="320" height="320" />`;
   };
 
   const createUniversalPrompt = (selectedSection) => {
@@ -146,11 +147,21 @@ function AIImageGenerator({ formData, onImageInsert }) {
     return prompt;
   };
 
+  const generateSuggestedName = (section) => {
+    if (!section || !section.heading) return "";
+
+    return section.heading
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9\s]/g, "")
+      .replace(/\s+/g, "-")
+      .substring(0, 30);
+  };
+
   const handleImageGeneration = async () => {
-    if (!formData.mainContent) {
-      alert(
-        "Please add some content to your page first, then generate images for specific sections."
-      );
+    if (!formData.mainContent || isGenerating) {
+      if (!formData.mainContent) {
+        alert("Please add some content to your page first.");
+      }
       return;
     }
     setIsGenerating(true);
@@ -190,7 +201,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             prompt: basicPrompt,
-            size: aiSettings.imageSize || "256x256",
+            size: aiSettings.imageSize || "1024x1024",
             enhancePrompt: true,
           }),
         }
@@ -210,6 +221,9 @@ function AIImageGenerator({ formData, onImageInsert }) {
       console.log("📝 Original prompt:", data.data[0].original_prompt);
       console.log("✨ Enhanced prompt:", data.data[0].revised_prompt);
 
+      const suggestedName = generateSuggestedName(selectedSection);
+      setCustomImageName(suggestedName);
+
       setGeneratedImage({
         url: imageUrl,
         prompt: data.data[0].revised_prompt,
@@ -227,12 +241,38 @@ function AIImageGenerator({ formData, onImageInsert }) {
     setIsGenerating(false);
   };
 
+  const generateFilename = () => {
+    const timestamp = Date.now();
+
+    if (customImageName && customImageName.trim()) {
+      const cleanName = customImageName
+        .trim()
+        .replace(/[^a-zA-Z0-9\-_]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .toLowerCase();
+
+      return cleanName ? `${cleanName}.jpg` : `ai-image-${timestamp}.jpg`;
+    }
+
+    // Default filename if no custom name
+    return `ai-image-${timestamp}.jpg`;
+  };
+
+  const canInsertImage = () => {
+    return customImageName && customImageName.trim().length > 0;
+  };
+
   const insertImageAtCursor = (imageData) => {
+    if (!canInsertImage()) {
+      alert("Please enter a custom image name before inserting.");
+      return;
+    }
+
     const currentContent = formData.mainContent || "";
     const id = nanoid();
 
-    const timestamp = Date.now();
-    const filename = `ai-image-${timestamp}.jpg`;
+    const filename = generateFilename();
 
     const imageForStorage = {
       id,
@@ -242,7 +282,6 @@ function AIImageGenerator({ formData, onImageInsert }) {
       alt: "",
     };
 
-  
     const previewImageHTML = generateImageHTML(
       {
         url: `data:image/jpeg;base64,${imageData.b64_json}`,
@@ -273,6 +312,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
         setLastInsertedId(id);
         setEditorAlt("");
         setEditorFloat(imageFloat);
+        setCustomImageName("");
         return;
       }
     }
@@ -285,6 +325,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
     setEditorFloat(imageFloat);
     setGeneratedImage(null);
     setSelectedTextInfo(null);
+    setCustomImageName("");
   };
   const updateInsertedImage = () => {
     if (!lastInsertedId) return;
@@ -327,32 +368,117 @@ function AIImageGenerator({ formData, onImageInsert }) {
         type="button"
         className="btn btn-primary"
         onClick={handleImageGeneration}
-        // disabled={!formData.mainContent || isGenerating}
-        disabled
+        disabled={!formData.mainContent || isGenerating}
+        title={
+          !formData.mainContent
+            ? "Add content to your page first"
+            : isGenerating
+            ? "Generating image..."
+            : "Generate AI image"
+        }
       >
-        {isGenerating ? "Generating..." : "🎨 Generate Image"}
+        {isGenerating ? (
+          <>
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Generating...
+          </>
+        ) : (
+          "🎨 Generate Image"
+        )}
       </button>
 
       {generatedImage && (
         <div className="mt-4">
           <h4>Generated Image</h4>
+          {selectedTextInfo && (
+            <div className="alert alert-info mb-3">
+              <h6 className="mb-2">📍 This image will be added to section:</h6>
+              <strong>"{selectedTextInfo.heading}"</strong>
+              {selectedTextInfo.paragraphs &&
+                selectedTextInfo.paragraphs.length > 0 && (
+                  <p className="mb-0 mt-2 text-muted small">
+                    {selectedTextInfo.paragraphs[0].substring(0, 100)}
+                    {selectedTextInfo.paragraphs[0].length > 100 ? "..." : ""}
+                  </p>
+                )}
+            </div>
+          )}
           <div className="generated-image-preview">
             <img
               src={generatedImage.url}
               alt="Generated image"
-              style={{ maxWidth: "100%", maxHeight: "300px" }}
+              style={{ maxWidth: "100%", maxHeight: "320px" }}
               className="img-fluid border rounded mb-3"
             />
+
+            {/* 🔥 NEW: Custom name input after generation */}
+            <div className="mb-3">
+              <label className="form-label">
+                Custom Image Name <span className="text-danger">*</span>
+                <small className="text-muted ms-2">(required to insert)</small>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${
+                  customImageName.trim()
+                    ? "is-valid"
+                    : customImageName
+                    ? "is-invalid"
+                    : ""
+                }`}
+                value={customImageName}
+                onChange={(e) => setCustomImageName(e.target.value)}
+                placeholder="e.g., hero-banner, casino-games, payment-methods"
+                maxLength="50"
+                required
+              />
+
+              {customImageName && !customImageName.trim() && (
+                <div className="invalid-feedback">
+                  Image name cannot be empty or just spaces.
+                </div>
+              )}
+
+              {customImageName.trim() && (
+                <div className="valid-feedback">
+                  Filename: <code>{generateFilename()}</code>
+                </div>
+              )}
+
+              {!customImageName && (
+                <small className="form-text text-muted">
+                  Choose a descriptive name based on the section content
+                </small>
+              )}
+            </div>
+
             <div className="d-flex gap-2">
               <button
                 className="btn btn-success"
                 onClick={() => insertImageAtCursor(generatedImage)}
+                disabled={!canInsertImage()}
+                title={
+                  !canInsertImage()
+                    ? "Enter a custom image name first"
+                    : "Insert image into section"
+                }
               >
                 ✅ Insert Image
+                {!canInsertImage() && (
+                  <span className="text-muted ms-1">(Name Required)</span>
+                )}
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => setGeneratedImage(null)}
+                onClick={() => {
+                  setGeneratedImage(null);
+                  setCustomImageName("");
+                  setSelectedTextInfo(null);
+                }}
               >
                 ❌ Discard
               </button>

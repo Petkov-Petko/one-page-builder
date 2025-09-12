@@ -95,16 +95,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Only POST requests allowed" });
   }
 
-  const { prompt, size = "256x256", enhancePrompt = true } = req.body;
+  const { prompt, size = "1024x1024", enhancePrompt = true } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required" });
   }
 
-  if (!process.env.NONE) {
+  if (!process.env.PBN_KEY) {
     return res.status(500).json({
       error:
-        "NONE API key not configured. Please add NONE_KEY to your Vercel environment variables.",
+        "PBN API key not configured. Please add PBN_KEY to your Vercel environment variables.",
     });
   }
 
@@ -115,20 +115,25 @@ export default async function handler(req, res) {
       console.log("🧠 Enhancing prompt with GPT-4o Mini...");
       console.log("📝 Original prompt:", prompt);
 
-      finalPrompt = await enhancePromptWithGPT4oMini(prompt, process.env.NONE);
+      finalPrompt = await enhancePromptWithGPT4oMini(
+        prompt,
+        process.env.PBN_KEY
+      );
 
       console.log("✨ Enhanced prompt:", finalPrompt);
     }
 
     const requestBody = {
-      model: "dall-e-2",
+      model: "gpt-image-1",
       prompt: finalPrompt,
       n: 1,
       size,
-      response_format: "b64_json",
+      quality: "low",
+      output_format: "jpeg",
+      output_compression: 30,
     };
 
-    console.log("🟢 Sending request to DALL-E 2:", {
+    console.log("🟢 Sending request to GPT-Image-1:", {
       ...requestBody,
       prompt: finalPrompt.substring(0, 100) + "...",
     });
@@ -139,7 +144,7 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NONE}`,
+          Authorization: `Bearer ${process.env.PBN_KEY}`,
         },
         body: JSON.stringify(requestBody),
       }
@@ -147,51 +152,48 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("🔴 OpenAI API error:", errorData);
+      console.error("🔴 OpenAI GPT-Image-1 API error:", errorData);
       throw new Error(
         errorData.error?.message || `OpenAI API error: ${response.status}`
       );
     }
 
     const data = await response.json();
-    console.log("🟢 DALL-E 2 response received successfully");
+    console.log("🟢 GPT-Image-1 response received successfully");
 
     if (data.data && data.data[0] && data.data[0].b64_json) {
-      const pngBuffer = Buffer.from(data.data[0].b64_json, "base64");
+      const imageData = data.data[0].b64_json;
 
-      let quality = 80;
-      let jpgBuffer;
+      const buffer = Buffer.from(imageData, "base64");
 
-      while (quality >= 20) {
-        jpgBuffer = await sharp(pngBuffer)
-          .resize(256, 256)
-          .jpeg({ quality })
-          .toBuffer();
+      // Преоразмеряване до 320x320 px
+      const resizedBuffer = await sharp(buffer)
+        .resize(320, 320, { fit: "cover" }) 
+        .toFormat("jpeg", { quality: 80 })
+        .toBuffer();
 
-        if (jpgBuffer.length <= 100 * 1024) {
-          break;
-        }
-        quality -= 10;
-      }
+      const resizedBase64 = resizedBuffer.toString("base64");
 
       res.status(200).json({
         data: [
           {
-            b64_json: jpgBuffer.toString("base64"),
+            b64_json: resizedBase64,
             revised_prompt: finalPrompt,
             original_prompt: prompt,
-            format: "jpg",
-            size_kb: Math.round(jpgBuffer.length / 1024),
-            used_quality: quality,
+            format: "jpeg",
+            width: 320,
+            height: 320,
+            model: "gpt-image-1",
+            quality: "low",
           },
         ],
       });
     } else {
       console.error("🔴 Unexpected response structure:", data);
-      throw new Error("Invalid response from OpenAI API");
+      throw new Error("Invalid response from GPT-Image-1 API");
     }
   } catch (err) {
-    console.error("DALL-E 2 error:", err);
+    console.error("GPT-Image-1 error:", err);
     res.status(500).json({ error: err.message });
   }
 }

@@ -77,7 +77,7 @@ const Preview = ({
           if (filename) {
             replacementCount++;
             console.log(`✅ Replaced with: images/${filename}`);
-            return `src="images/${filename}"`;
+            return `src="/images/${filename}"`;
           }
 
           console.warn(`⚠️ No mapping found for this base64 data`);
