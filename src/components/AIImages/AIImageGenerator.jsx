@@ -114,7 +114,7 @@ function AIImageGenerator({ formData, onImageInsert }) {
     const altText =
       altValue && altValue.trim().length > 0 ? altValue.trim() : "Image alt";
     const idAttr = id ? ` data-ai-id="${id}"` : "";
-    return `<img src="${imageData.url}" alt="${altText}" class="${classes}"${idAttr} width="320" height="320" />`;
+    return `<img src="${imageData.url}" alt="${altText}" class="${classes}"${idAttr} width="320" height="320">`;
   };
 
   const createUniversalPrompt = (selectedSection) => {
