@@ -2,7 +2,7 @@ import "./Preview.css";
 import { generateMultiPageExport } from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { export404 } from "../../utils/export404";
+import { errorPage1, errorPage2, errorPage3 } from "../../utils/export404";
 import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
@@ -93,6 +93,12 @@ const Preview = ({
         },
       };
     });
+  };
+
+  const getRandomErrorPage = () => {
+    const errorPages = [errorPage1, errorPage2, errorPage3];
+    const randomIndex = Math.floor(Math.random() * errorPages.length);
+    return errorPages[randomIndex];
   };
 
   const validateRequiredFields = () => {
@@ -213,8 +219,8 @@ const Preview = ({
     }
 
     // Add 404.php
-    zip.file("404.php", export404());
-    // Add robots.txt
+    zip.file("404.php", getRandomErrorPage()());
+     // Add robots.txt
     zip.file("robots.txt", exportRobots(globalSettings.url, pages));
     // Add sitemap.xml
     if (pages.length > 1) {
