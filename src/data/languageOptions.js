@@ -32,6 +32,8 @@ export const languageOptions = [
   { value: "es", label: "Spanish (es)" },
   { value: "es-ES", label: "Spanish - Spain (es-ES)" },
   { value: "es-MX", label: "Spanish - Mexico (es-MX)" },
+  { value: "sv", label: "Swedish (sv)" },
+  { value: "sv-FI", label: "Swedish - Finland (sv-FI)" },
   { value: "gl", label: "Galician (gl)" },
   { value: "gl-ES", label: "Galician - Spain (gl-ES)" },
   { value: "th", label: "Thai (th)" },
