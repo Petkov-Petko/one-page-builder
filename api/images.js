@@ -101,10 +101,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Prompt is required" });
   }
 
-  if (!process.env.PBN_KEY) {
+  if (!process.env.P_KEY) {
     return res.status(500).json({
       error:
-        "PBN API key not configured. Please add PBN_KEY to your Vercel environment variables.",
+        "PBN API key not configured. Please add P_KEY to your Vercel environment variables.",
     });
   }
 
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
 
       finalPrompt = await enhancePromptWithGPT4oMini(
         prompt,
-        process.env.PBN_KEY
+        process.env.P_KEY
       );
 
       console.log("✨ Enhanced prompt:", finalPrompt);
@@ -144,7 +144,7 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.PBN_KEY}`,
+          Authorization: `Bearer ${process.env.P_KEY}`,
         },
         body: JSON.stringify(requestBody),
       }

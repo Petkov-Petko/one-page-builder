@@ -401,7 +401,8 @@ function AIImageGenerator({ formData, onImageInsert }) {
         type="button"
         className="btn btn-primary"
         onClick={handleImageGeneration}
-        disabled={!formData.mainContent || isGenerating}
+        // disabled={!formData.mainContent || isGenerating}
+        disabled
         title={
           !formData.mainContent
             ? "Add content to your page first"
