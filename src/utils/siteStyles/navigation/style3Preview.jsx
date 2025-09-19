@@ -47,7 +47,7 @@ export function Navigation3JsxElement({
         </div>
 
         <div
-          className="collapse navbar-collapse justify-content-center mt-xl-2"
+          className="collapse navbar-collapse justify-content-center mt-lg-0 py-lg-0"
           id="navbarNav"
         >
           <ul className="navbar-nav">
