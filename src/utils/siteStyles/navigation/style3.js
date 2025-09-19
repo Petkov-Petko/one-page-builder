@@ -107,7 +107,7 @@ ${
 .navbar-light .navbar-nav .nav-link {
   color: var(--nav-link-color, #141414) !important;
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
   transition: color 0.3s ease, transform 0.2s ease;
 }
 .navbar-light .navbar-nav .nav-link:hover {
