@@ -19,6 +19,9 @@ import {
   FooterHtml2,
   FooterCss2,
 } from "../../utils/siteStyles/footer/footerStyle2";
+import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1Preview";
+import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
+import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
 
 const Preview = ({
   formData,
@@ -229,12 +232,7 @@ const Preview = ({
     zip.file("404.php", getRandomErrorPage()());
     // Add contact page if enabled
     if (globalSettings.contactPage) {
-      zip.file(
-        "contact.php",
-        getRandomContactPage()(
-          globalSettings.email,
-        )
-      );
+      zip.file("contact.php", getRandomContactPage()(globalSettings.email));
     }
     // Add robots.txt
     zip.file("robots.txt", exportRobots(globalSettings.url, pages));
@@ -242,7 +240,12 @@ const Preview = ({
     if (pages.length > 1) {
       zip.file(
         "sitemap.xml",
-        exportSitemap(globalSettings.url, pages, globalSettings.privacyOrTerms, globalSettings)
+        exportSitemap(
+          globalSettings.url,
+          pages,
+          globalSettings.privacyOrTerms,
+          globalSettings
+        )
       );
     }
     // Add privacy or terms
@@ -469,107 +472,37 @@ const Preview = ({
       </div>
 
       <div className="website-preview" lang={globalSettings.lang || "en"}>
-        {/* Navigation */}
-        <nav
-          className={`navbar navbar-expand-lg navbar-light${
-            globalSettings.stickyNavbar ? " sticky-top" : ""
-          } ${
-            globalSettings.navStyle === "1"
-              ? ""
-              : "floating-rounded-navbar container"
-          }`}
-        >
-          <div className="container-fluid">
-            <a className="navbar-brand d-flex align-items-center" href="#">
-              <img
-                src={globalSettings.logo || "https://placehold.co/220x50"}
-                alt="Logo"
-                width="220"
-                height="50"
-              />
-            </a>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div
-              className="collapse navbar-collapse justify-content-end"
-              id="navbarNav"
-            >
-              <ul className="navbar-nav">
-                {topLevelPages.map((page) => {
-                  if (page.isDropdownParent) {
-                    // Render as dropdown
-                    const children = childPages.filter(
-                      (child) => child.parentId === page.id
-                    );
-                    return (
-                      <li key={page.id} className="nav-item dropdown">
-                        <a
-                          className="nav-link dropdown-toggle"
-                          href="#"
-                          role="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          {page.navLabel || page.title}
-                        </a>
-                        <ul className="custom-dropdown dropdown-menu">
-                          {children.map((child) => (
-                            <li key={child.id}>
-                              <a
-                                className={`dropdown-item ${
-                                  child.id === currentPage?.id ? "active" : ""
-                                }`}
-                                href={`#${child.slug}`}
-                              >
-                                {child.navLabel || child.title}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    );
-                  } else {
-                    // Render as regular nav item
-                    return (
-                      <li key={page.id} className="nav-item">
-                        <a
-                          className={`nav-link ${
-                            page.id === currentPage?.id ? "active" : ""
-                          }`}
-                          href={page.isHome ? "#" : `#${page.slug}`}
-                        >
-                          {page.navLabel || page.title}
-                        </a>
-                      </li>
-                    );
-                  }
-                })}
-                {customNavItems.map((item) => (
-                  <li key={item.id} className="nav-item">
-                    <a
-                      className="nav-link"
-                      href={item.url}
-                      target={item.external ? "_blank" : "_self"}
-                      rel={item.external ? "noopener noreferrer" : ""}
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </nav>
+        <>
+          {globalSettings.navStyle === "1" && (
+            <Navigation1JsxElement
+              globalSettings={globalSettings}
+              topLevelPages={topLevelPages}
+              childPages={childPages}
+              currentPage={currentPage}
+              customNavItems={customNavItems}
+            />
+          )}
 
+          {globalSettings.navStyle === "2" && (
+            <Navigation2JsxElement
+              globalSettings={globalSettings}
+              topLevelPages={topLevelPages}
+              childPages={childPages}
+              currentPage={currentPage}
+              customNavItems={customNavItems}
+            />
+          )}
+
+          {globalSettings.navStyle === "3" && (
+            <Navigation3JsxElement
+              globalSettings={globalSettings}
+              topLevelPages={topLevelPages}
+              childPages={childPages}
+              currentPage={currentPage}
+              customNavItems={customNavItems}
+            />
+          )}
+        </>
         {/* Hero Section */}
         <section
           className={`${heroClass} ${

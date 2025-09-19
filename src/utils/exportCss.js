@@ -1,5 +1,6 @@
 import { NavigationCSS1 } from "./siteStyles/navigation/style1";
 import { NavigationCSS2 } from "./siteStyles/navigation/style2";
+import { NavigationCSS3 } from "./siteStyles/navigation/style3";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { contactPageCss } from "./exportContact.js";
@@ -128,7 +129,9 @@ ${
 ${
   globalSettings.navStyle === "1"
     ? NavigationCSS1(globalSettings)
-    : NavigationCSS2(globalSettings)
+    : globalSettings.navStyle === "2"
+    ? NavigationCSS2(globalSettings)
+    : NavigationCSS3(globalSettings)
 }
 
 ${globalSettings.contactPage ? contactPageCss() : ""}

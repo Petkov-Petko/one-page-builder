@@ -6,6 +6,10 @@ import {
   NavigationHtml2,
   NavigationHero2,
 } from "./siteStyles/navigation/style2";
+import {
+  NavigationHtml3,
+  NavigationHero3,
+} from "./siteStyles/navigation/style3";
 import { FooterHtml1 } from "./siteStyles/footer/footerStyle1";
 import { FooterHtml2 } from "./siteStyles/footer/footerStyle2";
 import { exportCss } from "./exportCss";
@@ -185,8 +189,10 @@ function site_header($title, $description)
 ${
   globalSettings.navStyle === "1"
     ? NavigationHtml1(globalSettings, navigationHtml)
-    : NavigationHtml2(globalSettings, navigationHtml)
-}
+    : globalSettings.navStyle === "2"
+    ? NavigationHtml2(globalSettings, navigationHtml)
+    : NavigationHtml3(globalSettings, navigationHtml)
+} 
 <?php
   return ob_get_clean();
 }
@@ -232,7 +238,11 @@ ${
 function site_footer()
 {
   ob_start(); ?>
-  ${globalSettings.footerStyle === "1" ? FooterHtml1(globalSettings) : FooterHtml2(globalSettings)}
+  ${
+    globalSettings.footerStyle === "1"
+      ? FooterHtml1(globalSettings)
+      : FooterHtml2(globalSettings)
+  }
 
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/main.js"></script>
@@ -256,7 +266,9 @@ echo site_header("${page.formData.title || page.title}", "${
 ${
   globalSettings.navStyle === "1"
     ? NavigationHero1(globalSettings, page)
-    : NavigationHero2(globalSettings, page)
+    : globalSettings.navStyle === "2"
+    ? NavigationHero2(globalSettings, page)
+    : NavigationHero3(globalSettings, page)
 }
 
 <main class="container my-5">
