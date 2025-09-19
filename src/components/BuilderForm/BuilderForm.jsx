@@ -348,6 +348,25 @@ function BuilderForm({
               Check to display a sidebar on all pages. Default is off.
             </small>
           </div>
+          <div className="form-group">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={globalSettings.contactPage || false}
+                onChange={(e) =>
+                  handleGlobalChange("contactPage", e.target.checked)
+                }
+                id="contactPageCheckbox"
+              />
+              <label className="form-check-label " htmlFor="contactPageCheckbox">
+                Add Contact Page
+              </label>
+            </div>
+            <small className="form-text text-muted">
+              Check to add a contact page. Default is off.
+            </small>
+          </div>
 
           <div className="form-group">
             <label>Logo</label>

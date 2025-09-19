@@ -63,6 +63,7 @@ function App() {
         privacyOption: "1",
         termsOption: "1",
         navStyle: "1",
+        footerStyle: "1",
       }
     );
   });

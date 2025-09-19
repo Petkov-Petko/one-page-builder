@@ -2,6 +2,7 @@ import { NavigationCSS1 } from "./siteStyles/navigation/style1";
 import { NavigationCSS2 } from "./siteStyles/navigation/style2";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
+import { contactPageCss } from "./exportContact.js";
 
 export function exportCss(globalSettings) {
   return `
@@ -129,5 +130,7 @@ ${
     ? NavigationCSS1(globalSettings)
     : NavigationCSS2(globalSettings)
 }
+
+${globalSettings.contactPage ? contactPageCss() : ""}
 `;
 }

@@ -1,4 +1,4 @@
-export function exportSitemap(url, pages, privacyOrTerms) {
+export function exportSitemap(url, pages, privacyOrTerms, globalSettings = {}) {
   const baseUrl = url.endsWith("/") ? url.slice(0, -1) : url;
   let sitemapUrls = "";
 
@@ -27,6 +27,13 @@ export function exportSitemap(url, pages, privacyOrTerms) {
 `;
     }
   });
+
+  if (globalSettings.contactPage) {
+    sitemapUrls += `  <url>
+    <loc>${baseUrl}/contact</loc>
+  </url>
+`;
+  }
 
   if (privacyOrTerms === "privacy") {
     sitemapUrls += `  <url>
