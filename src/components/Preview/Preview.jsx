@@ -303,7 +303,10 @@ const Preview = ({
     // Add .htaccess
     zip.file(".htaccess", exportHtaccess(globalSettings.url));
     // Add main.js
-    zip.file("assets/js/main.js", exportMainJs());
+    zip.file(
+      "assets/js/main.js",
+      exportMainJs(pages, globalSettings.stickyNavbar)
+    );
     // Add images if they exist
     if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
       const res = await fetch(globalSettings.logo);
