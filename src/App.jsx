@@ -64,6 +64,7 @@ function App() {
         termsOption: "1",
         navStyle: "1",
         footerStyle: "1",
+        headingsStyle: "1",
       }
     );
   });

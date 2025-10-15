@@ -359,7 +359,10 @@ function BuilderForm({
                 }
                 id="contactPageCheckbox"
               />
-              <label className="form-check-label " htmlFor="contactPageCheckbox">
+              <label
+                className="form-check-label "
+                htmlFor="contactPageCheckbox"
+              >
                 Add Contact Page
               </label>
             </div>
@@ -630,6 +633,25 @@ function BuilderForm({
                   />
                 </div>
               </div>
+              <div className="col-12">
+                <div className="form-group">
+                  <label>H2 Styles</label>
+                  <select
+                    className="form-control"
+                    value={globalSettings.headingsStyle || "1"}
+                    onChange={(e) =>
+                      handleGlobalChange("headingsStyle", e.target.value)
+                    }
+                  >
+                    <option value="1">None</option>  
+                    <option value="2">Underline</option>  
+                    <option value="3">Dashed underline</option>
+                    <option value="4">Top and bottom lines</option>
+                    <option value="5">Left border</option>
+                    <option value="6">Lines on both sides</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -659,7 +681,9 @@ function BuilderForm({
                     className="form-check-input"
                     type="checkbox"
                     checked={globalSettings.whiteLogo || false}
-                    onChange={(e) => handleGlobalChange("whiteLogo", e.target.checked)}
+                    onChange={(e) =>
+                      handleGlobalChange("whiteLogo", e.target.checked)
+                    }
                     id="whiteLogoCheckbox"
                   />
                 </div>

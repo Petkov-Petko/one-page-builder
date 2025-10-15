@@ -22,6 +22,7 @@ import {
 import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1Preview";
 import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
 import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
+import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
 
 const Preview = ({
   formData,
@@ -429,6 +430,9 @@ const Preview = ({
         "--header-text-color": globalSettings.headerTextColor || "#ffffffff",
       }}
     >
+      <style
+        dangerouslySetInnerHTML={{ __html: getHeadingsCss(globalSettings) }}
+      />
       <style dangerouslySetInnerHTML={{ __html: getFooterCss() }} />
 
       <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">

@@ -4,6 +4,7 @@ import { NavigationCSS3 } from "./siteStyles/navigation/style3";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { contactPageCss } from "./exportContact.js";
+import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
 
 export function exportCss(globalSettings) {
   return `
@@ -54,10 +55,11 @@ p {
   scroll-margin-top: 70px;
 }
 
-
 h2, h3 {
   color: var(--heading-color) !important;
 }
+
+${getHeadingsCss(globalSettings)}
 
 .content-area a {
   color: var(--link-color) !important;
