@@ -1005,7 +1005,9 @@ echo site_header($title, $description);
   --footer-text-color: ${E.footerTextColor||"#ffffff"};
   --header-text-color: ${E.headerTextColor||"#ffffffff"};
 }
-
+html {
+  overflow-x: hidden;
+}
 body {
   background-color: var(--body-bg-color) !important;
   color: var(--body-text-color) !important;
@@ -1846,7 +1848,7 @@ echo site_header($title, $description);
     <p>BY USING SERVICE OR OTHER SERVICES PROVIDED BY US, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE TO BE BOUND BY THEM.</p>
 </div>
 <?php echo site_footer(); ?>
-    `}function Lm(E,B){return`User-agent: *
+    `}function Lm(E,B,b){return`User-agent: *
 Allow: /*.css
 Allow: /*.js
 
@@ -1875,7 +1877,7 @@ Disallow: /
 
 #end optional
 
-${B.length>1?`Sitemap: ${E||"domain.com"}/sitemap.xml`:""}`}function qm(E,B,b,x={}){const R=E.endsWith("/")?E.slice(0,-1):E;let p="";return B.filter(h=>!(h.isDropdownParent&&!h.hasOwnPage||!h.isHome&&(!h.slug||h.slug.trim()===""))).forEach(h=>{h.isHome?p+=`  <url>
+${B.length>1||b?`Sitemap: ${E||"domain.com"}/sitemap.xml`:""}`}function qm(E,B,b,x={}){const R=E.endsWith("/")?E.slice(0,-1):E;let p="";return B.filter(h=>!(h.isDropdownParent&&!h.hasOwnPage||!h.isHome&&(!h.slug||h.slug.trim()===""))).forEach(h=>{h.isHome?p+=`  <url>
     <loc>${R}/</loc>
   </url>
 `:p+=`  <url>
@@ -1998,7 +2000,7 @@ The page will now reload with a fresh start.`),window.location.reload())},m=(Z,V
 • ${T.missingFields.join(`
 • `)}
 
-These fields are required for generating the website files.`);return}v()};async function v(){const Z=new Cm,V=m(b,R),le=Sm(V,B);console.log(B),Object.entries(le.pages).forEach(([X,ue])=>{Z.file(X,ue)}),Z.file("functions.php",le.functions),Z.file("style.css",le.styles);try{const ue=await(await fetch("/one-page-builder/bootstrap/css/bootstrap.min.css")).blob();Z.file("assets/bootstrap/css/bootstrap.min.css",ue);const D=await(await fetch("/one-page-builder/bootstrap/js/bootstrap.min.js")).blob();Z.file("assets/bootstrap/js/bootstrap.min.js",D)}catch(X){console.warn("Could not add Bootstrap files to download:",X)}if(R&&R.length>0){console.log(`🖼️ Adding ${R.length} AI-generated images to ZIP`),console.log("📋 Stored images:",R.map(X=>({filename:X.filename,hasData:!!X.b64_json})));for(const X of R)try{if(!X.b64_json){console.error(`❌ No base64 data for ${X.filename}`);continue}const ue=atob(X.b64_json),ge=new Uint8Array(ue.length);for(let D=0;D<ue.length;D++)ge[D]=ue.charCodeAt(D);Z.file(`images/${X.filename}`,ge),console.log(`Added AI image: ${X.filename}`)}catch(ue){console.error(`Error processing AI image ${X.filename}:`,ue)}}if(Z.file("404.php",h()()),B.contactPage&&Z.file("contact.php",g()(B.email)),Z.file("robots.txt",Lm(B.url,b)),b.length>1&&Z.file("sitemap.xml",qm(B.url,b,B.privacyOrTerms,B)),B.privacyOrTerms==="privacy")switch(B.privacyOption){case"1":Z.file("privacy.php",Mm(B.email,B.url,B.country,B.name));break;case"2":Z.file("privacy.php",Ym(B.email,B.url,B.country,B.name));break}else if(B.privacyOrTerms==="terms")switch(B.termsOption){case"1":Z.file("terms.php",Bm(B.email,B.url,B.country,B.name));break;case"2":Z.file("terms.php",Hm(B.email,B.url,B.country,B.name));break}if(Z.file(".htaccess",Um(B.url)),Z.file("assets/js/main.js",Gm(b,B.stickyNavbar)),B.logo&&B.logo.startsWith("data:")){const ue=await(await fetch(B.logo)).blob();Z.file("images/logo.svg",ue)}if(B.favicon&&B.favicon.startsWith("data:")){const ue=await(await fetch(B.favicon)).blob();Z.file("images/favicon.png",ue)}if(B.heroBg&&B.heroBg.startsWith("data:")){const ue=await(await fetch(B.heroBg)).blob();Z.file("images/hero-bg.jpg",ue)}Z.generateAsync({type:"blob"}).then(X=>{km.saveAs(X,`${B.domain||"multi-page-website"}.zip`)})}const c=B.heroBg?"hero-section with-bg":"hero-section gradient-bg",u=b.filter(Z=>{var V;return!((V=B.hiddenFromNav)!=null&&V.includes(Z.id))}),_=B.customNavItems||[],w=u.filter(Z=>!Z.parentId),N=u.filter(Z=>Z.parentId);new Date().getFullYear();const U=b.filter(Z=>!(Z.isDropdownParent&&!Z.hasOwnPage)).length,q=()=>{const Z=B.footerStyle||"1";let V="";switch(Z){case"2":V=Ns?Ns():Es();break;case"1":default:V=Es()}return B.whiteLogo&&(V+=`
+These fields are required for generating the website files.`);return}v()};async function v(){const Z=new Cm,V=m(b,R),le=Sm(V,B);console.log(B),Object.entries(le.pages).forEach(([X,ue])=>{Z.file(X,ue)}),Z.file("functions.php",le.functions),Z.file("style.css",le.styles);try{const ue=await(await fetch("/one-page-builder/bootstrap/css/bootstrap.min.css")).blob();Z.file("assets/bootstrap/css/bootstrap.min.css",ue);const D=await(await fetch("/one-page-builder/bootstrap/js/bootstrap.min.js")).blob();Z.file("assets/bootstrap/js/bootstrap.min.js",D)}catch(X){console.warn("Could not add Bootstrap files to download:",X)}if(R&&R.length>0){console.log(`🖼️ Adding ${R.length} AI-generated images to ZIP`),console.log("📋 Stored images:",R.map(X=>({filename:X.filename,hasData:!!X.b64_json})));for(const X of R)try{if(!X.b64_json){console.error(`❌ No base64 data for ${X.filename}`);continue}const ue=atob(X.b64_json),ge=new Uint8Array(ue.length);for(let D=0;D<ue.length;D++)ge[D]=ue.charCodeAt(D);Z.file(`images/${X.filename}`,ge),console.log(`Added AI image: ${X.filename}`)}catch(ue){console.error(`Error processing AI image ${X.filename}:`,ue)}}if(Z.file("404.php",h()()),B.contactPage&&Z.file("contact.php",g()(B.email)),Z.file("robots.txt",Lm(B.url,b,B.contactPage)),(b.length>1||B.contactPage)&&Z.file("sitemap.xml",qm(B.url,b,B.privacyOrTerms,B)),B.privacyOrTerms==="privacy")switch(B.privacyOption){case"1":Z.file("privacy.php",Mm(B.email,B.url,B.country,B.name));break;case"2":Z.file("privacy.php",Ym(B.email,B.url,B.country,B.name));break}else if(B.privacyOrTerms==="terms")switch(B.termsOption){case"1":Z.file("terms.php",Bm(B.email,B.url,B.country,B.name));break;case"2":Z.file("terms.php",Hm(B.email,B.url,B.country,B.name));break}if(Z.file(".htaccess",Um(B.url)),Z.file("assets/js/main.js",Gm(b,B.stickyNavbar)),B.logo&&B.logo.startsWith("data:")){const ue=await(await fetch(B.logo)).blob();Z.file("images/logo.svg",ue)}if(B.favicon&&B.favicon.startsWith("data:")){const ue=await(await fetch(B.favicon)).blob();Z.file("images/favicon.png",ue)}if(B.heroBg&&B.heroBg.startsWith("data:")){const ue=await(await fetch(B.heroBg)).blob();Z.file("images/hero-bg.jpg",ue)}Z.generateAsync({type:"blob"}).then(X=>{km.saveAs(X,`${B.domain||"multi-page-website"}.zip`)})}const c=B.heroBg?"hero-section with-bg":"hero-section gradient-bg",u=b.filter(Z=>{var V;return!((V=B.hiddenFromNav)!=null&&V.includes(Z.id))}),_=B.customNavItems||[],w=u.filter(Z=>!Z.parentId),N=u.filter(Z=>Z.parentId);new Date().getFullYear();const U=b.filter(Z=>!(Z.isDropdownParent&&!Z.hasOwnPage)).length,q=()=>{const Z=B.footerStyle||"1";let V="";switch(Z){case"2":V=Ns?Ns():Es();break;case"1":default:V=Es()}return B.whiteLogo&&(V+=`
       .footer img {
         filter: brightness(0) invert(1);
       }
