@@ -27,7 +27,9 @@ export function exportCss(globalSettings) {
   --footer-text-color: ${globalSettings.footerTextColor || "#ffffff"};
   --header-text-color: ${globalSettings.headerTextColor || "#ffffffff"};
 }
-
+html {
+  overflow-x: hidden;
+}
 body {
   background-color: var(--body-bg-color) !important;
   color: var(--body-text-color) !important;
