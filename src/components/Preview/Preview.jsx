@@ -236,9 +236,13 @@ const Preview = ({
       zip.file("contact.php", getRandomContactPage()(globalSettings.email));
     }
     // Add robots.txt
-    zip.file("robots.txt", exportRobots(globalSettings.url, pages));
+    zip.file(
+      "robots.txt",
+      exportRobots(globalSettings.url, pages, globalSettings.contactPage)
+    );
+    
     // Add sitemap.xml
-    if (pages.length > 1) {
+    if (pages.length > 1 || globalSettings.contactPage) {
       zip.file(
         "sitemap.xml",
         exportSitemap(
