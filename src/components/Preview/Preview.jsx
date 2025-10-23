@@ -1,3 +1,4 @@
+import React from "react";
 import "./Preview.css";
 import { generateMultiPageExport } from "../../utils/exportSite";
 import JSZip from "jszip";
@@ -23,6 +24,7 @@ import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1P
 import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
 import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
 import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
+import { setConfig, logClick, fetchTable } from "../../utils/clicksService";
 
 const Preview = ({
   formData,
@@ -31,6 +33,21 @@ const Preview = ({
   currentPage,
   storedImages = [],
 }) => {
+  const WEB_APP_URL = import.meta.env.VITE_APP_WEB_APP_URL || "";
+  const SHARED_KEY = import.meta.env.VITE_APP_SHARED_KEY || "";
+
+  React.useEffect(() => {
+    setConfig({ webAppUrl: WEB_APP_URL, sharedKey: SHARED_KEY });
+    fetchTable().catch((e) => setError(e.message));
+  }, []);
+  const handleClick = async () => {
+    try {
+      await logClick(1);
+    } catch (e) {
+      console.error("Click logging failed:", e);
+    }
+  };
+
   const handleClearStorage = () => {
     if (
       window.confirm(
@@ -147,6 +164,7 @@ const Preview = ({
     }
 
     handleDownloadZip();
+    handleClick();
   };
 
   async function handleDownloadZip() {
@@ -240,7 +258,7 @@ const Preview = ({
       "robots.txt",
       exportRobots(globalSettings.url, pages, globalSettings.contactPage)
     );
-    
+
     // Add sitemap.xml
     if (pages.length > 1 || globalSettings.contactPage) {
       zip.file(
