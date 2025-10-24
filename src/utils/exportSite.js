@@ -16,25 +16,49 @@ import { exportCss } from "./exportCss";
 
 export function splitHtmlToSections(html) {
   const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
+
+  let prelude = ""; // съдържание преди първия <h2>
   let sections = [];
   let currentSection = "";
+  let started = false; // започнала ли е първа секция (срещнат ли е <h2>)
 
   parts.forEach((part) => {
-    if (part.match(/<h2[\s\S]*?<\/h2>/i)) {
-      if (currentSection) {
-        sections.push(`<section>${currentSection}</section>`);
-        currentSection = "";
+    const isH2 = /<h2[\s\S]*?<\/h2>/i.test(part);
+
+    if (isH2) {
+      if (!started) {
+        // първият <h2>: добави (непразния) прелюд към първата секция
+        started = true;
+        currentSection = (prelude ? prelude : "") + part;
+        prelude = "";
+      } else {
+        // нов <h2>: приключи предната секция и започни нова
+        if (currentSection.trim()) {
+          sections.push(`<section>${currentSection}</section>`);
+        }
+        currentSection = part;
       }
-      currentSection += part;
     } else {
-      currentSection += part;
+      if (started) {
+        currentSection += part;
+      } else {
+        // още не сме срещнали <h2> — трупай прелюд (може да е текст или само празнини)
+        prelude += part;
+      }
     }
   });
-  if (currentSection) {
+
+  // ако има секция в процес — добави я
+  if (started && currentSection.trim()) {
     sections.push(`<section>${currentSection}</section>`);
+  } else if (!started && prelude.trim()) {
+    // ако изобщо няма <h2>, но има реално съдържание — върни като една секция
+    sections.push(`<section>${prelude}</section>`);
   }
+
   return sections.join("\n");
 }
+
 
 // Multi-page export function
 export function generateMultiPageExport(pages, globalSettings) {
