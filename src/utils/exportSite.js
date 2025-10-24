@@ -17,22 +17,20 @@ import { exportCss } from "./exportCss";
 export function splitHtmlToSections(html) {
   const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
 
-  let prelude = ""; // съдържание преди първия <h2>
+  let prelude = "";
   let sections = [];
   let currentSection = "";
-  let started = false; // започнала ли е първа секция (срещнат ли е <h2>)
+  let started = false;
 
   parts.forEach((part) => {
     const isH2 = /<h2[\s\S]*?<\/h2>/i.test(part);
 
     if (isH2) {
       if (!started) {
-        // първият <h2>: добави (непразния) прелюд към първата секция
         started = true;
         currentSection = (prelude ? prelude : "") + part;
         prelude = "";
       } else {
-        // нов <h2>: приключи предната секция и започни нова
         if (currentSection.trim()) {
           sections.push(`<section>${currentSection}</section>`);
         }
@@ -42,41 +40,34 @@ export function splitHtmlToSections(html) {
       if (started) {
         currentSection += part;
       } else {
-        // още не сме срещнали <h2> — трупай прелюд (може да е текст или само празнини)
         prelude += part;
       }
     }
   });
 
-  // ако има секция в процес — добави я
   if (started && currentSection.trim()) {
     sections.push(`<section>${currentSection}</section>`);
   } else if (!started && prelude.trim()) {
-    // ако изобщо няма <h2>, но има реално съдържание — върни като една секция
     sections.push(`<section>${prelude}</section>`);
   }
 
   return sections.join("\n");
 }
 
-
 // Multi-page export function
 export function generateMultiPageExport(pages, globalSettings) {
   const hiddenPages = globalSettings.hiddenFromNav || [];
   const visiblePages = pages.filter((page) => !hiddenPages.includes(page.id));
 
-  // Generate navigation HTML
   const generateNavigation = () => {
     let navHtml = "";
     const customNavItems = globalSettings.customNavItems || [];
 
-    // Group pages by parent
     const topLevelPages = visiblePages.filter((page) => !page.parentId);
     const childPages = visiblePages.filter((page) => page.parentId);
 
     topLevelPages.forEach((page) => {
       if (page.isDropdownParent) {
-        // Create dropdown
         const children = childPages.filter(
           (child) => child.parentId === page.id
         );
@@ -119,7 +110,6 @@ export function generateMultiPageExport(pages, globalSettings) {
         `;
         }
       } else {
-        // Regular nav item
         const href = page.isHome ? "/" : `/${page.slug}`;
         navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.title}</a></li>\n`;
       }
