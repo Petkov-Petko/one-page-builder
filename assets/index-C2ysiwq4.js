@@ -847,6 +847,8 @@ ${T.heroBg?`.hero-section.with-bg {
   border-radius: 12px 12px 0 0;
   position: relative;
   overflow: hidden;
+  color: var(--footer-text-color);
+
 }
 
 .footer-news a {
