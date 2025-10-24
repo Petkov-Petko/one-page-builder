@@ -12,6 +12,7 @@ import {
 } from "./siteStyles/navigation/style3";
 import { FooterHtml1 } from "./siteStyles/footer/footerStyle1";
 import { FooterHtml2 } from "./siteStyles/footer/footerStyle2";
+import { FooterHtml3 } from "./siteStyles/footer/footerStyle3";
 import { exportCss } from "./exportCss";
 
 export function splitHtmlToSections(html) {
@@ -252,11 +253,13 @@ ${
 function site_footer()
 {
   ob_start(); ?>
-  ${
-    globalSettings.footerStyle === "1"
-      ? FooterHtml1(globalSettings)
-      : FooterHtml2(globalSettings)
-  }
+${
+  globalSettings.footerStyle === "1"
+    ? FooterHtml1(globalSettings)
+    : globalSettings.footerStyle === "2"
+    ? FooterHtml2(globalSettings)
+    : FooterHtml3(globalSettings)
+}
 
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/main.js"></script>

@@ -20,6 +20,10 @@ import {
   FooterHtml2,
   FooterCss2,
 } from "../../utils/siteStyles/footer/footerStyle2";
+import {
+  FooterHtml3,
+  FooterCss3,
+} from "../../utils/siteStyles/footer/footerStyle3";
 import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1Preview";
 import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
 import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
@@ -387,6 +391,9 @@ const Preview = ({
       case "2":
         css = FooterCss2 ? FooterCss2() : FooterCss1();
         break;
+      case "3":
+        css = FooterCss3 ? FooterCss3() : FooterCss1();
+        break;
       case "1":
       default:
         css = FooterCss1();
@@ -412,6 +419,11 @@ const Preview = ({
       case "2":
         footerHtml = FooterHtml2
           ? FooterHtml2(globalSettings)
+          : FooterHtml1(globalSettings);
+        break;
+      case "3":
+        footerHtml = FooterHtml3
+          ? FooterHtml3(globalSettings)
           : FooterHtml1(globalSettings);
         break;
       case "1":

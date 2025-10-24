@@ -3,6 +3,7 @@ import { NavigationCSS2 } from "./siteStyles/navigation/style2";
 import { NavigationCSS3 } from "./siteStyles/navigation/style3";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
+import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
 import { contactPageCss } from "./exportContact.js";
 import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
 
@@ -122,14 +123,19 @@ ${getHeadingsCss(globalSettings)}
   min-height: 70vh;
 }
 
-${globalSettings.footerStyle === "1" ? FooterCss1() : FooterCss2()}
 ${
-  globalSettings.whiteLogo
-    ? `.footer img {
+  globalSettings.footerStyle === "1"
+    ? FooterCss1()
+    : globalSettings.footerStyle === "2"
+    ? FooterCss2()
+    : FooterCss3()
+}${
+    globalSettings.whiteLogo
+      ? `.footer img {
         filter: brightness(0) invert(1);
       }`
-    : ""
-}
+      : ""
+  }
 ${
   globalSettings.navStyle === "1"
     ? NavigationCSS1(globalSettings)

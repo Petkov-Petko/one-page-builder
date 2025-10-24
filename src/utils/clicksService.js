@@ -60,7 +60,6 @@ export async function fetchTable() {
   url.searchParams.set("key", CONFIG.sharedKey);
   const res = await fetch(url.toString());
   const data = await res.json();
-  console.log("GET status", res.status, data);
   return data.rows || [];
 }
 

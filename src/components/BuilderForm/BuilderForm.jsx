@@ -671,6 +671,7 @@ function BuilderForm({
                   >
                     <option value="1">Style 1</option>
                     <option value="2">Style 2</option>
+                    <option value="3">Style 3</option>
                   </select>
                 </div>
               </div>
