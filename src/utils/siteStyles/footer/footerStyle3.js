@@ -31,7 +31,7 @@ export function FooterHtml3(globalSettings) {
             <button type="submit" disabled>Subscribe</button>
           </form>
         </div>
-        <div class="footer-social text-center">
+        <div class="footer-social text-center d-flex justify-content-center">
           <span class="social-icon facebook"><i class="bi bi-facebook"></i></span>
           <span class="social-icon twitter"><i class="bi bi-twitter"></i></span>
           <span class="social-icon youtube"><i class="bi bi-youtube"></i></span>
@@ -106,7 +106,9 @@ export function FooterCss3() {
 .footer-social .social-icon {
   font-size: 1.5rem;
   margin: 0 0.5rem;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: var(--link-color);
   width: 40px;
   height: 40px;
