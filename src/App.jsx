@@ -65,6 +65,7 @@ function App() {
         navStyle: "1",
         footerStyle: "1",
         headingsStyle: "1",
+        scrollToTop: false,
       }
     );
   });
@@ -129,7 +130,7 @@ function App() {
     <>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-6 px-0">
             <div className="builder-panel">
               <PageManager
                 pages={pages}
@@ -154,7 +155,7 @@ function App() {
               />
             </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-md-6 px-0">
             <Preview
               formData={currentFormData}
               globalSettings={globalSettings}

@@ -12,6 +12,7 @@ export const languageOptions = [
   { value: "en-AU", label: "English - Australia (en-AU)" },
   { value: "en-CA", label: "English - Canada (en-CA)" },
   { value: "en-GB", label: "English - United Kingdom (en-GB)" },
+  { value: "en-IE", label: "English - Ireland (en-IE)" },
   { value: "en-US", label: "English - United States (en-US)" },
   { value: "fr", label: "French (fr)" },
   { value: "fr-CA", label: "French - Canada (fr-CA)" },

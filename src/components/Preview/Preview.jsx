@@ -332,7 +332,11 @@ const Preview = ({
     // Add main.js
     zip.file(
       "assets/js/main.js",
-      exportMainJs(pages, globalSettings.stickyNavbar)
+      exportMainJs(
+        pages,
+        globalSettings.stickyNavbar,
+        globalSettings.scrollToTop
+      )
     );
     // Add images if they exist
     if (globalSettings.logo && globalSettings.logo.startsWith("data:")) {
@@ -373,8 +377,6 @@ const Preview = ({
   // Group pages by parent for dropdown functionality
   const topLevelPages = visiblePages.filter((page) => !page.parentId);
   const childPages = visiblePages.filter((page) => page.parentId);
-
-  const currentYear = new Date().getFullYear();
 
   const realPageCount = pages.filter((page) => {
     if (page.isDropdownParent && !page.hasOwnPage) {
@@ -469,16 +471,19 @@ const Preview = ({
       />
       <style dangerouslySetInnerHTML={{ __html: getFooterCss() }} />
 
-      <div className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+      <div
+        className="preview-header d-flex justify-content-between align-items-center p-3 bg-light border-bottom"
+        id="preview-header"
+      >
         <div>
-          <h5 className="mb-0">
+          <h5 className="mb-0 fw-bold">
             Preview: {currentPage?.title || "Untitled Page"}
           </h5>
           <small className="text-muted">
             {realPageCount} page{realPageCount !== 1 ? "s" : ""} total
           </small>
         </div>
-        <div className="d-flex flex-column gap-3 align-items-end">
+        <div className="d-flex flex-column gap-2 align-items-end">
           <button
             className="btn btn-outline-danger btn-sm"
             onClick={handleClearStorage}
@@ -488,7 +493,7 @@ const Preview = ({
           </button>
 
           <button
-            className={`btn ${
+            className={`download-button btn ${
               isDownloadDisabled ? "btn-secondary" : "btn-success"
             }`}
             onClick={handleDownloadClick}
@@ -546,6 +551,7 @@ const Preview = ({
         </>
         {/* Hero Section */}
         <section
+          id="preview-hero"
           className={`${heroClass} ${
             globalSettings.navStyle === "2" && "second-style"
           }`}
@@ -576,7 +582,6 @@ const Preview = ({
             </div>
           </div>
         </section>
-
         {/* Main Content */}
         <main className="container my-5">
           <div className="row">
@@ -595,9 +600,18 @@ const Preview = ({
             </div>
           </div>
         </main>
-
         {/* Footer */}
         <div dangerouslySetInnerHTML={{ __html: getFooterHtml() }} />
+        {globalSettings.scrollToTop && (
+          <a
+            href="#"
+            id="scroll-top"
+            className="scroll-top d-flex align-items-center justify-content-center"
+          >
+            {" "}
+            <i className="bi bi-arrow-up-short" />{" "}
+          </a>
+        )}
       </div>
     </div>
   );

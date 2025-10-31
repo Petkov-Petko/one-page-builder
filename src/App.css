@@ -1,7 +1,6 @@
 .builder-panel {
     max-height: 100vh;
     overflow-y: auto;
-    padding-right: 1rem;
 }
 
 .current-page-indicator .alert {
@@ -25,7 +24,7 @@
 .preview-container {
     height: 100vh;
     overflow-y: auto;
-    /* border-left: 2px solid #e9ecef; */
+    padding: 5px;
 }
 
 .preview-header {

@@ -643,8 +643,8 @@ function BuilderForm({
                       handleGlobalChange("headingsStyle", e.target.value)
                     }
                   >
-                    <option value="1">None</option>  
-                    <option value="2">Underline</option>  
+                    <option value="1">None</option>
+                    <option value="2">Underline</option>
                     <option value="3">Dashed underline</option>
                     <option value="4">Top and bottom lines</option>
                     <option value="5">Left border</option>
@@ -659,7 +659,7 @@ function BuilderForm({
           <div className="style-section">
             <h4 className="section-title">Footer</h4>
             <div className="row">
-              <div className="col-12">
+              <div className="col-lg-9">
                 <div className="form-group">
                   <label>Footer Style:</label>
                   <select
@@ -673,6 +673,19 @@ function BuilderForm({
                     <option value="2">Style 2</option>
                     <option value="3">Style 3</option>
                   </select>
+                </div>
+              </div>
+              <div className="col-lg-3">
+                <div className="form-group">
+                  <label>Scroll to top button:</label>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    checked={globalSettings.scrollToTop || false}
+                    onChange={(e) =>
+                      handleGlobalChange("scrollToTop", e.target.checked)
+                    }
+                  />
                 </div>
               </div>
               <div className="col-lg-4">

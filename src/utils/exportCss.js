@@ -145,5 +145,37 @@ ${
 }
 
 ${globalSettings.contactPage ? contactPageCss() : ""}
+${
+  globalSettings.scrollToTop
+    ? `.scroll-top {
+  position: fixed;
+  visibility: hidden;
+  opacity: 0;
+  right: 15px;
+  bottom: -15px;
+  z-index: 99999;
+  background-color: var(--link-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 50px;
+  transition: all 0.4s;
+}
+.scroll-top i {
+  font-size: 24px;
+  color: var(--footer-bg-color);
+  line-height: 0;
+}
+.scroll-top:hover {
+  background-color: color-mix(in srgb, var(--link-color), transparent 20%);
+  color: var(--footer-bg-color);
+}
+.scroll-top.active {
+  visibility: visible;
+  opacity: 1;
+  bottom: 15px;
+}
+`
+    : ""
+}
 `;
 }

@@ -23,6 +23,12 @@ export function FooterHtml1(globalSettings) {
       </div>
     </div>
   </div>
+  ${
+    globalSettings.scrollToTop
+      ? `      <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+`
+      : ""
+  }
 </footer>
   `;
 }
@@ -39,4 +45,3 @@ export function FooterCss1() {
   color: var(--link-color) !important;
 }`;
 }
-

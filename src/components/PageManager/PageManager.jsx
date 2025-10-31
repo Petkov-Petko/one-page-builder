@@ -182,7 +182,7 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4 className="mb-0">Pages ({pages.length})</h4>
         <button
-          className="btn btn-primary btn-sm"
+          className=" add-page-button"
           onClick={() => setShowAddPage(true)}
         >
           + Add Page
