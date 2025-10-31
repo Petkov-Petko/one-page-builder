@@ -541,7 +541,7 @@ function BuilderForm({
                   <input
                     type="color"
                     className="form-control"
-                    value={globalSettings.heroGradient1 || "#667eea"}
+                    value={globalSettings.heroGradient1 || "#168295"}
                     onChange={(e) =>
                       handleGlobalChange("heroGradient1", e.target.value)
                     }
@@ -554,7 +554,7 @@ function BuilderForm({
                   <input
                     type="color"
                     className="form-control"
-                    value={globalSettings.heroGradient2 || "#764ba2"}
+                    value={globalSettings.heroGradient2 || "#0b5e3a"}
                     onChange={(e) =>
                       handleGlobalChange("heroGradient2", e.target.value)
                     }

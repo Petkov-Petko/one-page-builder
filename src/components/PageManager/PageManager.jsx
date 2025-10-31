@@ -11,17 +11,17 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
     dropdownHasOwnPage: false,
   });
 
-    const defaultPageSettings = {
-      lang: "en",
-      bodyBgColor: "#f8fafc",
-      bodyTextColor: "#222222",
-      headingColor: "#222222",
-      heroGradient1: "#667eea",
-      heroGradient2: "#764ba2",
-      footerBgColor: "#0d0d0d",
-      linkColor: "#2563eb",
-      headerBgColor: "#ffffff",
-    };
+  const defaultPageSettings = {
+    lang: "en",
+    bodyBgColor: "#f8fafc",
+    bodyTextColor: "#222222",
+    headingColor: "#222222",
+    heroGradient1: "#168295",
+    heroGradient2: "#0b5e3a",
+    footerBgColor: "#0d0d0d",
+    linkColor: "#2563eb",
+    headerBgColor: "#ffffff",
+  };
 
   const handleDeleteDropdown = (pageId) => {
     if (
@@ -77,21 +77,23 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
         isDropdownParent: true,
         hasOwnPage: newPageData.dropdownHasOwnPage,
         children: [],
-        formData: newPageData.dropdownHasOwnPage ? {
-          title: newPageData.dropdownTitle,
-          desc: "",
-          h1: newPageData.dropdownTitle,
-          mainContent: `<h2>${newPageData.dropdownTitle}</h2>\n<p>This is a dropdown menu parent page.</p>`,
-          ...defaultPageSettings,
-        } : null,
+        formData: newPageData.dropdownHasOwnPage
+          ? {
+              title: newPageData.dropdownTitle,
+              desc: "",
+              h1: newPageData.dropdownTitle,
+              mainContent: `<h2>${newPageData.dropdownTitle}</h2>\n<p>This is a dropdown menu parent page.</p>`,
+              ...defaultPageSettings,
+            }
+          : null,
       };
 
       // Only add the dropdown parent
       setPages((prev) => [...prev, dropdownParent]);
 
-         if (newPageData.dropdownHasOwnPage) {
-           setCurrentPageId(dropdownParent.id);
-         }
+      if (newPageData.dropdownHasOwnPage) {
+        setCurrentPageId(dropdownParent.id);
+      }
     }
     // If adding a page under an existing dropdown
     else if (newPageData.parentId) {
@@ -341,7 +343,6 @@ const PageManager = ({ pages, setPages, currentPageId, setCurrentPageId }) => {
               page.id === currentPageId ? "active" : ""
             } ${page.parentId ? "child-page" : ""}`}
             onClick={() => {
-    
               if (page.formData) {
                 setCurrentPageId(page.id);
               }

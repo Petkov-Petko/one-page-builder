@@ -14,8 +14,8 @@ export function exportCss(globalSettings) {
   --body-bg-color: ${globalSettings.bodyBgColor || "#f8fafc"};
   --body-text-color: ${globalSettings.bodyTextColor || "#222222"};
   --heading-color: ${globalSettings.headingColor || "#222222"};
-  --hero-gradient1: ${globalSettings.heroGradient1 || "#667eea"};
-  --hero-gradient2: ${globalSettings.heroGradient2 || "#764ba2"};
+  --hero-gradient1: ${globalSettings.heroGradient1 || "#168295"};
+  --hero-gradient2: ${globalSettings.heroGradient2 || "#0b5e3a"};
   --footer-bg-color: ${globalSettings.footerBgColor || "#0d0d0d"};
   --link-color: ${globalSettings.linkColor || "#2563eb"};
   --header-bg-color: ${globalSettings.headerBgColor || "#ffffff"};
