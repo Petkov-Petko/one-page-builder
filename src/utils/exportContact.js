@@ -1,4 +1,4 @@
-export function contactPage1(email) {
+export function contactPage1(email, heroClass) {
   return `
     <?php include 'functions.php';
 $title = 'Contact Us - page';
@@ -7,10 +7,16 @@ $description = 'Looking to connect? Use the contact page for questions, feedback
 echo site_header($title, $description);
 
 ?>
+<section class="${heroClass}">
+  <div class="container">
+    <div class="justify-content-center text-center">
+        <h1>Contact Us</h1>
+    </div>
+  </div>
+</section>
 <div class="contact-container ">
     <div class="contact-header">
         <i class="bi bi-envelope-fill"></i>
-        <h1>Contact Us</h1>
     </div>
     <form>
         <h2>Get in Touch</h2>
@@ -34,7 +40,7 @@ echo site_header($title, $description);
 <?php echo site_footer(); ?>
     `;
 }
-export function contactPage2(email) {
+export function contactPage2(email, heroClass) {
   return `
 <?php include 'functions.php';
 $title = 'Contact Us - page';
@@ -43,10 +49,16 @@ $description = 'Need assistance or have a question? Contact us directly — we�
 echo site_header($title, $description);
 
 ?>
+<section class="${heroClass}">
+  <div class="container">
+    <div class="justify-content-center text-center">
+        <h1>Say Hello</h1>
+    </div>
+  </div>
+</section>
 <div class="contact-container">
     <div class="contact-header">
         <i class="bi bi-send-fill"></i>
-        <h1>Say Hello</h1>
         <p class="text-muted">We’d love to hear from you. Fill out the form below.</p>
     </div>
     <form>

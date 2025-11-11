@@ -39,6 +39,9 @@ const Preview = ({
 }) => {
   const WEB_APP_URL = import.meta.env.VITE_APP_WEB_APP_URL || "";
   const SHARED_KEY = import.meta.env.VITE_APP_SHARED_KEY || "";
+  const heroClass = globalSettings.heroBg
+    ? "hero-section with-bg"
+    : "hero-section gradient-bg";
 
   React.useEffect(() => {
     setConfig({ webAppUrl: WEB_APP_URL, sharedKey: SHARED_KEY });
@@ -252,10 +255,13 @@ const Preview = ({
     }
 
     // Add 404.php
-    zip.file("404.php", getRandomErrorPage()());
+    zip.file("404.php", getRandomErrorPage()(heroClass));
     // Add contact page if enabled
     if (globalSettings.contactPage) {
-      zip.file("contact.php", getRandomContactPage()(globalSettings.email));
+      zip.file(
+        "contact.php",
+        getRandomContactPage()(globalSettings.email, heroClass)
+      );
     }
     // Add robots.txt
     zip.file(
@@ -285,7 +291,8 @@ const Preview = ({
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name
+              globalSettings.name,
+              heroClass
             )
           );
           break;
@@ -296,7 +303,8 @@ const Preview = ({
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name
+              globalSettings.name,
+              heroClass
             )
           );
           break;
@@ -310,7 +318,8 @@ const Preview = ({
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name
+              globalSettings.name,
+              heroClass
             )
           );
           break;
@@ -321,7 +330,8 @@ const Preview = ({
               globalSettings.email,
               globalSettings.url,
               globalSettings.country,
-              globalSettings.name
+              globalSettings.name,
+              heroClass
             )
           );
           break;
@@ -363,10 +373,6 @@ const Preview = ({
       saveAs(content, `${globalSettings.domain || "multi-page-website"}.zip`);
     });
   }
-
-  const heroClass = globalSettings.heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
 
   // Generate navigation items
   const visiblePages = pages.filter(
