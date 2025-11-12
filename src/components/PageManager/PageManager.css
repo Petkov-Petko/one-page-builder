@@ -26,12 +26,12 @@
 }
 
 .page-item:hover {
-  border-color: #6366f1;
+  border-color: #08b25c80;
   box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
 .page-item.active {
-  border-color: #6366f1;
+  border-color: #08b25c80;
   background: #f0f0ff;
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
 }

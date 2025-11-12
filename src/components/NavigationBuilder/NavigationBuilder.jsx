@@ -97,7 +97,7 @@ const NavigationBuilder = ({ pages, globalSettings, setGlobalSettings }) => {
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h6 className="section-title mb-0">Custom Navigation Links</h6>
           <button 
-            className="btn btn-sm btn-outline-primary"
+            className="btn btn-sm btn-outline-success"
             onClick={() => setShowAddCustomLink(true)}
           >
             + Add Link
