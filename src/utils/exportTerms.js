@@ -11,7 +11,7 @@ echo site_header($title, $description);
     </div>
   </div>
 </section>
-<div class="container py-5 mt-5">
+<div class="container py-5">
     <p>Please read these terms and conditions carefully before using Our Service.</p>
     <h2>Interpretation and Definitions</h2>
     <h3>Interpretation</h3>
@@ -116,7 +116,7 @@ echo site_header($title, $description);
     </div>
   </div>
 </section>
-<div class="container py-5 mt-5">
+<div class="container py-5">
     <h2>1. Introduction</h2>
     <p>Welcome to ${name || "Our website"} (“Company”, “we”, “our”, “us”)!</p>
     <p>These Terms of Service (“Terms”, “Terms of Service”) govern your use of our website located at ${
