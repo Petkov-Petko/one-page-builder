@@ -12,7 +12,7 @@
 .website-preview {
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: #f8fafc;
   border: 2px solid #d1d5db;
   border-radius: 11px;
@@ -462,3 +462,12 @@ p {
   opacity: 1;
   bottom: 15px;
 }
+.website-preview .transparent-navbar {
+  background-color: transparent !important;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 1030 !important;
+}
+
