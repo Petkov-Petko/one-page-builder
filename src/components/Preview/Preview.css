@@ -89,8 +89,8 @@ p {
 }
 
 .website-preview .navbar.sticky-top {
-  position: sticky;
-  top: 0;
+  position: sticky !important;
+  top: -5px;
   z-index: 1020;
   box-shadow: 0 2px 12px 0 rgba(99, 102, 241, 0.08);
 }
