@@ -10,6 +10,10 @@ import {
   NavigationHtml3,
   NavigationHero3,
 } from "./siteStyles/navigation/style3";
+import {
+  NavigationHtml4,
+  NavigationHero4,
+} from "./siteStyles/navigation/style4";
 import { FooterHtml1 } from "./siteStyles/footer/footerStyle1";
 import { FooterHtml2 } from "./siteStyles/footer/footerStyle2";
 import { FooterHtml3 } from "./siteStyles/footer/footerStyle3";
@@ -201,13 +205,20 @@ function site_header($title, $description)
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-${
-  globalSettings.navStyle === "1"
-    ? NavigationHtml1(globalSettings, navigationHtml)
-    : globalSettings.navStyle === "2"
-    ? NavigationHtml2(globalSettings, navigationHtml)
-    : NavigationHtml3(globalSettings, navigationHtml)
-} 
+${(() => {
+  switch (globalSettings.navStyle) {
+    case "1":
+      return NavigationHtml1(globalSettings, navigationHtml);
+    case "2":
+      return NavigationHtml2(globalSettings, navigationHtml);
+    case "3":
+      return NavigationHtml3(globalSettings, navigationHtml);
+    case "4":
+      return NavigationHtml4(globalSettings, navigationHtml);
+    default:
+      return NavigationHtml1(globalSettings, navigationHtml);
+  }
+})()} 
 <?php
   return ob_get_clean();
 }
@@ -280,13 +291,20 @@ echo site_header("${page.formData.title || page.title}", "${
   }");
 ?>
 
-${
-  globalSettings.navStyle === "1"
-    ? NavigationHero1(globalSettings, page)
-    : globalSettings.navStyle === "2"
-    ? NavigationHero2(globalSettings, page)
-    : NavigationHero3(globalSettings, page)
-}
+${(() => {
+  switch (globalSettings.navStyle) {
+    case "1":
+      return NavigationHero1(globalSettings, page);
+    case "2":
+      return NavigationHero2(globalSettings, page);
+    case "3":
+      return NavigationHero3(globalSettings, page);
+    case "4":
+      return NavigationHero4(globalSettings, page);
+    default:
+      return NavigationHero1(globalSettings, page);
+  }
+})()}
 
 <main class="container my-5">
   <div class="row">

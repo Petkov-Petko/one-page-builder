@@ -27,6 +27,7 @@ import {
 import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1Preview";
 import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
 import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
+import { Navigation4JsxElement } from "../../utils/siteStyles/navigation/style4Preview";
 import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
 import { setConfig, logClick, fetchTable } from "../../utils/clicksService";
 
@@ -345,7 +346,8 @@ const Preview = ({
       exportMainJs(
         pages,
         globalSettings.stickyNavbar,
-        globalSettings.scrollToTop
+        globalSettings.scrollToTop,
+        globalSettings.navStyle
       )
     );
     // Add images if they exist
@@ -554,13 +556,22 @@ const Preview = ({
               customNavItems={customNavItems}
             />
           )}
+          {globalSettings.navStyle === "4" && (
+            <Navigation4JsxElement
+              globalSettings={globalSettings}
+              topLevelPages={topLevelPages}
+              childPages={childPages}
+              currentPage={currentPage}
+              customNavItems={customNavItems}
+            />
+          )}
         </>
         {/* Hero Section */}
         <section
           id="preview-hero"
           className={`${heroClass} ${
             globalSettings.navStyle === "2" && "second-style"
-          }`}
+          } ${globalSettings.navStyle === "4" && "fourth-style"}`}
           style={
             globalSettings.heroBg
               ? {

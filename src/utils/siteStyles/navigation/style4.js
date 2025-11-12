@@ -1,35 +1,31 @@
-export function NavigationHtml3(globalSettings, navigationHtml) {
+export function NavigationHtml4(globalSettings, navigationHtml) {
   return `
- <nav class="navbar navbar-expand-xl navbar-light ${
-   globalSettings.stickyNavbar ? "sticky-top" : ""
- }">
-      <div class="container flex-xl-column">
-        <div class="d-flex w-100 justify-content-between align-items-center d-xl-block text-center">
-          <a class="navbar-brand mx-xl-auto" href="/">
-             <img src="${
-               globalSettings.logo
-                 ? "/images/logo.svg"
-                 : "https://placehold.co/220x50"
-             }" alt="${
+        <nav class="navbar navbar-expand-xl navbar-light${
+          globalSettings.stickyNavbar ? " sticky-top" : ""
+        }">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="/">
+      <img src="${
+        globalSettings.logo ? "/images/logo.svg" : "https://placehold.co/220x50"
+      }" alt="${
     globalSettings.name || globalSettings.domain || "Domain"
   }" width="220" height="50">
-          </a>
-          <button class="navbar-toggler d-xl-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-        <div class="collapse navbar-collapse justify-content-center mt-xl-2" id="navbarNav">
-          <ul class="navbar-nav">
-            ${navigationHtml}
-          </ul>
-        </div>
-      </div>
-    </nav>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        ${navigationHtml}
+      </ul>
+    </div>
+  </div>
+</nav>
     `;
 }
 
-export function NavigationHero3(globalSettings, page) {
+export function NavigationHero4(globalSettings, page) {
   const heroClass = globalSettings.heroBg
     ? "hero-section with-bg"
     : "hero-section gradient-bg";
@@ -48,25 +44,38 @@ export function NavigationHero3(globalSettings, page) {
     `;
 }
 
-export function NavigationCSS3(globalSettings) {
+export function NavigationCSS4(globalSettings) {
   return `
  .navbar {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+${
+  globalSettings.stickyNavbar
+    ? `  background-color: transparent !important;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;`
+    : `  background-color: transparent !important;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease;
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;`
+}
+
+}
+.navbar.scrolled {
   background-color: var(--header-bg-color) !important;
-  ${
-    globalSettings.stickyNavbar
-      ? "position: sticky; top: 0; z-index: 1020;"
-      : ""
-  }
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .hero-section {
-  padding: 55px 0;
+  padding: 115px 0 30px;
   position: relative;
   overflow: hidden;
   color: var(--header-text-color);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.246);
 }
 
 ${
@@ -106,22 +115,14 @@ ${
   }
   
 }
-.navbar-light .navbar-nav .nav-link {
-  color: var(--nav-link-color, #141414) !important;
-  font-weight: 500;
-  padding: 0 1rem;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-.navbar-light .navbar-nav .nav-link:hover {
-  color: var(--link-color) !important;
-  transform: translateY(-1px);
-}
+  .navbar-light .navbar-nav .nav-link {
+    color: var(--nav-link-color, #141414) !important;
+  }
+
   .navbar-light .navbar-nav .nav-link.active {
   color: var(--link-color) !important;
-  font-weight: 600;
-  border-bottom: 2px solid var(--link-color);
+  font-weight: bold;
 }
-
   /* Mobile nav */
 @media (max-width: 1199.98px) {
   .navbar-collapse {
@@ -129,11 +130,7 @@ ${
     top: 61px;
     left: 15px;
     right: 15px;
-    background-color: color-mix(
-      in srgb,
-      var(--header-bg-color) 65%,
-      transparent
-    );
+    background-color: color-mix(in srgb, var(--header-bg-color) 65%, transparent);
     backdrop-filter: blur(12px);
     border-radius: 12px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
@@ -187,17 +184,13 @@ ${
 
 .custom-dropdown {
   border: 0;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
   border-radius: 12px;
-  padding: 0.5rem 0;
-  margin-top: 0.5rem;
+  padding: .5rem 0;
+  margin-top: .5rem;
   min-width: 220px;
-  background: color-mix(
-    in srgb,
-    var(--header-bg-color) 65%,
-    transparent
-  ) !important;
-  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--header-bg-color) 65%, transparent) !important;
+  backdrop-filter: blur(12px)
 }
 
 .custom-dropdown .dropdown-item {

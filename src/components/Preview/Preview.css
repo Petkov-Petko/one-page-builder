@@ -88,7 +88,13 @@ p {
   background: var(--header-bg-color, #fff) !important;
 }
 
-.website-preview .navbar.sticky-top {
+.website-preview .second-style-navbar.sticky-top {
+  position: absolute !important;
+  top: -5px;
+  z-index: 1020;
+  box-shadow: 0 2px 12px 0 rgba(99, 102, 241, 0.08);
+}
+.website-preview .second-style-navbar.sticky-top.navbar.scrolled {
   position: sticky !important;
   top: -5px;
   z-index: 1020;
@@ -335,7 +341,7 @@ p {
 }
 
 .website-preview .hero-section.second-style {
-  padding: 100px 0 30px 0;
+  padding: 125px 0 30px 0;
 }
 
 .website-preview .footer-news {
@@ -471,3 +477,42 @@ p {
   z-index: 1030 !important;
 }
 
+.website-preview .navbar.nav-style-4 {
+  background-color: transparent !important;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease,
+    position 0.3s ease;
+  position: absolute !important; /* Start absolute to overlay hero */
+  top: -5px;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  box-shadow: none;
+}
+
+/* When scrolled - becomes sticky and gets background */
+.website-preview .navbar.nav-style-4.sticky-top.scrolled {
+  position: sticky !important; /* Switch to sticky when scrolled */
+  background-color: var(--header-bg-color) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Nav links styling for transparent state */
+.website-preview .navbar.nav-style-4 .nav-link {
+  color: var(--header-text-color, #ffffff);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.website-preview .hero-section {
+  position: relative;
+}
+.website-preview .fourth-style {
+  padding: 110px 0 30px;
+}
+.website-preview .navbar-light .navbar-nav .nav-link.active {
+  color: var(--link-color) !important;
+  font-weight: bold;
+}
+.sticky-top {
+  top: -5px !important;
+}

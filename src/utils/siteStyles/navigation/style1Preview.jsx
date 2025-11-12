@@ -14,6 +14,7 @@ export function Navigation1JsxElement({
         "navbar-expand-lg",
         "navbar-light",
         globalSettings?.stickyNavbar ? "sticky-top" : "",
+        globalSettings?.transparentNavbar ? "transparent-navbar" : "",
       ]
         .filter(Boolean)
         .join(" ")}

@@ -1,6 +1,7 @@
 import { NavigationCSS1 } from "./siteStyles/navigation/style1";
 import { NavigationCSS2 } from "./siteStyles/navigation/style2";
 import { NavigationCSS3 } from "./siteStyles/navigation/style3";
+import { NavigationCSS4 } from "./siteStyles/navigation/style4";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
@@ -136,13 +137,20 @@ ${
       }`
       : ""
   }
-${
-  globalSettings.navStyle === "1"
-    ? NavigationCSS1(globalSettings)
-    : globalSettings.navStyle === "2"
-    ? NavigationCSS2(globalSettings)
-    : NavigationCSS3(globalSettings)
-}
+${(() => {
+  switch (globalSettings.navStyle) {
+    case "1":
+      return NavigationCSS1(globalSettings);
+    case "2":
+      return NavigationCSS2(globalSettings);
+    case "3":
+      return NavigationCSS3(globalSettings);
+    case "4":
+      return NavigationCSS4(globalSettings);
+    default:
+      return NavigationCSS1(globalSettings);
+  }
+})()}
 
 ${globalSettings.contactPage ? contactPageCss() : ""}
 ${

@@ -1,4 +1,5 @@
-export function exportMainJs(pages, sticky, scrollToTop) {
+export function exportMainJs(pages, sticky, scrollToTop, navStyle) {
+  navStyle = Number(navStyle);
   return `
 document.addEventListener("DOMContentLoaded", function () {
   const navbarToggler  = document.querySelector(".navbar-toggler");
@@ -144,6 +145,26 @@ ${
   window.addEventListener("load", toggleScrollTop);
   document.addEventListener("scroll", toggleScrollTop);
   `
+    : ``
+}
+${
+  navStyle === 4 && sticky
+    ? `
+document.addEventListener("scroll", function () {
+  const navbar = document.querySelector(".navbar");
+  if (window.scrollY > 50) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const hero = document.querySelector(".hero-section");
+  if (!hero) {
+    document.body.style.paddingTop = "30px";
+  }
+});
+`
     : ``
 }
 

@@ -1,15 +1,15 @@
-
 import React from "react";
 
-export function Navigation2JsxElement({
+export function Navigation4JsxElement({
   globalSettings,
   topLevelPages,
   childPages,
   currentPage,
   customNavItems,
 }) {
-  if (globalSettings?.navStyle !== "2") return null;
- const navRef = React.useRef(null);
+  if (globalSettings?.navStyle !== "4") return null;
+
+  const navRef = React.useRef(null);
 
   React.useEffect(() => {
     const previewContainer = document.querySelector(".preview-container");
@@ -46,6 +46,7 @@ export function Navigation2JsxElement({
       }
     };
   }, [globalSettings]);
+
   return (
     <nav
       ref={navRef}
@@ -53,10 +54,8 @@ export function Navigation2JsxElement({
         "navbar",
         "navbar-expand-lg",
         "navbar-light",
+        "nav-style-4",
         globalSettings?.stickyNavbar ? "sticky-top" : "",
-        "floating-rounded-navbar",
-        "container",
-        "second-style-navbar",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -155,4 +154,4 @@ export function Navigation2JsxElement({
   );
 }
 
-export default Navigation2JsxElement;
+export default Navigation4JsxElement;
