@@ -66,6 +66,7 @@ function App() {
         footerStyle: "1",
         headingsStyle: "1",
         scrollToTop: false,
+        contactPage: false,
       }
     );
   });

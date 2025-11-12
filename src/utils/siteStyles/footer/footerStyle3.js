@@ -9,10 +9,14 @@ export function FooterHtml3(globalSettings) {
             }. All rights reserved.</p>
           </div>
           <div class="footer-links text-center text-lg-end d-flex flex-column flex-sm-row align-items-center gap-3">
-            <span><span class="footer-icon">✉️</span> ${
-              globalSettings.email ||
-              `info[@]${globalSettings.domain || "domain.com"}`
-            }</span>
+            ${
+              globalSettings.contactPage
+                ? `<a class="pe-2" href="/contact">Contacts</a>`
+                : `<span><span class="footer-icon">✉️</span> ${
+                    globalSettings.email ||
+                    `info[@]${globalSettings.domain || "domain.com"}`
+                  }</span>`
+            }
             <a href="${
               globalSettings.privacyOrTerms === "privacy"
                 ? "/privacy"

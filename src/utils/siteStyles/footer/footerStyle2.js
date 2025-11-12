@@ -18,10 +18,14 @@ export function FooterHtml2(globalSettings) {
             }</span> All rights reserved.</p>
           </div>
           <div class="col-md-6 text-md-end text-center d-flex flex-column flex-lg-row justify-content-center justify-content-md-end">
-            <span class="me-3"><i class="bi bi-envelope pe-2"></i>${
-              globalSettings.email ||
-              `info[@]${globalSettings.domain || "domain.com"}`
-            }</span>
+          ${
+            globalSettings.contactPage
+              ? `<a class="pe-2" href="/contact">Contacts</a>`
+              : `<span class="me-3"><i class="bi bi-envelope pe-2"></i>${
+                  globalSettings.email ||
+                  `info[@]${globalSettings.domain || "domain.com"}`
+                }</span>`
+          }
             <a href="${
               globalSettings.privacyOrTerms === "privacy"
                 ? "/privacy"
