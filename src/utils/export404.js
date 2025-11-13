@@ -52,7 +52,6 @@ echo site_header($title, $description);
             <i class="bi bi-bug-fill display-1 display-md-2 text-danger"></i>
         </div>
         <div class="col-md-6">
-            <h1 class=" fw-bold mb-3">404</h1>
             <h2 class="h3 mb-3">Uh-oh! Lost in the Web</h2>
             <p class="mb-4 lead">
                 The page you’re looking for doesn’t exist. Maybe it wandered off or got deleted. Let’s get you back home.
@@ -87,7 +86,6 @@ echo site_header($title, $description);
     <div class="mb-4">
         <i class="bi bi-emoji-frown-fill fs-1"></i>
     </div>
-    <h1 class="display-1 fw-bold">404</h1>
     <h2 class="mb-3">Oops! Page Not Found</h2>
     <p class="mb-4 fs-5">Sorry, the page you're looking for doesn't exist.</p>
     <div class="d-flex justify-content-center gap-3">
