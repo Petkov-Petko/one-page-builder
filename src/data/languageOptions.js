@@ -39,6 +39,7 @@ export const languageOptions = [
   { value: "gl-ES", label: "Galician - Spain (gl-ES)" },
   { value: "th", label: "Thai (th)" },
   { value: "th-TH", label: "Thai - Thailand (th-TH)" },
+  { value: "vi", label: "Vietnamese (vi)" },
   { value: "ru", label: "Russian (ru)" },
   { value: "ru-RU", label: "Russian - Russia (ru-RU)" },
 ];
