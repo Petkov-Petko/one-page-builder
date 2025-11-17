@@ -150,30 +150,40 @@ ${
   }
 }
 
-
 .custom-dropdown {
   border: 0;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
-  padding: .5rem 0;
-  margin-top: .5rem;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
   min-width: 220px;
-  background: color-mix(in srgb, var(--header-bg-color) 65%, transparent) !important;
-  backdrop-filter: blur(12px)
+  background: color-mix(
+    in srgb,
+    var(--header-bg-color) 65%,
+    transparent
+  ) !important;
+  backdrop-filter: blur(12px);
 }
 
 .custom-dropdown .dropdown-item {
-  padding: .75rem 1.5rem;
-  transition: all .3s ease;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
   color: var(--nav-link-color, #141414) !important;
   font-weight: 500;
   border-radius: 0;
-  text-wrap: wrap
+  text-wrap: wrap;
+}
+.dropdown-menu {
+  display: none;
 }
 
 .custom-dropdown .dropdown-item:hover {
   color: #fff;
-  background: color-mix(in srgb, var(--header-bg-color) 95%, transparent) !important;
+  background: color-mix(
+    in srgb,
+    var(--header-bg-color) 95%,
+    transparent
+  ) !important;
 }
 .nav-item.dropdown > .nav-link {
   display: flex;
@@ -181,32 +191,47 @@ ${
 }
 
 .nav-item.dropdown > .nav-link .arrow {
-  margin-left: auto; 
-  border: solid black;
+  position: relative;
+  margin-left: auto;
+  border: solid var(--nav-link-color, #141414);
   border-width: 0 2px 2px 0;
   padding: 3px;
   transform: rotate(45deg);
   transition: transform 0.25s;
 }
 
-/* Rotate arrow */
-.dropdown.open .arrow {
-  transform: rotate(-135deg);
-}
-
-/* Hidden by default */
-.dropdown-menu {
-  display: none;
-}
-
 .dropdown.open .dropdown-menu {
   display: block;
 }
+
 @media (min-width: 1200px) {
+  .nav-item.dropdown {
+    position: relative;
+  }
   .nav-item.dropdown > .nav-link .arrow {
     margin-left: 7px;
   }
+  .custom-dropdown.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0;
+    z-index: 1000;
+  }
+
+  .nav-item.dropdown:hover > .nav-link .arrow {
+    transform: rotate(-135deg);
+  }
+  .nav-item.dropdown:hover > .dropdown-menu {
+    display: block !important;
+  }
 }
+@media (max-width: 1199px) {
+  .nav-item.dropdown > .nav-link .arrow {
+    padding: 4px;
+  }
+}
+
 
             `;
 }
