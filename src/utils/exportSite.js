@@ -81,10 +81,8 @@ export function generateMultiPageExport(pages, globalSettings) {
         if (page.hasOwnPage && page.slug) {
           navHtml += `
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="/${
-              page.slug
-            }" role="button">
-              ${page.title}
+            <a class="nav-link" id="dropToggle" href="/${page.slug}" >
+              ${page.title} <span class="arrow"></span>
             </a>
             <ul class="custom-dropdown dropdown-menu">
               ${children

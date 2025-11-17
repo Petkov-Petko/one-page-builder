@@ -76,17 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       : ``
   }
 
-  // Close on nav link click (mobile)
-  navLinks.forEach((link) => {
-    link.addEventListener("click", function () {
-      if (!navbarToggler || !navbarCollapse) return;
-      if (window.getComputedStyle(navbarToggler).display !== "none") {
-        const inst = bootstrap.Collapse.getOrCreateInstance(navbarCollapse, { toggle: false });
-        inst.hide();
-        navbarToggler.setAttribute("aria-expanded", "false");
-      }
-    });
-  });
+
 
   // Close when clicking outside the nav (mobile)
   document.addEventListener("click", function (event) {
@@ -104,7 +94,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
+   const arrow = document.querySelector("#dropToggle .arrow");
+
+  arrow.addEventListener("click", function (e) {
+    e.preventDefault(); // stops the link navigation
+    e.stopPropagation(); // prevents <a> click event
+
+    const parent = this.closest(".dropdown");
+    parent.classList.toggle("open");
+  });
 });
+
 ${
   scrollToTop
     ? `

@@ -4,6 +4,8 @@ export const languageOptions = [
   { value: "eu", label: "Basque (eu)" },
   { value: "eu-ES", label: "Basque - Spain (eu-ES)" },
   { value: "zh", label: "Chinese (zh)" },
+  { value: "zh-Hans", label: "Chinese - Simplified (zh-Hans)" },
+  { value: "zh-Hant", label: "Chinese - Traditional (zh-Hant)" },
   { value: "zh-CN", label: "Chinese - China (zh-CN)" },
   { value: "zh-TW", label: "Chinese - Taiwan (zh-TW)" },
   { value: "nl", label: "Dutch (nl)" },

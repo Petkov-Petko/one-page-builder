@@ -169,21 +169,6 @@ ${
   }
 }
 
-@media screen and (min-width: 1199.98px) {
-.dropdown-menu {
-    top: 100%;
-    left: 50% !important;
-    transform: translateX(-50%);
-  }
-}
-
-.navbar .dropdown-toggle::after {
-  transition: transform .3s ease
-}
-
-.dropdown:hover .dropdown-toggle::after {
-  transform: rotate(180deg)
-}
 
 .custom-dropdown {
   border: 0;
@@ -213,64 +198,39 @@ ${
   color: #fff;
   background: color-mix(in srgb, var(--header-bg-color) 95%, transparent) !important;
 }
-
-.custom-dropdown .dropdown-item i {
-  width: 16px;
-  color: #6c757d;
-  transition: color .3s ease
+  
+.nav-item.dropdown > .nav-link {
+  display: flex;
+  align-items: center;
 }
 
-.custom-dropdown .dropdown-item:hover i {
-  color: #fff
+.nav-item.dropdown > .nav-link .arrow {
+  margin-left: auto; 
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  padding: 3px;
+  transform: rotate(45deg);
+  transition: transform 0.25s;
 }
 
+/* Rotate arrow */
+.dropdown.open .arrow {
+  transform: rotate(-135deg);
+}
+
+/* Hidden by default */
 .dropdown-menu {
-  opacity: 0;
-  transition: all .3s ease;
+  display: none;
+}
+
+.dropdown.open .dropdown-menu {
   display: block;
-  visibility: hidden
 }
-
-.dropdown-menu.show {
-  opacity: 1;
-  transform: translateY(0);
-  visibility: visible
-}
-
-@media (min-width:1199.98px) {
-  .custom-dropdown {
-    max-width: 200px
+@media (min-width: 1200px) {
+  .nav-item.dropdown > .nav-link .arrow {
+    margin-left: 7px;
   }
 }
 
-@media (max-width:1199.98px) {
-  .custom-dropdown {
-    display: none;
-    background: #f8f9fa;
-    box-shadow: none;
-    border-radius: 0;
-    margin-top: 0;
-    border-top: 1px solid #dee2e6
-  }
-
-  .custom-dropdown .dropdown-item:hover {
-    margin: 0;
-    border-radius: 0;
-    transform: none
-  }
-}
-
-.dropdown-menu:hover,
-.dropdown:hover .dropdown-menu {
-  display: block !important;
-  visibility: visible;
-  opacity: 1
-}
-.dropdown-item.active,
-.dropdown-item:active {
-  color: #fff;
-  text-decoration: none;
-  background-color: #91919131 !important;
-}
             `;
 }
