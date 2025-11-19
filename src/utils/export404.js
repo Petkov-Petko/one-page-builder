@@ -105,3 +105,42 @@ echo site_header($title, $description);
 
 <?php echo site_footer(); ?>`;
 }
+
+
+export function errorPage4(heroClass) {
+  return `<?php include 'functions.php';
+$title = '404 - page';
+$description = "The page you are looking for doesn't exist.";
+
+echo site_header($title, $description);
+
+?>
+<section class="${heroClass}">
+  <div class="container">
+    <div class="justify-content-center text-center">
+        <h1>
+          404
+        </h1>
+    </div>
+  </div>
+</section>
+<section class="d-flex align-items-center justify-content-center text-center py-5 error_page">
+    <div class="container">
+        <h2 class="fw-bold  mb-3">
+            Something Went Wrong
+        </h2>
+        <p class="mb-4">
+            We couldn't find the page you're looking for.
+            It may have been moved or never existed.
+        </p>
+        <a href="/" class="btn btn-dark fw-semibold shadow btn-lg px-4">
+            <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+        <div class="mt-4 opacity-50">
+            <i class="bi bi-exclamation-triangle display-6 text-danger"></i>
+        </div>
+    </div>
+</section>
+
+<?php echo site_footer(); ?>`;
+}

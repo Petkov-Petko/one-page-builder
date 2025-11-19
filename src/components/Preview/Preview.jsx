@@ -3,7 +3,12 @@ import "./Preview.css";
 import { generateMultiPageExport } from "../../utils/exportSite";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { errorPage1, errorPage2, errorPage3 } from "../../utils/export404";
+import {
+  errorPage1,
+  errorPage2,
+  errorPage3,
+  errorPage4,
+} from "../../utils/export404";
 import { contactPage1, contactPage2 } from "../../utils/exportContact";
 import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
@@ -30,6 +35,7 @@ import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3P
 import { Navigation4JsxElement } from "../../utils/siteStyles/navigation/style4Preview";
 import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
 import { setConfig, logClick, fetchTable } from "../../utils/clicksService";
+import { cssBodyPattern } from "../../utils/helpers";
 
 const Preview = ({
   formData,
@@ -126,7 +132,7 @@ const Preview = ({
   };
 
   const getRandomErrorPage = () => {
-    const errorPages = [errorPage1, errorPage2, errorPage3];
+    const errorPages = [errorPage1, errorPage2, errorPage3, errorPage4];
     const randomIndex = Math.floor(Math.random() * errorPages.length);
     return errorPages[randomIndex];
   };
@@ -525,7 +531,9 @@ const Preview = ({
         </div>
       </div>
 
-      <div className="website-preview" lang={globalSettings.lang || "en"}>
+      <div className={`website-preview `} lang={globalSettings.lang || "en"}>
+        <style>{cssBodyPattern(globalSettings.bodyPattern, ".website-preview")}</style>
+
         <>
           {globalSettings.navStyle === "1" && (
             <Navigation1JsxElement

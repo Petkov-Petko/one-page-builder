@@ -637,7 +637,7 @@ function BuilderForm({
                   />
                 </div>
               </div>
-              <div className="col-12">
+              <div className="col-9">
                 <div className="form-group">
                   <label>H2 Styles</label>
                   <select
@@ -653,6 +653,25 @@ function BuilderForm({
                     <option value="4">Top and bottom lines</option>
                     <option value="5">Left border</option>
                     <option value="6">Lines on both sides</option>
+                  </select>
+                </div>
+              </div>
+              <div className="col-lg-3">
+                <div className="form-group">
+                  <label>Body pattern</label>
+                  <select
+                    className="form-control"
+                    value={globalSettings.bodyPattern || "1"}
+                    onChange={(e) =>
+                      handleGlobalChange("bodyPattern", e.target.value)
+                    }
+                  >
+                    <option value="0">None</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
                 </div>
               </div>

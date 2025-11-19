@@ -7,6 +7,7 @@ import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
 import { contactPageCss } from "./exportContact.js";
 import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
+import { cssBodyPattern } from "./helpers.js";
 
 export function exportCss(globalSettings) {
   return `
@@ -33,7 +34,7 @@ html {
   overflow-x: hidden;
 }
 body {
-  background-color: var(--body-bg-color) !important;
+  background-color: var(--body-bg-color);
   color: var(--body-text-color) !important;
   font-family: var(--font-family);
   line-height: 1.6;
@@ -41,6 +42,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+  ${cssBodyPattern(globalSettings.bodyPattern, "body")}
 h1 {
     font-size: clamp(2rem, 4vw, 2.5rem) !important;
 }
