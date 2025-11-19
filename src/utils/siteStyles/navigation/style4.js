@@ -111,7 +111,7 @@ ${
   
 @media (max-width: 768px) {
   .hero-section {
-    padding: 60px 0;
+    padding: 77px 0;
   }
   
 }
