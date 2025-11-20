@@ -75,9 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
   `
       : ``
   }
-
-
-
   // Close when clicking outside the nav (mobile)
   document.addEventListener("click", function (event) {
     if (!navbarToggler || !navbarCollapse) return;
@@ -96,35 +93,18 @@ document.addEventListener("DOMContentLoaded", function () {
   });
    const arrow = document.querySelector("#dropToggle .arrow");
 
-  arrow.addEventListener("click", function (e) {
-    e.preventDefault(); // stops the link navigation
-    e.stopPropagation(); // prevents <a> click event
+ if (arrow) {
+    arrow.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-    const parent = this.closest(".dropdown");
-    parent.classList.toggle("open");
-  });
-});
-
+      const parent = this.closest(".dropdown");
+      parent.classList.toggle("open");
+    });
+  }
 ${
   scrollToTop
     ? `
-   function toggleScrolled() {
-    const selectBody = document.querySelector("body");
-    const selectHeader = document.querySelector("#header");
-    if (
-      !selectHeader.classList.contains("scroll-up-sticky") &&
-      !selectHeader.classList.contains("sticky-top") &&
-      !selectHeader.classList.contains("fixed-top")
-    )
-      return;
-    window.scrollY > 100
-      ? selectBody.classList.add("scrolled")
-      : selectBody.classList.remove("scrolled");
-  }
-
-  document.addEventListener("scroll", toggleScrolled);
-  window.addEventListener("load", toggleScrolled);
-
   let scrollTop = document.querySelector(".scroll-top");
 
   function toggleScrollTop() {
@@ -168,5 +148,5 @@ document.addEventListener("DOMContentLoaded", function () {
     : ``
 }
 
-  `;
+  });`;
 }
