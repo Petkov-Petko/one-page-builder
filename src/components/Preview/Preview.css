@@ -8,6 +8,66 @@
     0 4px 10px rgba(6, 182, 212, 0.12);
   opacity: 0.98;
 }
+.delete-button {
+  --primary: 255, 90, 120;
+  --secondary: 150, 50, 60;
+  width: 30px;
+  height: 20px;
+  margin-bottom: 7px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  outline: 10px solid rgb(var(--primary), .5);
+  border-radius: 100%;
+  position: relative;
+  transition: .3s;
+}
+
+.delete-button .back {
+  background: rgb(var(--secondary));
+  border-radius: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.delete-button .front {
+  background: linear-gradient(0deg, rgba(var(--primary), .6) 20%, rgba(var(--primary)) 50%);
+  box-shadow: 0 .5em 1em -0.2em rgba(var(--secondary), .5);
+  border-radius: 100%;
+  position: absolute;
+  border: 1px solid rgb(var(--secondary));
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: inherit;
+  transform: translateY(-15%);
+  transition: .15s;
+  color: rgb(var(--secondary));
+}
+
+.delete-button:active .front {
+  transform: translateY(0%);
+  box-shadow: 0 0;
+}
+.delete-button-title {
+    font-weight: 800;
+    color: #d10000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0 #570000;
+}
+
 
 .website-preview {
   width: 100%;

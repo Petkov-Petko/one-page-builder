@@ -498,13 +498,17 @@ const Preview = ({
           </small>
         </div>
         <div className="d-flex flex-column gap-2 align-items-end">
-          <button
-            className="btn btn-outline-danger btn-sm"
-            onClick={handleClearStorage}
-            title="Clear all saved data and start fresh"
-          >
-            <i className="bi bi-trash3"></i> Clear All Data
-          </button>
+          <div className="d-flex align-items-center gap-3 mb-1">
+            <h5 className="delete-button-title">Clear All Data</h5>
+            <button
+              className="btn btn-outline-danger btn-sm delete-button"
+              onClick={handleClearStorage}
+              title="Clear all saved data and start fresh"
+            >
+              <span class="back"></span>
+              <span class="front"></span>
+            </button>
+          </div>
 
           <button
             className={`download-button btn ${
@@ -520,7 +524,7 @@ const Preview = ({
                 : "Download your website"
             }
           >
-            <i className="bi bi-download"></i> Download Multi-Page Site
+            <i class="bi bi-cloud-arrow-down pe-1"></i>Download
           </button>
 
           {isDownloadDisabled && (
@@ -532,7 +536,9 @@ const Preview = ({
       </div>
 
       <div className={`website-preview `} lang={globalSettings.lang || "en"}>
-        <style>{cssBodyPattern(globalSettings.bodyPattern, ".website-preview")}</style>
+        <style>
+          {cssBodyPattern(globalSettings.bodyPattern, ".website-preview")}
+        </style>
 
         <>
           {globalSettings.navStyle === "1" && (
