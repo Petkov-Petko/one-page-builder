@@ -15,9 +15,9 @@ export function FooterHtml1(globalSettings) {
           : `<span class="me-3">Email: ${
               globalSettings.email ||
               `info[@]${globalSettings.domain || "domain.com"}`
-            }`
+            } </span>`
       }
-      </span>
+      
         <a href="${
           globalSettings.privacyOrTerms === "privacy" ? "/privacy" : "/terms"
         }">${
