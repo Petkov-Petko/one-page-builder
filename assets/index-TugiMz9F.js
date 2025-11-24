@@ -940,8 +940,8 @@ ${y.heroBg?`.hero-section.with-bg {
         <p class="mb-0">© Copyright <?php echo date('Y'); ?> ${y.domain||"Your Website"}. All rights reserved.</p>
       </div>
       <div class="col-md-6 text-md-end text-center d-flex flex-column flex-lg-row justify-content-center justify-content-md-end">
-      ${y.contactPage?'<a class="pe-2" href="/contact">Contacts</a>':`<span class="me-3">Email: ${y.email||`info[@]${y.domain||"domain.com"}`}`}
-      </span>
+      ${y.contactPage?'<a class="pe-2" href="/contact">Contacts</a>':`<span class="me-3">Email: ${y.email||`info[@]${y.domain||"domain.com"}`} </span>`}
+      
         <a href="${y.privacyOrTerms==="privacy"?"/privacy":"/terms"}">${y.privacyOrTerms==="privacy"?"Privacy Policy":"Terms & Conditions"}</a>
       </div>
     </div>
