@@ -5,9 +5,8 @@ import { NavigationCSS4 } from "./siteStyles/navigation/style4";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
-import { contactPageCss } from "./exportContact.js";
 import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
-import { cssBodyPattern } from "./helpers.js";
+import { cssBodyPattern, chooseContactPageCss } from "./helpers.js";
 
 export function exportCss(globalSettings) {
   return `
@@ -154,7 +153,11 @@ ${(() => {
   }
 })()}
 
-${globalSettings.contactPage ? contactPageCss() : ""}
+${
+  globalSettings.contactPage
+    ? chooseContactPageCss(globalSettings.contactRandomIndex)
+    : ""
+}
 ${
   globalSettings.scrollToTop
     ? `.scroll-top {

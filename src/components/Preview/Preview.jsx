@@ -9,7 +9,6 @@ import {
   errorPage3,
   errorPage4,
 } from "../../utils/export404";
-import { contactPage1, contactPage2 } from "../../utils/exportContact";
 import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
 import { exportTerms1, exportTerms2 } from "../../utils/exportTerms";
@@ -35,7 +34,7 @@ import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3P
 import { Navigation4JsxElement } from "../../utils/siteStyles/navigation/style4Preview";
 import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
 import { setConfig, logClick, fetchTable } from "../../utils/clicksService";
-import { cssBodyPattern } from "../../utils/helpers";
+import { cssBodyPattern, chooseContactPageHtml } from "../../utils/helpers";
 
 const Preview = ({
   formData,
@@ -137,12 +136,6 @@ const Preview = ({
     return errorPages[randomIndex];
   };
 
-  const getRandomContactPage = () => {
-    const contactPages = [contactPage1, contactPage2];
-    const randomIndex = Math.floor(Math.random() * contactPages.length);
-    return contactPages[randomIndex];
-  };
-
   const validateRequiredFields = () => {
     const missingFields = [];
 
@@ -183,6 +176,10 @@ const Preview = ({
 
   async function handleDownloadZip() {
     const zip = new JSZip();
+
+   if (globalSettings.contactPage) {
+     globalSettings.contactRandomIndex = Math.floor(Math.random() * 3) + 1;
+   }
 
     const pagesWithProperPaths = replacePreviewImagesWithPaths(
       pages,
@@ -267,7 +264,7 @@ const Preview = ({
     if (globalSettings.contactPage) {
       zip.file(
         "contact.php",
-        getRandomContactPage()(globalSettings.email, heroClass)
+        chooseContactPageHtml(globalSettings.contactRandomIndex, globalSettings)
       );
     }
     // Add robots.txt
