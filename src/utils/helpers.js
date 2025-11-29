@@ -264,3 +264,13 @@ export function chooseContactPageCss(templateIndex) {
       return;
   }
 }
+
+export function heroClass (globalSettings) {
+  if (globalSettings.transparentHero) {
+    return "hero-section transparent-hero";
+  } else if (globalSettings.heroBg) {
+    return "hero-section with-bg";
+  } else {
+    return "hero-section gradient-bg";
+  }
+};

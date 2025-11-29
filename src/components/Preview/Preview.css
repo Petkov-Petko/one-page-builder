@@ -263,6 +263,12 @@ p {
   );
   color: #fff;
 }
+.transparent-hero {
+  background: transparent !important;
+}
+.transparent-hero:before {
+  background: transparent !important;
+}
 
 .website-preview .hero-content {
   padding: 64px 0;

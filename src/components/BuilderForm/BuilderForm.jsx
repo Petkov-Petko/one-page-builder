@@ -538,7 +538,7 @@ function BuilderForm({
           <div className="style-section">
             <h4 className="section-title">Header</h4>
             <div className="row">
-              <div className="col-lg-9">
+              <div className="col-lg-8">
                 <div className="form-group">
                   <label>Navigation style:</label>
                   <select
@@ -555,7 +555,7 @@ function BuilderForm({
                   </select>
                 </div>
               </div>
-              <div className="col-lg-3">
+              <div className="col-lg-4">
                 <div className="form-group">
                   <div className="form-check">
                     <input
@@ -568,6 +568,21 @@ function BuilderForm({
                     />
                     <label className="form-check-label">
                       Sticky Navigation Bar
+                    </label>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      checked={globalSettings.transparentHero || false}
+                      onChange={(e) =>
+                        handleGlobalChange("transparentHero", e.target.checked)
+                      }
+                    />
+                    <label className="form-check-label">
+                      Transparent Background
                     </label>
                   </div>
                 </div>

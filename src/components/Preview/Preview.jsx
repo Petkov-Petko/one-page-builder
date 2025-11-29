@@ -34,7 +34,11 @@ import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3P
 import { Navigation4JsxElement } from "../../utils/siteStyles/navigation/style4Preview";
 import { getHeadingsCss } from "../../utils/siteStyles/mainContent/headingsStyles";
 import { setConfig, logClick, fetchTable } from "../../utils/clicksService";
-import { cssBodyPattern, chooseContactPageHtml } from "../../utils/helpers";
+import {
+  cssBodyPattern,
+  chooseContactPageHtml,
+  heroClass,
+} from "../../utils/helpers";
 
 const Preview = ({
   formData,
@@ -45,9 +49,7 @@ const Preview = ({
 }) => {
   const WEB_APP_URL = import.meta.env.VITE_APP_WEB_APP_URL || "";
   const SHARED_KEY = import.meta.env.VITE_APP_SHARED_KEY || "";
-  const heroClass = globalSettings.heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
+  const heroClassValue = heroClass(globalSettings);
 
   React.useEffect(() => {
     setConfig({ webAppUrl: WEB_APP_URL, sharedKey: SHARED_KEY });
@@ -259,7 +261,7 @@ const Preview = ({
     }
 
     // Add 404.php
-    zip.file("404.php", getRandomErrorPage()(heroClass));
+    zip.file("404.php", getRandomErrorPage()(heroClassValue));
     // Add contact page if enabled
     if (globalSettings.contactPage) {
       zip.file(
@@ -296,7 +298,7 @@ const Preview = ({
               globalSettings.url,
               globalSettings.country,
               globalSettings.name,
-              heroClass
+              heroClassValue
             )
           );
           break;
@@ -308,7 +310,7 @@ const Preview = ({
               globalSettings.url,
               globalSettings.country,
               globalSettings.name,
-              heroClass
+              heroClassValue
             )
           );
           break;
@@ -323,7 +325,7 @@ const Preview = ({
               globalSettings.url,
               globalSettings.country,
               globalSettings.name,
-              heroClass
+              heroClassValue
             )
           );
           break;
@@ -335,7 +337,7 @@ const Preview = ({
               globalSettings.url,
               globalSettings.country,
               globalSettings.name,
-              heroClass
+              heroClassValue
             )
           );
           break;
@@ -367,7 +369,7 @@ const Preview = ({
     }
 
     // Add hero background if it exists
-    if (globalSettings.heroBg && globalSettings.heroBg.startsWith("data:")) {
+    if (globalSettings.heroBg && globalSettings.heroBg.startsWith("data:") && !globalSettings.transparentHero) {
       const res = await fetch(globalSettings.heroBg);
       const blob = await res.blob();
       zip.file("images/hero-bg.jpg", blob);
@@ -539,7 +541,22 @@ const Preview = ({
         </div>
       </div>
 
-      <div className={`website-preview `} lang={globalSettings.lang || "en"}>
+      <div
+        className={`website-preview `}
+        lang={globalSettings.lang || "en"}
+        style={
+          globalSettings.bodyBg
+            ? {
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("${globalSettings.bodyBg}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
+              }
+            : {}
+        }
+      >
         <style>
           {cssBodyPattern(globalSettings.bodyPattern, ".website-preview")}
         </style>
@@ -587,11 +604,13 @@ const Preview = ({
         {/* Hero Section */}
         <section
           id="preview-hero"
-          className={`${heroClass} ${
+          className={`${heroClassValue} ${
             globalSettings.navStyle === "2" && "second-style"
-          } ${globalSettings.navStyle === "4" && "fourth-style"}`}
+          } ${globalSettings.navStyle === "4" && "fourth-style"} ${
+            globalSettings.transparentHero ? "transparent-hero" : ""
+          }`}
           style={
-            globalSettings.heroBg
+            globalSettings.heroBg && !globalSettings.transparentHero
               ? {
                   backgroundImage: `url(${globalSettings.heroBg})`,
                   backgroundSize: "cover",
@@ -618,21 +637,7 @@ const Preview = ({
           </div>
         </section>
         {/* Main Content */}
-        <main
-          className="container py-5"
-          style={
-            globalSettings.bodyBg
-              ? {
-                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("${globalSettings.bodyBg}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundAttachment: "fixed",
-                }
-              : {}
-          }
-        >
+        <main className="container py-5">
           <div className="row">
             <div className="col-lg-12">
               {formData.mainContent ? (

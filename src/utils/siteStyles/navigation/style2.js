@@ -1,3 +1,5 @@
+import { heroClass as getHeroClass } from "../../helpers.js";
+
 export function NavigationHtml2(globalSettings, navigationHtml) {
   return `
         <nav class="navbar navbar-expand-xl navbar-light container floating-rounded-navbar">
@@ -24,9 +26,7 @@ export function NavigationHtml2(globalSettings, navigationHtml) {
 }
 
 export function NavigationHero2(globalSettings, page) {
-  const heroClass = globalSettings.heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
+  const heroClass = getHeroClass(globalSettings);
 
   return `
 <section class="${heroClass}">
