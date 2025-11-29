@@ -44,7 +44,6 @@ function App() {
         domain: "",
         logo: "",
         favicon: "",
-        faviconName: "",
         hiddenFromNav: [],
         customNavItems: [],
         lang: "en",

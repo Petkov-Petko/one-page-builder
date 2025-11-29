@@ -40,7 +40,20 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+    ${
+      globalSettings.bodyBg
+        ? `  
+  background-image:
+  linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("/images/body-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;`
+        : ``
+    }
 }
+
   ${cssBodyPattern(globalSettings.bodyPattern, "body")}
 h1 {
     font-size: clamp(2rem, 4vw, 2.5rem) !important;

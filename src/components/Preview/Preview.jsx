@@ -177,9 +177,9 @@ const Preview = ({
   async function handleDownloadZip() {
     const zip = new JSZip();
 
-   if (globalSettings.contactPage) {
-     globalSettings.contactRandomIndex = Math.floor(Math.random() * 3) + 1;
-   }
+    if (globalSettings.contactPage) {
+      globalSettings.contactRandomIndex = Math.floor(Math.random() * 3) + 1;
+    }
 
     const pagesWithProperPaths = replacePreviewImagesWithPaths(
       pages,
@@ -371,6 +371,13 @@ const Preview = ({
       const res = await fetch(globalSettings.heroBg);
       const blob = await res.blob();
       zip.file("images/hero-bg.jpg", blob);
+    }
+
+    // Add body background if it exists
+    if (globalSettings.bodyBg && globalSettings.bodyBg.startsWith("data:")) {
+      const res = await fetch(globalSettings.bodyBg);
+      const blob = await res.blob();
+      zip.file("images/body-bg.jpg", blob);
     }
 
     // Generate and trigger download
@@ -611,7 +618,21 @@ const Preview = ({
           </div>
         </section>
         {/* Main Content */}
-        <main className="container my-5">
+        <main
+          className="container py-5"
+          style={
+            globalSettings.bodyBg
+              ? {
+                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("${globalSettings.bodyBg}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundAttachment: "fixed",
+                }
+              : {}
+          }
+        >
           <div className="row">
             <div className="col-lg-12">
               {formData.mainContent ? (

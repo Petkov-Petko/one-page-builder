@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./BuilderForm.css";
 import { languageOptions } from "../../data/languageOptions";
 import { fontFamilyOptions } from "../../data/fontFamilyOptions";
@@ -13,6 +13,12 @@ function BuilderForm({
   onImageInsert,
 }) {
   const [activeTab, setActiveTab] = useState("page");
+  const fileInputRefs = useRef({
+    bodyBg: null,
+    favicon: null,
+    logo: null,
+    heroBg: null,
+  });
 
   const handleImageInsert = (updatedContent, imageData = null) => {
     // Use the parent's handler if available, otherwise fall back to local update
@@ -48,14 +54,24 @@ function BuilderForm({
           handleGlobalChange("logo", e.target.result);
         } else if (field === "favicon") {
           handleGlobalChange("favicon", e.target.result);
-          handleGlobalChange("faviconName", file.name);
         } else if (field === "heroBg") {
           handleGlobalChange("heroBg", e.target.result);
+        } else if (field === "bodyBg") {
+          handleGlobalChange("bodyBg", e.target.result);
         }
       };
       reader.readAsDataURL(file);
     }
   };
+  const handleRemoveImage = (field) => {
+    handleGlobalChange(field, "");
+
+    const input = fileInputRefs.current[field];
+    if (input) {
+      input.value = "";
+    }
+  };
+
   const handleApplyBoldWords = () => {
     if (!formData.mainContent || !formData.boldWords) return;
 
@@ -377,7 +393,11 @@ function BuilderForm({
               type="file"
               className="form-control"
               accept="image/*"
+              ref={(el) => (fileInputRefs.current.logo = el)}
               onChange={(e) => handleFileUpload("logo", e.target.files[0])}
+              onClick={(e) => {
+                e.target.value = "";
+              }}
             />
             {globalSettings.logo && (
               <div className="file-preview">
@@ -389,7 +409,7 @@ function BuilderForm({
                 <button
                   type="button"
                   className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handleGlobalChange("logo", "")}
+                  onClick={() => handleRemoveImage("logo")}
                 >
                   Remove
                 </button>
@@ -403,22 +423,28 @@ function BuilderForm({
               type="file"
               className="form-control"
               accept="image/*"
+              ref={(el) => (fileInputRefs.current.favicon = el)}
               onChange={(e) => handleFileUpload("favicon", e.target.files[0])}
+              onClick={(e) => {
+                e.target.value = "";
+              }}
             />
             {globalSettings.favicon && (
               <div className="file-preview">
                 <img
                   src={globalSettings.favicon}
                   alt="Favicon"
-                  style={{ maxWidth: "48px", maxHeight: "48px" }}
+                  style={{
+                    maxWidth: "48px",
+                    maxHeight: "48px",
+                    marginTop: "5px",
+                  }}
                 />
-                <span className="ms-2">{globalSettings.faviconName}</span>
                 <button
                   type="button"
                   className="btn btn-sm btn-danger ms-2"
                   onClick={() => {
-                    handleGlobalChange("favicon", "");
-                    handleGlobalChange("faviconName", "");
+                    handleRemoveImage("favicon");
                   }}
                 >
                   Remove
@@ -433,7 +459,11 @@ function BuilderForm({
               type="file"
               className="form-control"
               accept="image/*"
+              ref={(el) => (fileInputRefs.current.heroBg = el)}
               onChange={(e) => handleFileUpload("heroBg", e.target.files[0])}
+              onClick={(e) => {
+                e.target.value = "";
+              }}
             />
             {globalSettings.heroBg && (
               <div className="file-preview">
@@ -445,7 +475,36 @@ function BuilderForm({
                 <button
                   type="button"
                   className="btn btn-sm btn-danger ms-2"
-                  onClick={() => handleGlobalChange("heroBg", "")}
+                  onClick={() => handleRemoveImage("heroBg")}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="form-group">
+            <label>Body Background Image (All Pages)</label>
+            <input
+              type="file"
+              className="form-control"
+              accept="image/*"
+              ref={(el) => (fileInputRefs.current.bodyBg = el)}
+              onChange={(e) => handleFileUpload("bodyBg", e.target.files[0])}
+              onClick={(e) => {
+                e.target.value = "";
+              }}
+            />
+            {globalSettings.bodyBg && (
+              <div className="file-preview">
+                <img
+                  src={globalSettings.bodyBg}
+                  alt="Body background"
+                  style={{ maxWidth: "180px", maxHeight: "110px" }}
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm btn-danger ms-2"
+                  onClick={() => handleRemoveImage("bodyBg")}
                 >
                   Remove
                 </button>
