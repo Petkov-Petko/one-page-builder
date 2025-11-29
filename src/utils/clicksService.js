@@ -42,7 +42,6 @@ export async function logClick(delta = 1) {
   try {
     json = await res.json();
   } catch (_) {}
-  console.log("POST status", res.status, json);
 
   if (!res.ok || json.ok === false) {
     throw new Error(json.error || `POST failed: ${res.status}`);
