@@ -23,6 +23,7 @@ export const languageOptions = [
   { value: "de-DE", label: "German - Germany (de-DE)" },
   { value: "hi", label: "Hindi (hi)" },
   { value: "hi-IN", label: "Hindi - India (hi-IN)" },
+  { value: "hu", label: "Hungarian (hu)" },
   { value: "it", label: "Italian (it)" },
   { value: "it-IT", label: "Italian - Italy (it-IT)" },
   { value: "ja", label: "Japanese (ja)" },
