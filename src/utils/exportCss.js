@@ -6,7 +6,11 @@ import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
 import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
-import { cssBodyPattern, chooseContactPageCss } from "./helpers.js";
+import {
+  cssBodyPattern,
+  chooseContactPageCss,
+  isColorDark,
+} from "./helpers.js";
 
 export function exportCss(globalSettings) {
   return `
@@ -165,7 +169,13 @@ ${(() => {
       return NavigationCSS1(globalSettings);
   }
 })()}
-
+${
+  isColorDark(globalSettings.headerBgColor || "#ffffffff")
+    ? `.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}`
+    : ``
+}
 ${
   globalSettings.contactPage
     ? chooseContactPageCss(globalSettings.contactRandomIndex)

@@ -593,7 +593,7 @@ function BuilderForm({
                   <input
                     type="color"
                     className="form-control"
-                    value={globalSettings.headerBgColor || "#ffffff"}
+                    value={globalSettings.headerBgColor || "#ffffffff"}
                     onChange={(e) =>
                       handleGlobalChange("headerBgColor", e.target.value)
                     }
