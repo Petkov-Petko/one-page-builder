@@ -147,6 +147,11 @@ document.addEventListener("DOMContentLoaded", function () {
 `
     : ``
 }
-
+const year = new Date().getFullYear();
+document.title = document.title.replace(/{{year}}/g, year);
+const metaDesc = document.querySelector('meta[name="description"]');
+if (metaDesc) {
+  metaDesc.content = metaDesc.content.replace(/{{year}}/g, year);
+}
   });`;
 }

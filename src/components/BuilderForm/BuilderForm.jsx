@@ -200,6 +200,9 @@ function BuilderForm({
               onChange={(e) => handlePageChange("title", e.target.value)}
               placeholder="Page title for browser tab and SEO"
             />
+            <small className="form-text text-muted">
+              <p>{`If you want to include dynamic year, use {{year}}`}</p>
+            </small>
           </div>
 
           <div className="form-group">
@@ -211,6 +214,9 @@ function BuilderForm({
               onChange={(e) => handlePageChange("desc", e.target.value)}
               placeholder="Brief description for search engines"
             />
+            <small className="form-text text-muted">
+              <p>{`If you want to include dynamic year, use {{year}}`}</p>
+            </small>
           </div>
 
           <div className="form-group">
