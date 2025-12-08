@@ -8,6 +8,8 @@ import {
   errorPage2,
   errorPage3,
   errorPage4,
+  errorPage5,
+  errorPage6,
 } from "../../utils/export404";
 import { exportHtaccess } from "../../utils/exportHtaccess";
 import { exportPrivacy1, exportPrivacy2 } from "../../utils/exportPrivacy";
@@ -133,7 +135,7 @@ const Preview = ({
   };
 
   const getRandomErrorPage = () => {
-    const errorPages = [errorPage1, errorPage2, errorPage3, errorPage4];
+    const errorPages = [errorPage1, errorPage2, errorPage3, errorPage4, errorPage5, errorPage6];
     const randomIndex = Math.floor(Math.random() * errorPages.length);
     return errorPages[randomIndex];
   };

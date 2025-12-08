@@ -144,3 +144,88 @@ echo site_header($title, $description);
 
 <?php echo site_footer(); ?>`;
 }
+
+export function errorPage5(heroClass) {
+  return `<?php include 'functions.php';
+$title = '404 - page';
+$description = "The page you are looking for does not exist. Return to the homepage.";
+
+echo site_header($title, $description);
+
+?>
+<section class="${heroClass}">
+  <div class="container">
+    <div class="justify-content-center text-center">
+        <h1>
+          Error 404 - Page Not Found
+        </h1>
+    </div>
+  </div>
+</section>
+<section class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-8 col-lg-6">
+
+                <div class="mb-4">
+                    <span class="display-1 fw-bold d-block">404</span>
+                    <h2 class="fs-2 d-block mb-2">Oops! Page not found.</h2>
+                    <p class=" mb-4">
+                        The page you’re looking for might have been moved, renamed, or doesn’t exist anymore.
+                    </p>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                    <a href="/" class="btn btn-primary px-4">
+                        <i class="bi bi-house-door me-1"></i> Go back home
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-arrow-left me-1"></i> Previous page
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php echo site_footer(); ?>`;
+}
+export function errorPage6(heroClass) {
+  return `<?php include 'functions.php';
+$title = '404 - page';
+$description = "The page you are looking for cannot be found.";
+
+echo site_header($title, $description);
+
+?>
+<section class="${heroClass}">
+  <div class="container">
+    <div class="justify-content-center text-center">
+        <h1>
+          Error 404
+        </h1>
+    </div>
+  </div>
+</section>
+<section class="error-section container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-white text-center">
+                <div class="mb-3">
+                    <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h2 class="fw-bold mb-3">This Page Isn’t Available</h2>
+                <p class="text-muted mb-4">
+                    The page you’re trying to reach may have been removed, renamed,
+                    or is temporarily unavailable. Let’s get you back on track.
+                </p>
+                <a href="/" class="btn btn-dark btn-lg px-4">
+                    <i class="bi bi-arrow-left-circle"></i> Go to Homepage
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php echo site_footer(); ?>`;
+}
