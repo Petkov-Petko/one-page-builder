@@ -3,6 +3,7 @@ import "./BuilderForm.css";
 import { languageOptions } from "../../data/languageOptions";
 import { fontFamilyOptions } from "../../data/fontFamilyOptions";
 import AIImageGenerator from "../AIImages/AIImageGenerator";
+import { convertTextToHtml } from "../../utils/helpers";
 
 function BuilderForm({
   formData,
@@ -250,7 +251,7 @@ function BuilderForm({
               className="form-control"
               rows="12"
               value={formData.mainContent || ""}
-              onChange={(e) => handlePageChange("mainContent", e.target.value)}
+              onChange={(e) => handlePageChange("mainContent", convertTextToHtml(e.target.value))}
               placeholder="HTML content for this page (use <h2> for sections, <p> for paragraphs)"
             />
             <small className="form-text text-muted">

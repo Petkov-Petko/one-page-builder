@@ -292,3 +292,80 @@ export function isColorDark(hex) {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness < 128;
 }
+
+export function convertTextToHtml(input) {
+  if (!input) return "";
+
+  const lines = input.split(/\r?\n/);
+  let html = "";
+  let listBuffer = [];
+  let listType = null; // "ul" or "ol"
+
+  function flushList() {
+    if (listBuffer.length === 0) return;
+
+    if (listType === "ul") {
+      html += "<ul>\n";
+      for (const item of listBuffer) {
+        html += `    <li>${item}</li>\n`;
+      }
+      html += "</ul>\n\n";
+    } else if (listType === "ol") {
+      html += "<ol>\n";
+      for (const item of listBuffer) {
+        html += `    <li>${item}</li>\n`;
+      }
+      html += "</ol>\n\n";
+    }
+
+    listBuffer = [];
+    listType = null;
+  }
+
+  for (const rawLine of lines) {
+    const line = rawLine; // keep original for output
+    const trimmed = line.trim(); // use trimmed for checks
+
+    // empty line → end any list, skip
+    if (!trimmed) {
+      flushList();
+      continue;
+    }
+
+    // 🔹 If line already looks like HTML, just keep it
+    if (trimmed.startsWith("<")) {
+      flushList();
+      html += line + "\n";
+      continue;
+    }
+
+    // 🔹 Bullet list: "• something"
+    if (/^•/.test(trimmed)) {
+      const itemText = trimmed.replace(/^•\s*/, "");
+      if (listType !== "ul") {
+        flushList();
+        listType = "ul";
+      }
+      listBuffer.push(itemText);
+      continue;
+    }
+
+    // 🔹 Numbered list: "1. something" or "1) something"
+    if (/^\d+[\.)]/.test(trimmed)) {
+      const itemText = trimmed.replace(/^\d+[\.)]\s*/, "");
+      if (listType !== "ol") {
+        flushList();
+        listType = "ol";
+      }
+      listBuffer.push(itemText);
+      continue;
+    }
+
+    // 🔹 Normal plain text → <p>
+    flushList();
+    html += `<p>${trimmed}</p>\n`;
+  }
+
+  flushList();
+  return html.trim();
+}

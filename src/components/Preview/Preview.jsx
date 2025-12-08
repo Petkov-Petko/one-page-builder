@@ -194,6 +194,7 @@ const Preview = ({
       globalSettings
     );
     console.log(globalSettings);
+    console.log(pages);
 
     // Add all PHP files
     Object.entries(multiPageExport.pages).forEach(([filename, content]) => {
