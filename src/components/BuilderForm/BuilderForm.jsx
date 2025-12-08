@@ -130,29 +130,6 @@ function BuilderForm({
     handlePageChange("boldWords", "");
   };
 
-  const handleAfterH1Change = (value) => {
-    const textToHtml = (text) => {
-      if (!text || text.trim() === "") return "";
-
-      const hasHtmlTags = /<[^>]+>/.test(text);
-
-      if (hasHtmlTags) {
-        return text;
-      }
-
-      return text
-        .split("\n") // Split by line breaks
-        .map((line) => line.trim()) // Remove extra whitespace
-        .filter((line) => line !== "") // Remove empty lines
-        .map((line) => `<p>${line}</p>`) // Wrap each line in <p> tags
-        .join("\n"); // Join with line breaks
-    };
-
-    // Convert and update the form data
-    const htmlContent = textToHtml(value);
-    handlePageChange("afterH1", htmlContent);
-  };
-
   return (
     <div className="builder-form">
       <div className="form-tabs">
@@ -237,27 +214,30 @@ function BuilderForm({
               className="form-control"
               rows="3"
               value={formData.afterH1 || ""}
-              onChange={(e) => handleAfterH1Change(e.target.value)}
+              onChange={(e) =>
+                handlePageChange(
+                  "afterH1",
+                  convertTextToHtml(e.target.value)
+                )
+              }
               placeholder="Text that appears below the main heading"
             />
           </div>
 
           <div className="form-group">
-            <label>
-              Main Content(The content must be valid HTML. For example:{" "}
-              <code>&lt;h2&gt;Heading&lt;/h2&gt;</code>)
-            </label>
+            <label>Main Content</label>
             <textarea
               className="form-control"
               rows="12"
               value={formData.mainContent || ""}
-              onChange={(e) => handlePageChange("mainContent", convertTextToHtml(e.target.value))}
+              onChange={(e) =>
+                handlePageChange(
+                  "mainContent",
+                  convertTextToHtml(e.target.value)
+                )
+              }
               placeholder="HTML content for this page (use <h2> for sections, <p> for paragraphs)"
             />
-            <small className="form-text text-muted">
-              Use HTML tags like &lt;h2&gt;Section Title&lt;/h2&gt; and
-              &lt;p&gt;Paragraph text&lt;/p&gt;
-            </small>
           </div>
           <div className="form-group">
             <label>Bold Words (Optional)</label>
