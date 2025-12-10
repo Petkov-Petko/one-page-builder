@@ -76,42 +76,23 @@ export function generateMultiPageExport(pages, globalSettings) {
         const children = childPages.filter(
           (child) => child.parentId === page.id
         );
+        const href = page.hasOwnPage && page.slug ? `href="/${page.slug}"` : "";
 
-        // Check if dropdown has its own page
-        if (page.hasOwnPage && page.slug) {
-          navHtml += `
-          <li class="nav-item dropdown">
-            <a class="nav-link" id="dropToggle" href="/${page.slug}" >
-              ${page.title} <span class="arrow"></span>
-            </a>
-            <ul class="custom-dropdown dropdown-menu">
-              ${children
-                .map(
-                  (child) =>
-                    `<li><a class="dropdown-item" href="/${child.slug}">${child.title}</a></li>`
-                )
-                .join("\n")}
-            </ul>
-          </li>
-        `;
-        } else {
-          // Dropdown without own page - no href
-          navHtml += `
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button">
-              ${page.title}
-            </a>
-            <ul class="custom-dropdown dropdown-menu">
-              ${children
-                .map(
-                  (child) =>
-                    `<li><a class="dropdown-item" href="/${child.slug}">${child.title}</a></li>`
-                )
-                .join("\n")}
-            </ul>
-          </li>
-        `;
-        }
+        navHtml += `
+      <li class="nav-item dropdown">
+        <a class="nav-link has-arrow" ${href}>
+          ${page.title} <span class="arrow"></span>
+        </a>
+        <ul class="custom-dropdown dropdown-menu">
+          ${children
+            .map(
+              (child) =>
+                `<li><a class="dropdown-item" href="/${child.slug}">${child.title}</a></li>`
+            )
+            .join("\n")}
+        </ul>
+      </li>
+    `;
       } else {
         const href = page.isHome ? "/" : `/${page.slug}`;
         navHtml += `<li class="nav-item"><a class="nav-link" href="${href}">${page.title}</a></li>\n`;

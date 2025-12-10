@@ -91,17 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
-   const arrow = document.querySelector("#dropToggle .arrow");
+  const arrows = document.querySelectorAll(".nav-link .arrow");
 
- if (arrow) {
-    arrow.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
+arrows.forEach(function (arrow) {
+  arrow.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-      const parent = this.closest(".dropdown");
-      parent.classList.toggle("open");
-    });
-  }
+    const parent = this.closest(".dropdown");
+    parent.classList.toggle("open");
+  });
+});
 ${
   scrollToTop
     ? `
