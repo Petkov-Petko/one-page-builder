@@ -1,7 +1,4 @@
-export function contactPage2(email, heroBg) {
-  const heroClass = heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
+export function contactPage2(email, heroClass) {
 
   return `
   
@@ -62,6 +59,9 @@ export function contactPage2Css() {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   color: black !important;
 }
+  .contact-container h2 {
+    color: black !important;
+  }
 
 @media screen and (max-width: 768px) {
   .contact-container {

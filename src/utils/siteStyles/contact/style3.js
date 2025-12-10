@@ -1,7 +1,4 @@
-export function contactPage3(email, heroBg) {
-  const heroClass = heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
+export function contactPage3(email, heroClass) {
 
   return `
   
@@ -62,7 +59,7 @@ export function contactPage3Css() {
   margin: 10px 0;
   padding-bottom: 10px;
   width: 320px;
-  color: var(--hero-gradient1);
+  color: var(--hero-gradient1) !important;
   border-bottom: 3px solid var(--hero-gradient2);
 }
 .contact-container input {

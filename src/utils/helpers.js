@@ -1,6 +1,7 @@
 import { contactPage1Css, contactPage1 } from "./siteStyles/contact/style1.js";
 import { contactPage2Css, contactPage2 } from "./siteStyles/contact/style2.js";
 import { contactPage3Css, contactPage3 } from "./siteStyles/contact/style3.js";
+import { contactPage4Css, contactPage4 } from "./siteStyles/contact/style4.js";
 
 export function cssBodyPattern(patternId, selector = ".website-preview") {
   switch (String(patternId)) {
@@ -240,11 +241,13 @@ export function chooseContactPageHtml(templateIndex, globalSettings) {
   console.log(templateIndex);
   switch (templateIndex) {
     case 1:
-      return contactPage1(globalSettings.email, globalSettings.heroBg);
+      return contactPage1(globalSettings.email, heroClass(globalSettings));
     case 2:
-      return contactPage2(globalSettings.email, globalSettings.heroBg);
+      return contactPage2(globalSettings.email, heroClass(globalSettings));
     case 3:
-      return contactPage3(globalSettings.email, globalSettings.heroBg);
+      return contactPage3(globalSettings.email, heroClass(globalSettings));
+    case 4:
+      return contactPage4(globalSettings.email, heroClass(globalSettings));
     default:
       return;
   }
@@ -260,6 +263,8 @@ export function chooseContactPageCss(templateIndex) {
       return contactPage2Css();
     case 3:
       return contactPage3Css();
+    case 4:
+      return contactPage4Css();
     default:
       return;
   }

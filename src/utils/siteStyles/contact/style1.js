@@ -1,8 +1,4 @@
-export function contactPage1(email, heroBg) {
-  const heroClass = heroBg
-    ? "hero-section with-bg"
-    : "hero-section gradient-bg";
-
+export function contactPage1(email, heroClass) {
   return `
     <?php include 'functions.php';
 $title = 'Contact Us - page';
@@ -55,6 +51,9 @@ export function contactPage1Css() {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   color: black !important;
 }
+  .contact-container h2{
+    color: black !important;
+  }
 
 @media screen and (max-width: 768px) {
   .contact-container {
