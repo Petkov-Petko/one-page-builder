@@ -304,22 +304,26 @@ export function convertTextToHtml(input) {
   const lines = input.split(/\r?\n/);
   let html = "";
   let listBuffer = [];
-  let listType = null; // "ul" or "ol"
+  let listType = null; // "ul", "ul-dash", "ol", "ol-alpha"
 
   function flushList() {
     if (listBuffer.length === 0) return;
 
     if (listType === "ul") {
       html += "<ul>\n";
-      for (const item of listBuffer) {
-        html += `    <li>${item}</li>\n`;
-      }
+      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
+      html += "</ul>\n\n";
+    } else if (listType === "ul-dash") {
+      html += `<ul style="list-style-type: '- ';">\n`;
+      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
       html += "</ul>\n\n";
     } else if (listType === "ol") {
       html += "<ol>\n";
-      for (const item of listBuffer) {
-        html += `    <li>${item}</li>\n`;
-      }
+      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
+      html += "</ol>\n\n";
+    } else if (listType === "ol-alpha") {
+      html += '<ol style="list-style-type: lower-alpha;">\n';
+      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
       html += "</ol>\n\n";
     }
 
@@ -328,23 +332,33 @@ export function convertTextToHtml(input) {
   }
 
   for (const rawLine of lines) {
-    const line = rawLine; // keep original for output
-    const trimmed = line.trim(); // use trimmed for checks
+    const trimmed = rawLine.trim();
 
-    // empty line → end any list, skip
+    // Empty line ends any list
     if (!trimmed) {
       flushList();
       continue;
     }
 
-    // 🔹 If line already looks like HTML, just keep it
+    // Already HTML → keep as is
     if (trimmed.startsWith("<")) {
       flushList();
-      html += line + "\n";
+      html += rawLine + "\n";
       continue;
     }
 
-    // 🔹 Bullet list: "• something"
+    // 🔹 Dash list: "- item"  => <ul style="list-style-type: '- ';"><li>...</li></ul>
+    if (/^-\s+/.test(trimmed)) {
+      const itemText = trimmed.replace(/^-+\s+/, "");
+      if (listType !== "ul-dash") {
+        flushList();
+        listType = "ul-dash";
+      }
+      listBuffer.push(itemText);
+      continue;
+    }
+
+    // 🔹 Bullet list: "• item"
     if (/^•/.test(trimmed)) {
       const itemText = trimmed.replace(/^•\s*/, "");
       if (listType !== "ul") {
@@ -355,7 +369,7 @@ export function convertTextToHtml(input) {
       continue;
     }
 
-    // 🔹 Numbered list: "1. something" or "1) something"
+    // 🔹 Numbered list: "1. item" or "1) item"
     if (/^\d+[\.)]/.test(trimmed)) {
       const itemText = trimmed.replace(/^\d+[\.)]\s*/, "");
       if (listType !== "ol") {
@@ -366,7 +380,18 @@ export function convertTextToHtml(input) {
       continue;
     }
 
-    // 🔹 Normal plain text → <p>
+    // 🔹 Alphabetical list: "a. item" or "a) item"
+    if (/^[a-zA-Z][\.)]/.test(trimmed)) {
+      const itemText = trimmed.replace(/^[a-zA-Z][\.)]\s*/, "");
+      if (listType !== "ol-alpha") {
+        flushList();
+        listType = "ol-alpha";
+      }
+      listBuffer.push(itemText);
+      continue;
+    }
+
+    // 🔹 Normal paragraph
     flushList();
     html += `<p>${trimmed}</p>\n`;
   }
@@ -374,3 +399,4 @@ export function convertTextToHtml(input) {
   flushList();
   return html.trim();
 }
+

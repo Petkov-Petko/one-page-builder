@@ -236,7 +236,7 @@ function BuilderForm({
                   convertTextToHtml(e.target.value)
                 )
               }
-              placeholder="HTML content for this page (use <h2> for sections, <p> for paragraphs)"
+              placeholder="Paste the main content of the page in HTML format or plain text."
             />
           </div>
           <div className="form-group">
