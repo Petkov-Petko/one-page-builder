@@ -3,7 +3,7 @@ import "./BuilderForm.css";
 import { languageOptions } from "../../data/languageOptions";
 import { fontFamilyOptions } from "../../data/fontFamilyOptions";
 import AIImageGenerator from "../AIImages/AIImageGenerator";
-import { convertTextToHtml } from "../../utils/helpers";
+import { convertTextToHtml, parseWordDocument } from "../../utils/helpers";
 
 function BuilderForm({
   formData,
@@ -14,11 +14,13 @@ function BuilderForm({
   onImageInsert,
 }) {
   const [activeTab, setActiveTab] = useState("page");
+  const [isParsingWord, setIsParsingWord] = useState(false);
   const fileInputRefs = useRef({
     bodyBg: null,
     favicon: null,
     logo: null,
     heroBg: null,
+    wordDoc: null,
   });
 
   const handleImageInsert = (updatedContent, imageData = null) => {
@@ -129,6 +131,38 @@ function BuilderForm({
     handlePageChange("mainContent", updatedContent);
     handlePageChange("boldWords", "");
   };
+const handleWordUpload = async (file) => {
+  if (!file) return;
+
+  setIsParsingWord(true);
+
+  try {
+    const parsedData = await parseWordDocument(file);
+
+    // Update all fields at once
+    handlePageChange("title", parsedData.title);
+    handlePageChange("desc", parsedData.desc);
+    handlePageChange("h1", parsedData.h1);
+    handlePageChange("afterH1", parsedData.afterH1);
+    handlePageChange("mainContent", parsedData.mainContent);
+
+    console.log("✅ Word document parsed successfully!");
+
+    // Clear the file input
+    if (fileInputRefs.current.wordDoc) {
+      fileInputRefs.current.wordDoc.value = "";
+    }
+  } catch (error) {
+    console.error("Error parsing Word document:", error);
+    alert(
+      error.message ||
+        "Failed to parse Word document. Please try again or copy-paste the content manually."
+    );
+  } finally {
+    setIsParsingWord(false);
+  }
+};
+
 
   return (
     <div className="builder-form">
@@ -168,7 +202,50 @@ function BuilderForm({
       {activeTab === "page" && (
         <div className="tab-content">
           <h3>{currentPage?.title || "Page"} Content</h3>
-
+          <div
+            className="form-group"
+            style={{
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              padding: "1.5rem",
+              borderRadius: "12px",
+              marginBottom: "1.5rem",
+            }}
+          >
+            <label
+              style={{
+                color: "white",
+                fontWeight: "600",
+                marginBottom: "0.75rem",
+                display: "block",
+              }}
+            >
+              📄 Quick Import from Word Document (Please check the formatting after import!)
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              accept=".docx"
+              ref={(el) => (fileInputRefs.current.wordDoc = el)}
+              onChange={(e) => handleWordUpload(e.target.files[0])}
+              disabled={isParsingWord}
+              style={{
+                background: "rgba(255,255,255,0.9)",
+                border: "2px dashed rgba(255,255,255,0.3)",
+                cursor: isParsingWord ? "wait" : "pointer",
+              }}
+            />
+            <small
+              style={{
+                color: "rgba(255,255,255,0.9)",
+                display: "block",
+                marginTop: "0.5rem",
+              }}
+            >
+              {isParsingWord
+                ? "⏳ Parsing document..."
+                : "Upload a .docx file to auto-fill: Title, Description, H1, Hero Text & Main Content"}
+            </small>
+          </div>
           <div className="form-group">
             <label>Page Title (SEO)</label>
             <input
@@ -215,10 +292,7 @@ function BuilderForm({
               rows="3"
               value={formData.afterH1 || ""}
               onChange={(e) =>
-                handlePageChange(
-                  "afterH1",
-                  convertTextToHtml(e.target.value)
-                )
+                handlePageChange("afterH1", convertTextToHtml(e.target.value))
               }
               placeholder="Text that appears below the main heading"
             />

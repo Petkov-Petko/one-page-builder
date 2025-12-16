@@ -1,3 +1,5 @@
+import mammoth from "mammoth";
+
 import { contactPage1Css, contactPage1 } from "./siteStyles/contact/style1.js";
 import { contactPage2Css, contactPage2 } from "./siteStyles/contact/style2.js";
 import { contactPage3Css, contactPage3 } from "./siteStyles/contact/style3.js";
@@ -270,7 +272,7 @@ export function chooseContactPageCss(templateIndex) {
   }
 }
 
-export function heroClass (globalSettings) {
+export function heroClass(globalSettings) {
   if (globalSettings.transparentHero) {
     return "hero-section transparent-hero";
   } else if (globalSettings.heroBg) {
@@ -278,7 +280,7 @@ export function heroClass (globalSettings) {
   } else {
     return "hero-section gradient-bg";
   }
-};
+}
 
 export function isColorDark(hex) {
   hex = hex.replace("#", "");
@@ -304,7 +306,7 @@ export function convertTextToHtml(input) {
   const lines = input.split(/\r?\n/);
   let html = "";
   let listBuffer = [];
-  let listType = null; // "ul", "ul-dash", "ol", "ol-alpha"
+  let listType = null; // "ul" | "ol"
 
   function flushList() {
     if (listBuffer.length === 0) return;
@@ -313,16 +315,8 @@ export function convertTextToHtml(input) {
       html += "<ul>\n";
       for (const item of listBuffer) html += `  <li>${item}</li>\n`;
       html += "</ul>\n\n";
-    } else if (listType === "ul-dash") {
-      html += `<ul style="list-style-type: '- ';">\n`;
-      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
-      html += "</ul>\n\n";
     } else if (listType === "ol") {
       html += "<ol>\n";
-      for (const item of listBuffer) html += `  <li>${item}</li>\n`;
-      html += "</ol>\n\n";
-    } else if (listType === "ol-alpha") {
-      html += '<ol style="list-style-type: lower-alpha;">\n';
       for (const item of listBuffer) html += `  <li>${item}</li>\n`;
       html += "</ol>\n\n";
     }
@@ -334,33 +328,21 @@ export function convertTextToHtml(input) {
   for (const rawLine of lines) {
     const trimmed = rawLine.trim();
 
-    // Empty line ends any list
     if (!trimmed) {
       flushList();
       continue;
     }
 
-    // Already HTML → keep as is
     if (trimmed.startsWith("<")) {
       flushList();
       html += rawLine + "\n";
       continue;
     }
 
-    // 🔹 Dash list: "- item"  => <ul style="list-style-type: '- ';"><li>...</li></ul>
-    if (/^-\s+/.test(trimmed)) {
-      const itemText = trimmed.replace(/^-+\s+/, "");
-      if (listType !== "ul-dash") {
-        flushList();
-        listType = "ul-dash";
-      }
-      listBuffer.push(itemText);
-      continue;
-    }
+    // ✅ UL: dash list OR bullet list
+    if (/^-\s+/.test(trimmed) || /^•\s*/.test(trimmed)) {
+      const itemText = trimmed.replace(/^-+\s+/, "").replace(/^•\s*/, "");
 
-    // 🔹 Bullet list: "• item"
-    if (/^•/.test(trimmed)) {
-      const itemText = trimmed.replace(/^•\s*/, "");
       if (listType !== "ul") {
         flushList();
         listType = "ul";
@@ -369,7 +351,7 @@ export function convertTextToHtml(input) {
       continue;
     }
 
-    // 🔹 Numbered list: "1. item" or "1) item"
+    // ✅ OL: numbered list
     if (/^\d+[\.)]/.test(trimmed)) {
       const itemText = trimmed.replace(/^\d+[\.)]\s*/, "");
       if (listType !== "ol") {
@@ -380,18 +362,17 @@ export function convertTextToHtml(input) {
       continue;
     }
 
-    // 🔹 Alphabetical list: "a. item" or "a) item"
+    // ✅ OL: alphabetical list (a. / a))
     if (/^[a-zA-Z][\.)]/.test(trimmed)) {
       const itemText = trimmed.replace(/^[a-zA-Z][\.)]\s*/, "");
-      if (listType !== "ol-alpha") {
+      if (listType !== "ol") {
         flushList();
-        listType = "ol-alpha";
+        listType = "ol";
       }
       listBuffer.push(itemText);
       continue;
     }
 
-    // 🔹 Normal paragraph
     flushList();
     html += `<p>${trimmed}</p>\n`;
   }
@@ -399,4 +380,188 @@ export function convertTextToHtml(input) {
   flushList();
   return html.trim();
 }
+const cleanHeadingText = (text) => {
+  if (!text) return "";
 
+  // Decode &lt;h1&gt; etc
+  const decoded = decodeHtmlEntities(text.trim());
+
+  // If it is "<h1>Something</h1>" → extract inner text
+  const m = decoded.match(/^<h1>([\s\S]*?)<\/h1>$/i);
+  if (m) return m[1].trim();
+
+  return decoded;
+};
+
+const parseTypedHeading = (text) => {
+  const t = (text || "").trim();
+  const m = t.match(/^<h([1-6])>([\s\S]*?)<\/h\1>$/i);
+  if (!m) return null;
+  return {
+    level: Number(m[1]),
+    html: `<h${m[1]}>${m[2].trim()}</h${m[1]}>`,
+    text: m[2].trim(),
+  };
+};
+
+const decodeHtmlEntities = (str) => {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = str;
+  return textarea.value;
+};
+
+const normalizeTypedHeadingLine = (line) => {
+  const decoded = decodeHtmlEntities(line.trim());
+
+  // If the line is literally "<h2>...</h2>" (typed in Word)
+  if (/^<h[1-6]>[\s\S]*<\/h[1-6]>$/i.test(decoded)) {
+    return decoded; // keep as real HTML
+  }
+
+  return line.trim();
+};
+
+export async function parseWordDocument(file) {
+  if (!file) {
+    throw new Error("No file provided");
+  }
+
+  if (!file.name.match(/\.(docx)$/i)) {
+    throw new Error("Please upload a .docx file (Word document)");
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await mammoth.convertToHtml({ arrayBuffer });
+  const html = result.value;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const els = Array.from(doc.body.children);
+
+  const isNonEmpty = (el) => (el?.textContent || "").trim().length > 0;
+  const txt = (el) => (el?.textContent || "").trim();
+
+  // meta title/desc = first two non-empty <p>
+  const pEls = els.filter((el) => el.tagName === "P" && isNonEmpty(el));
+  const titleText = txt(pEls[0]) || file.name.replace(/\.(docx?)$/i, "");
+  const metaDesc = txt(pEls[1]) || "";
+
+  // find first H1 (real <h1> OR <p> containing "<h1>...</h1>")
+  let h1Index = -1;
+  let h1Text = titleText;
+
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i];
+    if (!isNonEmpty(el)) continue;
+
+    if (el.tagName === "H1") {
+      h1Index = i;
+      h1Text = cleanHeadingText(txt(el));
+      break;
+    }
+
+    if (el.tagName === "P") {
+      const parsed = parseTypedHeading(txt(el));
+      if (parsed?.level === 1) {
+        h1Index = i;
+        h1Text = parsed.text;
+        break;
+      }
+    }
+  }
+
+  // find first H2 after H1 (real <h2> OR typed "<h2>...</h2>" in a <p>)
+  let h2Index = -1;
+  if (h1Index !== -1) {
+    for (let i = h1Index + 1; i < els.length; i++) {
+      const el = els[i];
+      if (!isNonEmpty(el)) continue;
+
+      if (el.tagName === "H2") {
+        h2Index = i;
+        break;
+      }
+
+      if (el.tagName === "P") {
+        const parsed = parseTypedHeading(txt(el));
+        if (parsed?.level === 2) {
+          h2Index = i;
+          break;
+        }
+      }
+    }
+  }
+
+  // hero subtext: <p> after H1 until first H2 (keep HTML)
+  let heroSubtext = "";
+  if (h1Index !== -1) {
+    const end = h2Index !== -1 ? h2Index : els.length;
+    const heroParts = [];
+
+    for (let i = h1Index + 1; i < end; i++) {
+      const el = els[i];
+      if (el.tagName === "P" && isNonEmpty(el)) {
+        // exclude paragraphs that are actually typed headings
+        const parsed = parseTypedHeading(txt(el));
+        if (!parsed) heroParts.push(el.outerHTML);
+      }
+    }
+
+    heroSubtext = heroParts.join("\n");
+  }
+
+  // main content: from first H2 onward
+  let mainContent = "";
+  if (h2Index !== -1) {
+    const mainLines = [];
+
+   const pushList = (listEl) => {
+     const isOl = listEl.tagName === "OL";
+     const items = Array.from(listEl.querySelectorAll(":scope > li"));
+     if (!items.length) return;
+
+     items.forEach((li, idx) => {
+       const t = (li.textContent || "").trim();
+       if (!t) return;
+
+       if (!isOl) {
+         // UL -> treat as UL
+         mainLines.push(`- ${t}`);
+         return;
+       }
+
+       // ✅ OL -> numeric list (1., 2., 3.)
+       mainLines.push(`${idx + 1}. ${t}`);
+     });
+
+     mainLines.push(""); // blank line after list
+   };
+
+    for (let i = h2Index; i < els.length; i++) {
+      const el = els[i];
+      if (!el) continue;
+
+      // ✅ Preserve lists
+      if (el.tagName === "UL" || el.tagName === "OL") {
+        pushList(el);
+        continue;
+      }
+
+      const text = (el.textContent || "").trim();
+      if (!text) continue;
+
+      mainLines.push(normalizeTypedHeadingLine(text));
+      mainLines.push(""); // blank line between blocks
+    }
+
+    mainContent = convertTextToHtml(mainLines.join("\n"));
+  }
+
+  return {
+    title: titleText,
+    desc: metaDesc,
+    h1: h1Text,
+    afterH1: heroSubtext,
+    mainContent: mainContent,
+  };
+}
