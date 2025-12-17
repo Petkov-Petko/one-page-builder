@@ -182,7 +182,7 @@ const Preview = ({
     const zip = new JSZip();
 
     if (globalSettings.contactPage) {
-      globalSettings.contactRandomIndex = Math.floor(Math.random() * 4) + 1;
+      globalSettings.contactRandomIndex = Math.floor(Math.random() * 5) + 1;
     }
 
     const pagesWithProperPaths = replacePreviewImagesWithPaths(
