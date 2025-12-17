@@ -11,10 +11,10 @@ export function FooterHtml4(globalSettings, topLevelPages, childPages) {
             <h5 class="footer-title">Quick Links</h5>
             <ul class="footer-links">
        ${(topLevelPages || [])
-         .map((page) => `<li><a href="${page.url}">${page.title}</a></li>`)
+         .map((page) => `<li><a href="${page.slug === "" ? "/" : `/${page.slug}`}">${page.title}</a></li>`)
          .join("")}
             ${(childPages || [])
-              .map((page) => `<li><a href="${page.url}">${page.title}</a></li>`)
+              .map((page) => `<li><a href="${page.slug === "" ? "/" : `/${page.slug}`}">${page.title}</a></li>`)
               .join("")}
             </ul>
           </div>

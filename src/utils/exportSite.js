@@ -55,6 +55,8 @@ const renderNavigationHero = (settings, page) => {
 
 const renderFooterHtml = (settings, topLevelPages, childPages) => {
   const fn = footerHtmlMap[Number(settings.footerStyle)] || FooterHtml3;
+  console.log(topLevelPages);
+  
   return fn(settings, topLevelPages, childPages);
 };
 
