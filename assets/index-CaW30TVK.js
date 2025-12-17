@@ -2228,8 +2228,8 @@ ${i.heroBg?`.hero-section.with-bg {
           <div class="col-lg-4 text-center text-lg-start">
             <h5 class="footer-title">Quick Links</h5>
             <ul class="footer-links">
-       ${(a||[]).map(o=>`<li><a href="${o.url}">${o.title}</a></li>`).join("")}
-            ${(c||[]).map(o=>`<li><a href="${o.url}">${o.title}</a></li>`).join("")}
+       ${(a||[]).map(o=>`<li><a href="${o.slug===""?"/":`/${o.slug}`}">${o.title}</a></li>`).join("")}
+            ${(c||[]).map(o=>`<li><a href="${o.slug===""?"/":`/${o.slug}`}">${o.title}</a></li>`).join("")}
             </ul>
           </div>
           <div class="col-lg-4 text-center text-lg-start">
@@ -2487,7 +2487,7 @@ ${i.scrollToTop?`.scroll-top {
   bottom: 15px;
 }
 `:""}
-`}const P3={1:x1,2:N3,3:F3,4:W3},X3={1:D1,2:k3,3:O3,4:j3},G3={1:mo,2:Df,3:_s,4:Tf},V3=(i,a)=>(P3[Number(i.navStyle)]||x1)(i,a),$3=(i,a)=>(X3[Number(i.navStyle)]||D1)(i,a),Z3=(i,a,c)=>(G3[Number(i.footerStyle)]||_s)(i,a,c);function Q3(i,a){const c=a.hiddenFromNav||[],o=i.filter(U=>!c.includes(U.id)),f=o.filter(U=>!U.parentId),u=o.filter(U=>U.parentId),d=(()=>{let U="";const D=a.customNavItems||[];return f.forEach(g=>{if(g.isDropdownParent){const _=u.filter(m=>m.parentId===g.id),y=g.hasOwnPage&&g.slug?`href="/${g.slug}"`:"";U+=`
+`}const P3={1:x1,2:N3,3:F3,4:W3},X3={1:D1,2:k3,3:O3,4:j3},G3={1:mo,2:Df,3:_s,4:Tf},V3=(i,a)=>(P3[Number(i.navStyle)]||x1)(i,a),$3=(i,a)=>(X3[Number(i.navStyle)]||D1)(i,a),Z3=(i,a,c)=>{const o=G3[Number(i.footerStyle)]||_s;return console.log(a),o(i,a,c)};function Q3(i,a){const c=a.hiddenFromNav||[],o=i.filter(U=>!c.includes(U.id)),f=o.filter(U=>!U.parentId),u=o.filter(U=>U.parentId),d=(()=>{let U="";const D=a.customNavItems||[];return f.forEach(g=>{if(g.isDropdownParent){const _=u.filter(m=>m.parentId===g.id),y=g.hasOwnPage&&g.slug?`href="/${g.slug}"`:"";U+=`
       <li class="nav-item dropdown">
         <a class="nav-link has-arrow" ${y}>
           ${g.title} <span class="arrow"></span>
