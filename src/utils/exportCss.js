@@ -5,6 +5,7 @@ import { NavigationCSS4 } from "./siteStyles/navigation/style4";
 import { FooterCss1 } from "./siteStyles/footer/footerStyle1";
 import { FooterCss2 } from "./siteStyles/footer/footerStyle2";
 import { FooterCss3 } from "./siteStyles/footer/footerStyle3";
+import { FooterCss4 } from "./siteStyles/footer/footerStyle4";
 import { getHeadingsCss } from "./siteStyles/mainContent/headingsStyles.js";
 import {
   cssBodyPattern,
@@ -13,6 +14,16 @@ import {
 } from "./helpers.js";
 
 export function exportCss(globalSettings) {
+  const footerStyles = {
+    1: FooterCss1,
+    2: FooterCss2,
+    3: FooterCss3,
+    4: FooterCss4,
+  };
+  const renderFooterCss = () => {
+    const FooterCss = footerStyles[globalSettings.footerStyle] || FooterCss3;
+    return FooterCss();
+  };
   return `
 
 :root {
@@ -142,13 +153,8 @@ ${getHeadingsCss(globalSettings)}
   min-height: 70vh;
 }
 
+${renderFooterCss()}
 ${
-  globalSettings.footerStyle === "1"
-    ? FooterCss1()
-    : globalSettings.footerStyle === "2"
-    ? FooterCss2()
-    : FooterCss3()
-}${
     globalSettings.whiteLogo
       ? `.footer img {
         filter: brightness(0) invert(1);

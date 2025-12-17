@@ -30,6 +30,10 @@ import {
   FooterHtml3,
   FooterCss3,
 } from "../../utils/siteStyles/footer/footerStyle3";
+import {
+  FooterHtml4,
+  FooterCss4,
+} from "../../utils/siteStyles/footer/footerStyle4";
 import { Navigation1JsxElement } from "../../utils/siteStyles/navigation/style1Preview";
 import { Navigation2JsxElement } from "../../utils/siteStyles/navigation/style2Preview";
 import { Navigation3JsxElement } from "../../utils/siteStyles/navigation/style3Preview";
@@ -135,7 +139,14 @@ const Preview = ({
   };
 
   const getRandomErrorPage = () => {
-    const errorPages = [errorPage1, errorPage2, errorPage3, errorPage4, errorPage5, errorPage6];
+    const errorPages = [
+      errorPage1,
+      errorPage2,
+      errorPage3,
+      errorPage4,
+      errorPage5,
+      errorPage6,
+    ];
     const randomIndex = Math.floor(Math.random() * errorPages.length);
     return errorPages[randomIndex];
   };
@@ -173,7 +184,6 @@ const Preview = ({
       );
       return;
     }
-
     handleDownloadZip();
     handleClick();
   };
@@ -372,7 +382,11 @@ const Preview = ({
     }
 
     // Add hero background if it exists
-    if (globalSettings.heroBg && globalSettings.heroBg.startsWith("data:") && !globalSettings.transparentHero) {
+    if (
+      globalSettings.heroBg &&
+      globalSettings.heroBg.startsWith("data:") &&
+      !globalSettings.transparentHero
+    ) {
       const res = await fetch(globalSettings.heroBg);
       const blob = await res.blob();
       zip.file("images/hero-bg.jpg", blob);
@@ -419,6 +433,9 @@ const Preview = ({
       case "3":
         css = FooterCss3 ? FooterCss3() : FooterCss1();
         break;
+      case "4":
+        css = FooterCss4 ? FooterCss4() : FooterCss1();
+        break;
       case "1":
       default:
         css = FooterCss1();
@@ -449,6 +466,11 @@ const Preview = ({
       case "3":
         footerHtml = FooterHtml3
           ? FooterHtml3(globalSettings)
+          : FooterHtml1(globalSettings);
+        break;
+      case "4":
+        footerHtml = FooterHtml4
+          ? FooterHtml4(globalSettings, topLevelPages, childPages)
           : FooterHtml1(globalSettings);
         break;
       case "1":

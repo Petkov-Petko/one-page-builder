@@ -570,3 +570,41 @@ export async function parseWordDocument(file) {
     mainContent: mainContent,
   };
 }
+
+
+export function splitHtmlToSections(html) {
+  const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
+
+  let prelude = "";
+  let sections = [];
+  let currentSection = "";
+  let started = false;
+
+  parts.forEach((part) => {
+    const isH2 = /<h2[\s\S]*?<\/h2>/i.test(part);
+
+    if (isH2) {
+      if (!started) {
+        started = true;
+        currentSection = (prelude ? prelude : "") + part;
+        prelude = "";
+      } else {
+        if (currentSection.trim()) {
+          sections.push(`<section>${currentSection}</section>`);
+        }
+        currentSection = part;
+      }
+    } else {
+      if (started) currentSection += part;
+      else prelude += part;
+    }
+  });
+
+  if (started && currentSection.trim()) {
+    sections.push(`<section>${currentSection}</section>`);
+  } else if (!started && prelude.trim()) {
+    sections.push(`<section>${prelude}</section>`);
+  }
+
+  return sections.join("\n");
+}

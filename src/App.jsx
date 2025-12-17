@@ -152,6 +152,7 @@ function App() {
                 setGlobalSettings={setGlobalSettings}
                 currentPage={currentPage}
                 onImageInsert={handleImageInsert}
+                pageCount={pages.length}
               />
             </div>
           </div>

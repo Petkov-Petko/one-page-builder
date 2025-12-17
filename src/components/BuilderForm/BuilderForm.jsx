@@ -12,6 +12,7 @@ function BuilderForm({
   setGlobalSettings,
   currentPage,
   onImageInsert,
+  pageCount,
 }) {
   const [activeTab, setActiveTab] = useState("page");
   const [isParsingWord, setIsParsingWord] = useState(false);
@@ -817,6 +818,7 @@ function BuilderForm({
                     <option value="1">Style 1</option>
                     <option value="2">Style 2</option>
                     <option value="3">Style 3</option>
+                    {pageCount > 1 && <option value="4">Style 4</option>}
                   </select>
                 </div>
               </div>

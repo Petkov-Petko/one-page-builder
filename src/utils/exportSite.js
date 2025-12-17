@@ -14,68 +14,68 @@ import {
   NavigationHtml4,
   NavigationHero4,
 } from "./siteStyles/navigation/style4";
+
 import { FooterHtml1 } from "./siteStyles/footer/footerStyle1";
 import { FooterHtml2 } from "./siteStyles/footer/footerStyle2";
 import { FooterHtml3 } from "./siteStyles/footer/footerStyle3";
+import { FooterHtml4 } from "./siteStyles/footer/footerStyle4";
 import { exportCss } from "./exportCss";
+import { splitHtmlToSections } from "./helpers";
 
-export function splitHtmlToSections(html) {
-  const parts = html.split(/(<h2[\s\S]*?<\/h2>)/i).filter(Boolean);
+const navHtmlMap = {
+  1: NavigationHtml1,
+  2: NavigationHtml2,
+  3: NavigationHtml3,
+  4: NavigationHtml4,
+};
 
-  let prelude = "";
-  let sections = [];
-  let currentSection = "";
-  let started = false;
+const navHeroMap = {
+  1: NavigationHero1,
+  2: NavigationHero2,
+  3: NavigationHero3,
+  4: NavigationHero4,
+};
 
-  parts.forEach((part) => {
-    const isH2 = /<h2[\s\S]*?<\/h2>/i.test(part);
+const footerHtmlMap = {
+  1: FooterHtml1,
+  2: FooterHtml2,
+  3: FooterHtml3,
+  4: FooterHtml4,
+};
 
-    if (isH2) {
-      if (!started) {
-        started = true;
-        currentSection = (prelude ? prelude : "") + part;
-        prelude = "";
-      } else {
-        if (currentSection.trim()) {
-          sections.push(`<section>${currentSection}</section>`);
-        }
-        currentSection = part;
-      }
-    } else {
-      if (started) {
-        currentSection += part;
-      } else {
-        prelude += part;
-      }
-    }
-  });
+const renderNavigationHtml = (settings, navigationHtml) => {
+  const fn = navHtmlMap[Number(settings.navStyle)] || NavigationHtml1;
+  return fn(settings, navigationHtml);
+};
 
-  if (started && currentSection.trim()) {
-    sections.push(`<section>${currentSection}</section>`);
-  } else if (!started && prelude.trim()) {
-    sections.push(`<section>${prelude}</section>`);
-  }
+const renderNavigationHero = (settings, page) => {
+  const fn = navHeroMap[Number(settings.navStyle)] || NavigationHero1;
+  return fn(settings, page);
+};
 
-  return sections.join("\n");
-}
+const renderFooterHtml = (settings, topLevelPages, childPages) => {
+  const fn = footerHtmlMap[Number(settings.footerStyle)] || FooterHtml3;
+  return fn(settings, topLevelPages, childPages);
+};
 
-// Multi-page export function
+
+/** ---------- Multi-page export ---------- */
 export function generateMultiPageExport(pages, globalSettings) {
   const hiddenPages = globalSettings.hiddenFromNav || [];
   const visiblePages = pages.filter((page) => !hiddenPages.includes(page.id));
+  const topLevelPages = visiblePages.filter((page) => !page.parentId);
+  const childPages = visiblePages.filter((page) => page.parentId);
 
   const generateNavigation = () => {
     let navHtml = "";
     const customNavItems = globalSettings.customNavItems || [];
-
-    const topLevelPages = visiblePages.filter((page) => !page.parentId);
-    const childPages = visiblePages.filter((page) => page.parentId);
 
     topLevelPages.forEach((page) => {
       if (page.isDropdownParent) {
         const children = childPages.filter(
           (child) => child.parentId === page.id
         );
+
         const href = page.hasOwnPage && page.slug ? `href="/${page.slug}"` : "";
 
         navHtml += `
@@ -99,7 +99,6 @@ export function generateMultiPageExport(pages, globalSettings) {
       }
     });
 
-    // Add custom navigation items
     customNavItems.forEach((item) => {
       navHtml += `<li class="nav-item">
       <a class="nav-link" href="${item.url}">
@@ -111,33 +110,28 @@ export function generateMultiPageExport(pages, globalSettings) {
     return navHtml;
   };
 
-  // Generate functions.php with multi-page navigation
+  const navigationHtml = generateNavigation();
+
   const functions = generateMultiPageFunctions(
     globalSettings,
-    generateNavigation(),
-    visiblePages
+    navigationHtml,
+    visiblePages,
+    topLevelPages,
+    childPages
   );
 
-  // Generate combined CSS for all pages
   const styles = exportCss(globalSettings);
 
-  // Generate individual page files
   const pageFiles = {};
 
   pages.forEach((page) => {
-    // Skip dropdown parents that don't have their own page
-    if (page.isDropdownParent && !page.hasOwnPage) {
-      return;
-    }
-
-    // Skip pages without formData
-    if (!page.formData) {
-      return;
-    }
+    if (page.isDropdownParent && !page.hasOwnPage) return;
+    if (!page.formData) return;
 
     const filename = page.isHome ? "index.php" : `${page.slug}.php`;
     pageFiles[filename] = generatePagePhp(page, globalSettings);
   });
+
   return {
     pages: pageFiles,
     functions,
@@ -145,19 +139,18 @@ export function generateMultiPageExport(pages, globalSettings) {
   };
 }
 
-function generateMultiPageFunctions(globalSettings, navigationHtml, pages) {
-  // Generate sidebar links dynamically from pages
+function generateMultiPageFunctions(
+  globalSettings,
+  navigationHtml,
+  pages,
+  topLevelPages,
+  childPages
+) {
   const sidebarLinks = pages
-    .filter((page) => {
-      if (page.isDropdownParent && !page.hasOwnPage) {
-        return false;
-      }
-      return true;
-    })
+    .filter((page) => !(page.isDropdownParent && !page.hasOwnPage))
     .map((page) => {
       const href = page.isHome ? "/" : `/${page.slug}`;
-      const label = page.title;
-      return `<li><a href="${href}">${label}</a></li>`;
+      return `<li><a href="${href}">${page.title}</a></li>`;
     })
     .join("\n              ");
 
@@ -184,72 +177,50 @@ function site_header($title, $description)
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-${(() => {
-  switch (globalSettings.navStyle) {
-    case "1":
-      return NavigationHtml1(globalSettings, navigationHtml);
-    case "2":
-      return NavigationHtml2(globalSettings, navigationHtml);
-    case "3":
-      return NavigationHtml3(globalSettings, navigationHtml);
-    case "4":
-      return NavigationHtml4(globalSettings, navigationHtml);
-    default:
-      return NavigationHtml1(globalSettings, navigationHtml);
-  }
-})()} 
+${renderNavigationHtml(globalSettings, navigationHtml)}
 <?php
   return ob_get_clean();
 }
-  ?>
+?>
 
-  ${
-    globalSettings.sidebar
-      ? `
-    <?php
-    function sidebar()
-    {
-      ob_start(); ?>
-    
-      <div class="col-lg-4 col-xl-3 pt-3 d-flex flex-column align-items-center">
-      ${
-        pages.length > 1
-          ? `  
-          <div>
-          <h2>Quick Links</h2>
-            <ul class="sidebar-page-list">
-              ${sidebarLinks}
-            </ul>
-      </div>`
-          : ""
-      }
-     
-        <div class="mb-2">
-          <iframe width="279" height="330" class="rounded" src="https://www.youtube.com/embed/N6SY8uqaPZI" title="In 2022, the Brazilian Congress broke the record for changes to the country’s Constitution"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-      </div>
-    
-    <?php
-      return ob_get_clean();
+${
+  globalSettings.sidebar
+    ? `
+<?php
+function sidebar()
+{
+  ob_start(); ?>
+
+  <div class="col-lg-4 col-xl-3 pt-3 d-flex flex-column align-items-center">
+    ${
+      pages.length > 1
+        ? `
+    <div>
+      <h2>Quick Links</h2>
+      <ul class="sidebar-page-list">
+        ${sidebarLinks}
+      </ul>
+    </div>`
+        : ""
     }
-    ?>
-    `
-      : ""
-  }
 
+    <div class="mb-2">
+      <iframe width="279" height="330" class="rounded" src="https://www.youtube.com/embed/N6SY8uqaPZI" title="In 2022, the Brazilian Congress broke the record for changes to the country’s Constitution"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
 
 <?php
+  return ob_get_clean();
+}
+?>`
+    : ""
+}
 
+<?php
 function site_footer()
 {
   ob_start(); ?>
-${
-  globalSettings.footerStyle === "1"
-    ? FooterHtml1(globalSettings)
-    : globalSettings.footerStyle === "2"
-    ? FooterHtml2(globalSettings)
-    : FooterHtml3(globalSettings)
-}
+${renderFooterHtml(globalSettings, topLevelPages, childPages)}
 
     <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/assets/js/main.js"></script>
@@ -270,20 +241,7 @@ echo site_header("${page.formData.title || page.title}", "${
   }");
 ?>
 
-${(() => {
-  switch (globalSettings.navStyle) {
-    case "1":
-      return NavigationHero1(globalSettings, page);
-    case "2":
-      return NavigationHero2(globalSettings, page);
-    case "3":
-      return NavigationHero3(globalSettings, page);
-    case "4":
-      return NavigationHero4(globalSettings, page);
-    default:
-      return NavigationHero1(globalSettings, page);
-  }
-})()}
+${renderNavigationHero(globalSettings, page)}
 
 <main class="container my-5">
   <div class="row">
