@@ -2223,7 +2223,7 @@ ${i.heroBg?`.hero-section.with-bg {
       <div class="container">
         <div class="row gy-4">
           <div class="col-lg-4 text-center text-lg-start">
-            <img src="/images/logo.svg" alt="Meme Guide" width="220" height="50" class="mb-3">
+            <img src="/images/logo.svg" alt="${i.name||i.domain}" width="220" height="50" class="mb-3">
           </div>
           <div class="col-lg-4 text-center text-lg-start">
             <h5 class="footer-title">Quick Links</h5>
@@ -2233,7 +2233,7 @@ ${i.heroBg?`.hero-section.with-bg {
             </ul>
           </div>
           <div class="col-lg-4 text-center text-lg-start">
-            <h5 class="footer-title">Meme Newsletter</h5>
+            <h5 class="footer-title">Newsletter</h5>
             <p class="footer-text">
               Subscribe to our newsletter to get the latest updates.
             </p>
