@@ -12,7 +12,7 @@ export function FooterHtml3(globalSettings) {
             ${
               globalSettings.contactPage
                 ? `<a class="pe-2" href="/contact">Contacts</a>`
-                : `<span><span class="footer-icon">✉️</span> ${
+                : `<span>✉️ ${
                     globalSettings.email ||
                     `info[@]${globalSettings.domain || "domain.com"}`
                   }</span>`
@@ -36,9 +36,9 @@ export function FooterHtml3(globalSettings) {
           </form>
         </div>
         <div class="footer-social text-center d-flex justify-content-center">
-          <span class="social-icon facebook"><i class="bi bi-facebook"></i></span>
-          <span class="social-icon twitter"><i class="bi bi-twitter"></i></span>
-          <span class="social-icon youtube"><i class="bi bi-youtube"></i></span>
+          <span class="social-icon"><i class="bi bi-facebook"></i></span>
+          <span class="social-icon"><i class="bi bi-twitter"></i></span>
+          <span class="social-icon"><i class="bi bi-youtube"></i></span>
         </div>
       </div>
     </footer>
