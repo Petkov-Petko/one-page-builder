@@ -2733,7 +2733,7 @@ echo site_header($title, $description);
     </div>
   </div>
 </section>
-<section class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+<section class="min-vh-100 d-flex align-items-center justify-content-center">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-md-8 col-lg-6">
