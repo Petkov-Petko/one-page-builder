@@ -2778,12 +2778,12 @@ echo site_header($title, $description);
 <section class="error-section container py-5">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-6">
-            <div class="p-4 p-lg-5 border rounded-4 shadow-sm bg-white text-center">
+            <div class="p-4 p-lg-5 border rounded-4 shadow-sm text-center">
                 <div class="mb-3">
                     <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem;"></i>
                 </div>
                 <h2 class="fw-bold mb-3">This Page Isn’t Available</h2>
-                <p class="text-muted mb-4">
+                <p class="mb-4">
                     The page you’re trying to reach may have been removed, renamed,
                     or is temporarily unavailable. Let’s get you back on track.
                 </p>
