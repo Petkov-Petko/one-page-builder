@@ -2226,14 +2226,14 @@ ${i.heroBg?`.hero-section.with-bg {
             <img src="/images/logo.svg" alt="${i.name||i.domain}" width="220" height="50" class="mb-3">
           </div>
           <div class="col-lg-4 text-center text-lg-start">
-            <h5 class="footer-title">Quick Links</h5>
+            <h3 class="footer-title">Quick Links</h3>
             <ul class="footer-links">
        ${(a||[]).map(o=>`<li><a href="${o.slug===""?"/":`/${o.slug}`}">${o.title}</a></li>`).join("")}
             ${(c||[]).map(o=>`<li><a href="${o.slug===""?"/":`/${o.slug}`}">${o.title}</a></li>`).join("")}
             </ul>
           </div>
           <div class="col-lg-4 text-center text-lg-start">
-            <h5 class="footer-title">Newsletter</h5>
+            <h3 class="footer-title">Newsletter</h3>
             <p class="footer-text">
               Subscribe to our newsletter to get the latest updates.
             </p>
@@ -2264,7 +2264,7 @@ ${i.heroBg?`.hero-section.with-bg {
     </footer>
       ${i.scrollToTop?`      <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 `:""}
-  `}function _f(){return".footer{background:var(--footer-bg-color);color:var(--footer-text-color);border-top:1px solid var(--link-color)}.footer a {text-decoration: none;color: var(--footer-text-color) !important;}.footer-title{font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;position:relative}.footer-links{list-style:none;padding:0;margin:0}.footer-links li{margin-bottom:.6rem}.footer-links a{text-decoration:none;transition:all .3s ease}.footer-links a:hover{padding-left:6px}.newsletter-form{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}.newsletter-form input{flex:1;padding:.6rem .9rem;border-radius:8px;border:0;outline:0;background:color-mix(in srgb,var(--footer-bg-color) 80%,white 20%);color:var(--footer-text-color)}.newsletter-form input::placeholder{color:var(--footer-text-color)}.newsletter-form button{padding:.6rem 1.1rem;border-radius:8px;border:0;font-weight:600;background:var(--link-color);color:var(--footer-text-color);transition:all .3s ease}.newsletter-form button:hover{background:color-mix(in srgb,var(--link-color) 80%,white 20%)}.footer-divider{margin:1.5rem 0;border-color:var(--link-color)} "}function L3(){return`
+  `}function _f(){return".footer{background:var(--footer-bg-color);color:var(--footer-text-color);border-top:1px solid var(--link-color)}.footer a {text-decoration: none;color: var(--footer-text-color) !important;}.footer-title{font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;position:relative;color: var(--footer-text-color) !important;}.footer-links{list-style:none;padding:0;margin:0}.footer-links li{margin-bottom:.6rem}.footer-links a{text-decoration:none;transition:all .3s ease}.footer-links a:hover{padding-left:6px}.newsletter-form{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem}.newsletter-form input{flex:1;padding:.6rem .9rem;border-radius:8px;border:0;outline:0;background:color-mix(in srgb,var(--footer-bg-color) 80%,white 20%);color:var(--footer-text-color)}.newsletter-form input::placeholder{color:var(--footer-text-color)}.newsletter-form button{padding:.6rem 1.1rem;border-radius:8px;border:0;font-weight:600;background:var(--link-color);color:var(--footer-text-color);transition:all .3s ease}.newsletter-form button:hover{background:color-mix(in srgb,var(--link-color) 80%,white 20%)}.footer-divider{margin:1.5rem 0;border-color:var(--link-color)} "}function L3(){return`
 .content-area h2 {
   display: inline-block;
   border-bottom: 3px solid var(--heading-color);
