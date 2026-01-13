@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const navbarCollapse = document.querySelector(".navbar-collapse");
   const navLinks       = document.querySelectorAll(".navbar-nav .nav-link");
 
+  ${
+    pages.length > 1
+      ? `
+
   // Normalize current path (remove trailing slash except for root)
   const currentPath = (function () {
     let p = window.location.pathname;
@@ -13,9 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return p;
   })();
 
-  ${
-    pages.length > 1
-      ? `
   // Highlight active link (multi-page)
   navLinks.forEach((link) => {
     const href = link.getAttribute("href") || "";
