@@ -1,4 +1,5 @@
 export const languageOptions = [
+  { value: "sq", label: "Albanian (sq)" },
   { value: "ar", label: "Arabic (ar)" },
   { value: "ar-SA", label: "Arabic - Saudi Arabia (ar-SA)" },
   { value: "eu", label: "Basque (eu)" },
